@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/presentation/providers/theme_provider.dart';
+import 'package:songswipe/presentation/views/change_theme_view.dart';
 
 class ChangeThemeScreen extends ConsumerWidget {
   const ChangeThemeScreen({super.key});
@@ -33,7 +34,7 @@ class ChangeThemeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Placeholder(),
+      body: ChangeThemeView(),
     );
   }
 }

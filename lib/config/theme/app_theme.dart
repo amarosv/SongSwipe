@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
-// Listado de colores para el tema de la aplicación
-const colorList = <Color>[Colors.blue, Colors.red, Colors.yellow, Colors.pink];
+// Mapa de colores para el tema de la aplicación
+const colorList = {
+  'Blue': Colors.blue,
+  'Red': Colors.red,
+  'Yellow': Colors.yellow,
+  'Pink': Colors.pink
+};
 
 class AppTheme {
   // Atributo que almacena el índice del color seleccionado
@@ -23,7 +28,7 @@ class AppTheme {
   ThemeData getTheme() => ThemeData(
       useMaterial3: true,
       brightness: isDarkMode ? Brightness.dark : Brightness.light,
-      colorSchemeSeed: colorList[selectedColor],
+      colorSchemeSeed: colorList.values.toList()[selectedColor],
       appBarTheme: const AppBarTheme(centerTitle: true));
 
   // Método que permite crear una copia de la instancia actual de AppTheme,

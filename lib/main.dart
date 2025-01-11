@@ -21,14 +21,15 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // Obtenemos si se está usando el tema del sistema
+    // Obtenemos si se está usando el tema del dispositivo
     final system = ref.watch(themeNotifierProvider).isUsingSystem;
 
-    // Verificar si el brillo ha cambiado y hacer un print
+    // Comprobamos si se está usando el tema del dispositivo
     if (system) {
       // Obtenemos el tema actual del dispositivo
       final currentBrightness = MediaQuery.of(context).platformBrightness;
       
+      // Comprobamos si ha habido un cambio en el valor del modo oscuro
       if (currentBrightness != _previousBrightness) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           bool darkMode = currentBrightness == Brightness.dark;
@@ -46,7 +47,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     final appTheme = ref.watch(themeNotifierProvider);
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'SongSwipe',
       debugShowCheckedModeBanner: false,
       theme: appTheme.getTheme(),
       home: const ChangeThemeScreen(),

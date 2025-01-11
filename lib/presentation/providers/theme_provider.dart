@@ -5,14 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/config/theme/app_theme.dart';
 import 'package:songswipe/helpers/preferences.dart';
 
-// // Listado de colores inmutables
-// final colorListProvider = Provider((ref) => colorList);
+// Listado de colores inmutables
+final colorListProvider = Provider((ref) => colorList);
 
-// // Booleano que contiene si el modo oscuro está activado
-// final isDarModeProvider = StateProvider((ref) => loadDataBool(tag: 'isDarkMode'));
+// Booleano que contiene si el modo oscuro está activado
+final isDarModeProvider = StateProvider((ref) => loadDataBool(tag: 'isDarkMode'));
 
-// // Entero que contiene el índice del color seleccionado
-// final selectedColorProvider = StateProvider((ref) => loadDataInt(tag: 'selectedColorTheme'));
+// Entero que contiene el índice del color seleccionado
+final selectedColorProvider = StateProvider((ref) => loadDataInt(tag: 'selectedColorTheme'));
 
 // Objeto de tipo AppTheme
 final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, AppTheme>(
