@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:songswipe/helpers/export_helpers.dart';
+import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -9,16 +9,21 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  // Variable que almacena el idioma seleccionado
-  Language language = Language.english;
+  // Constante que almacena la ruta a los logos
+  final String assetsPath = 'assets/images/logos';
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          
-        ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            CustomDropdownLanguage(),
+            Image(
+              image: AssetImage('$assetsPath/logo-horizontal-sin-fondo.png'),
+            )
+          ],
+        ),
       ),
     );
   }
