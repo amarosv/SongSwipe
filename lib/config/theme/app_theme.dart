@@ -10,8 +10,11 @@ class AppTheme {
   // Atributo que almacena si el modo oscuro está activado
   final bool isDarkMode;
 
+  // Atributo que almacena si se está usando el tema del dispositivo
+  final bool isUsingSystem;
+
   // Constructor con aserciones
-  AppTheme({this.selectedColor = 0, this.isDarkMode = false})
+  AppTheme({this.selectedColor = 0, this.isDarkMode = false, this.isUsingSystem = false})
       : assert(selectedColor >= 0, 'Selected color must be greater than 0'),
         assert(selectedColor < colorList.length,
             'Selected colormut be less or equal than ${colorList.length - 1}');
@@ -25,7 +28,8 @@ class AppTheme {
 
   // Método que permite crear una copia de la instancia actual de AppTheme,
   // pero con la posibilidad de sobrescribir algunos de sus valores.
-  AppTheme copyWith({int? selectedColor, bool? isDarkMode}) => AppTheme(
+  AppTheme copyWith({int? selectedColor, bool? isDarkMode, bool? isUsingSystem}) => AppTheme(
       selectedColor: selectedColor ?? this.selectedColor,
-      isDarkMode: isDarkMode ?? this.isDarkMode);
+      isDarkMode: isDarkMode ?? this.isDarkMode,
+      isUsingSystem: isUsingSystem ?? this.isUsingSystem);
 }

@@ -10,6 +10,9 @@ class ChangeThemeScreen extends ConsumerWidget {
     // Constante que almacena si el modo oscuro está activado
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
 
+    // Constante que almacena si el modo sistema está activado
+    final isUsingSystem = ref.watch(themeNotifierProvider).isUsingSystem;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Theme changer'),
@@ -20,7 +23,14 @@ class ChangeThemeScreen extends ConsumerWidget {
               ref.read(themeNotifierProvider.notifier).toggleDarkMode();
             },
             icon: Icon(isDarkMode ? Icons.dark_mode_rounded : Icons.light_mode_rounded)
-          )
+          ),
+          IconButton(
+            onPressed: () {
+              // Llamamos al notifier para cambiar de modo
+              ref.read(themeNotifierProvider.notifier).toggleUseSystem();
+            },
+            icon: Icon(isUsingSystem ? Icons.mobile_friendly_sharp : Icons.mobile_off)
+          ),
         ],
       ),
       body: Placeholder(),
