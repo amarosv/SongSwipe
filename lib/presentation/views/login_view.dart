@@ -18,9 +18,16 @@ class _LoginViewState extends State<LoginView> {
       body: SafeArea(
         child: Column(
           children: [
+            // Dropdown para los idiomas
             CustomDropdownLanguage(),
-            Image(
-              image: AssetImage('$assetsPath/logo-horizontal-sin-fondo.png'),
+            const SizedBox(height: 20),
+
+            // Logo en horizontal
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 45),
+              child: Image(
+                image: AssetImage('$assetsPath/logo-horizontal-sin-fondo.png'),
+              ),
             )
           ],
         ),
