@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:songswipe/presentation/providers/theme_provider.dart';
-import 'package:songswipe/presentation/screens/change_theme_screen.dart';
+import 'package:songswipe/presentation/providers/export_providers.dart';
+import 'package:songswipe/presentation/screens/export_screens.dart';
 
 void main() {
   runApp(
@@ -50,7 +50,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       title: 'SongSwipe',
       debugShowCheckedModeBanner: false,
       theme: appTheme.getTheme(),
-      home: const ChangeThemeScreen(),
+      home: const LoginScreen(),
     );
   }
 }

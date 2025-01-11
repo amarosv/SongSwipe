@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:songswipe/config/theme/app_theme.dart';
-import 'package:songswipe/helpers/preferences.dart';
+import 'package:songswipe/config/export_config.dart';
+import 'package:songswipe/helpers/export_helpers.dart';
 
 // Listado de colores inmutables
 final colorListProvider = Provider((ref) => colorList);

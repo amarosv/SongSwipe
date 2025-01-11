@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:songswipe/presentation/providers/theme_provider.dart';
-import 'package:songswipe/presentation/views/change_theme_view.dart';
+import 'package:songswipe/presentation/providers/export_providers.dart';
+import 'package:songswipe/presentation/views/export_views.dart';
 
 class ChangeThemeScreen extends ConsumerWidget {
   const ChangeThemeScreen({super.key});
