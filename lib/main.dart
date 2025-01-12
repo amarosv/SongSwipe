@@ -50,7 +50,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       title: 'SongSwipe',
       debugShowCheckedModeBanner: false,
       theme: appTheme.getTheme(),
-      home: const LoginScreen(),
+      home: const SignUpScreen(),
     );
   }
 }

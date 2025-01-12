@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _SignUpViewState extends State<SignUpView> {
   // Constante que almacena la ruta a los logos
   final String assetsPath = 'assets/images/logos';
   
