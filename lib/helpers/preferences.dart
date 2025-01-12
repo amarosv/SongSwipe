@@ -27,6 +27,7 @@ Future<int> loadDataInt({required String tag}) async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getInt(tag) ?? 0;
 }
+
 // Cargar un bool desde SharedPreferences
 Future<bool> loadDataBool({required String tag}) async {
   final prefs = await SharedPreferences.getInstance();

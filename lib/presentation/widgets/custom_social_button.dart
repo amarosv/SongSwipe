@@ -1,0 +1,64 @@
+import 'package:flutter/material.dart';
+import 'package:songswipe/helpers/strings_methods.dart';
+
+class CustomSocialButton extends StatelessWidget {
+  final Color backgroundColor;
+  final Color borderColor;
+  final TextStyle? textStyle;
+  final String imagePath;
+  final Function onPressed;
+  final String text;
+  final double? width;
+
+  const CustomSocialButton({
+    super.key,
+    required this.backgroundColor,
+    required this.onPressed,
+    required this.text,
+    required this.borderColor,
+    required this.imagePath,
+    this.width,
+    this.textStyle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width ?? double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(
+              color: borderColor,
+              width: 1,
+            ),
+          ),
+          elevation: 0,
+        ),
+        onPressed: () => onPressed(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 20,
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 16),
+              child: Image(
+                image: AssetImage(imagePath),
+                width: 24,
+              ),
+            ),
+            Text(
+              upperCaseAfterSpace(text: text),
+              style: textStyle ??
+                  TextStyle(color: borderColor, fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

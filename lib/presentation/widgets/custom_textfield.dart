@@ -7,6 +7,7 @@ class CustomTextfield extends StatefulWidget {
   final String? placeholder;
   final String? title;
   final bool? isPassword;
+  final TextEditingController textEditingController;
 
   const CustomTextfield({
     super.key,
@@ -14,7 +15,7 @@ class CustomTextfield extends StatefulWidget {
     this.icon,
     this.placeholder,
     this.title,
-    this.isPassword,
+    this.isPassword, required this.textEditingController,
   });
 
   @override
@@ -61,6 +62,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextField(
+        controller: widget.textEditingController,
         obscureText: _obscureText,
         decoration: InputDecoration(
           hintText: widget.placeholder,

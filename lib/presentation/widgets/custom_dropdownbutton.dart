@@ -19,7 +19,10 @@ class _CustomDropdownLanguageState extends State<CustomDropdownLanguage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.symmetric(
+        vertical: 10,
+        horizontal: 50
+      ),
       child: Align(
         alignment: Alignment.topRight,
         child: Container(
