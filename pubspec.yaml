@@ -31,7 +31,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_riverpod: ^2.6.1
+  intl: any
   shared_preferences: ^2.3.5
 
 dev_dependencies:
@@ -47,6 +50,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
   assets:
     - assets/images/
     - assets/images/logos/

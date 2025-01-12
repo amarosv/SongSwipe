@@ -1,0 +1,8 @@
+{
+    "email": "email",
+    "password": "contraseña",
+    "confirm_password": "confirmar contraseña",
+    "email_placeholder": "escribe tu email",
+    "password_placeholder": "escribe tu contraseña",
+    "confirm_password_placeholder": "confirma tu contraseña"
+}

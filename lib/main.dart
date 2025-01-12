@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/presentation/providers/export_providers.dart';
 import 'package:songswipe/presentation/screens/export_screens.dart';
@@ -28,7 +30,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     if (system) {
       // Obtenemos el tema actual del dispositivo
       final currentBrightness = MediaQuery.of(context).platformBrightness;
-      
+
       // Comprobamos si ha habido un cambio en el valor del modo oscuro
       if (currentBrightness != _previousBrightness) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -37,7 +39,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               .read(themeNotifierProvider.notifier)
               .putSystemTheme(darkMode: darkMode);
         });
-        
+
         // Actualizamos el previo
         _previousBrightness = currentBrightness;
       }
@@ -50,6 +52,17 @@ class _MyAppState extends ConsumerState<MyApp> {
       title: 'SongSwipe',
       debugShowCheckedModeBanner: false,
       theme: appTheme.getTheme(),
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en'), // English
+        Locale('es'), // Spanish
+        Locale('it'), // Italian
+      ],
       home: const SignUpScreen(),
     );
   }

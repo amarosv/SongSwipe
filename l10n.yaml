@@ -1,0 +1,8 @@
+# Tuta donde van a estar los archivos de idiomas
+arb-dir: lib/l10n
+
+# Archivo principal
+template-arb-file: app_en.arb
+
+# Archivo que se va a generar con todas las traducciones
+output-localization-file: app_localizations.dart
