@@ -1,2 +1,2 @@
-// Enum que almacena los idiomas
+/// Enum que almacena los idiomas
 enum Language { spanish, english, italian }
