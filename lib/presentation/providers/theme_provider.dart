@@ -5,30 +5,32 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/config/export_config.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 
-// Listado de colores inmutables
+/// Listado de colores inmutables
 final colorListProvider = Provider((ref) => colorList);
 
-// Booleano que contiene si el modo oscuro está activado
+/// Booleano que contiene si el modo oscuro está activado
 final isDarModeProvider = StateProvider((ref) => loadDataBool(tag: 'isDarkMode'));
 
-// Entero que contiene el índice del color seleccionado
+/// Entero que contiene el índice del color seleccionado
 final selectedColorProvider = StateProvider((ref) => loadDataInt(tag: 'selectedColorTheme'));
 
-// Objeto de tipo AppTheme
+/// Objeto de tipo AppTheme
 final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, AppTheme>(
   (ref) => ThemeNotifier(ref: ref),
 );
 
-// Notifier
+/// Clase que almacena los atributos del ThemeNotifier y que extiende de AppTheme
 class ThemeNotifier extends StateNotifier<AppTheme> {
+  /// Ref del provider
   final Ref ref;
 
-  // Constructor
+  /// Constructor que llama al constructor padre
+  /// @param ref Ref del provider
   ThemeNotifier({required this.ref}) : super(AppTheme()) {
     _loadInitialConfig();
   }
 
-  // Función que carga la configuración establecida del tema
+  /// Función que carga la configuración establecida del tema
   void _loadInitialConfig() async {
     // Cargamos si se usa el tema del dispositivo
     bool system = await loadDataBool(tag: 'systemTheme');
@@ -60,7 +62,7 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
     }
   }
 
-  // Función que alterna de modo oscuro a modo claro
+  /// Función que alterna de modo oscuro a modo claro
   void toggleDarkMode() {
     bool darkMode = !state.isDarkMode;
 
@@ -69,14 +71,14 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
     saveData(tag: 'isDarkMode', value: darkMode);
   }
 
-  // Función que cambia el índice del color seleccionado
+  /// Función que cambia el índice del color seleccionado
   void changeColorIndex(int colorIndex) {
     state = state.copyWith(selectedColor: colorIndex);
 
     saveData(tag: 'selectedColorTheme', value: colorIndex);
   }
 
-  // Función que cambia si se usa el tema del dispositivo
+  /// Función que cambia si se usa el tema del dispositivo
   void toggleUseSystem() async {
     bool system = await loadDataBool(tag: 'systemTheme');
     saveData(tag: 'systemTheme', value: !system);
@@ -94,7 +96,7 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
     _loadInitialConfig();
   }
 
-  // Función que recibe el estado del modo oscuro y lo coloca en el tema
+  /// Función que recibe el estado del modo oscuro y lo coloca en el tema
   void putSystemTheme({required bool darkMode}) {
     state = state.copyWith(isDarkMode: darkMode);
   }
