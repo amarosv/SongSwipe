@@ -6,6 +6,9 @@ class SeparateSections extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Constante que almacena la localización de la app
+    final localization = AppLocalizations.of(context)!;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -20,7 +23,7 @@ class SeparateSections extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Text(AppLocalizations.of(context)!.or),
+          child: Text(localization.or),
         ),
         Expanded(
           child: Padding(

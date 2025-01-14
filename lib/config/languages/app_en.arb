@@ -8,5 +8,8 @@
     "create_account": "create account",
     "or": "or",
     "already_have_an_account": "already have an account?",
-    "login": "login"
+    "login": "login",
+    "spanish": "spanish",
+    "english": "english",
+    "italian": "italian"
 }

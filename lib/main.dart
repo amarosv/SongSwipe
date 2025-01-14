@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:songswipe/helpers/preferences.dart';
 import 'package:songswipe/presentation/providers/export_providers.dart';
 import 'package:songswipe/presentation/screens/export_screens.dart';
 
@@ -19,7 +21,55 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  // Variable que almacena el brillo previo
   Brightness _previousBrightness = Brightness.dark;
+
+  // Variable que almacena el país
+  Locale _locale = PlatformDispatcher.instance.locale;
+
+  // Función que obtiene el lenguaje por defecto
+  void _getDefaultLanguage() async {
+    Locale locale;
+
+    // Cargamos el lenguaje guardado en SharedPreferences
+    String languageCode = await loadDataString(tag: 'language');
+
+    // Comprobamos si está vacío
+    if (languageCode.isEmpty) {
+      // En el caso en el cual no hay guardado ningún lenguaje
+      // Obtenemos el lenguaje del dispositivo
+      Locale locale = PlatformDispatcher.instance.locale;
+
+      languageCode = locale.languageCode;
+    }
+
+    // Inicalizamos el locale
+    locale = Locale(languageCode);
+
+    // Cambiamos el locale
+    setState(() {
+      _locale = locale;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Cargamos el lenguaje por defecto
+    _getDefaultLanguage();
+  }
+
+  // Función que cambia el lenguage y es llamada por SignUpView, LoginView y el apartado en ajustes
+  void changeLanguage(String languageCode) {
+    // Guardamos el nuevo lenguaje
+    saveData(tag: 'language', value: languageCode);
+    
+    // Cambiamos el lenguaje de la app
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +100,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     return MaterialApp(
       title: 'SongSwipe',
+      locale: _locale,
       debugShowCheckedModeBanner: false,
       theme: appTheme.getTheme(),
       localizationsDelegates: [
@@ -63,7 +114,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         Locale('es'), // Spanish
         Locale('it'), // Italian
       ],
-      home: const SignUpScreen(),
+      home: SignUpScreen(onChangeLanguage: changeLanguage,),
     );
   }
 }

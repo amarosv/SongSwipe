@@ -4,7 +4,10 @@ import 'package:songswipe/helpers/strings_methods.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
 class SignUpView extends StatefulWidget {
-  const SignUpView({super.key});
+  // Función para cambiar el lenguaje
+  final Function(String) onChangeLanguage;
+
+  const SignUpView({super.key, required this.onChangeLanguage});
 
   @override
   State<SignUpView> createState() => _SignUpViewState();
@@ -39,13 +42,16 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
+    // Constante que almacena la localización de la app
+    final localization = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               // Dropdown para los idiomas
-              CustomDropdownLanguage(),
+              CustomDropdownLanguage(onChangeLanguage: widget.onChangeLanguage,),
 
               const SizedBox(height: 10),
 
@@ -63,10 +69,10 @@ class _SignUpViewState extends State<SignUpView> {
               // CustomTextField para el email
               CustomTextfield(
                 title: capitalizeFirstLetter(
-                    text: AppLocalizations.of(context)!.email),
+                    text: localization.email),
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 placeholder: capitalizeFirstLetter(
-                    text: AppLocalizations.of(context)!.email_placeholder),
+                    text: localization.email_placeholder),
                 textEditingController: emailController,
               ),
 
@@ -75,10 +81,10 @@ class _SignUpViewState extends State<SignUpView> {
               // CustomTextField para la contraseña
               CustomTextfield(
                 title: capitalizeFirstLetter(
-                    text: AppLocalizations.of(context)!.password),
+                    text: localization.password),
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 placeholder: capitalizeFirstLetter(
-                    text: AppLocalizations.of(context)!.password_placeholder),
+                    text: localization.password_placeholder),
                 isPassword: true,
                 textEditingController: passwordController,
               ),
@@ -88,10 +94,10 @@ class _SignUpViewState extends State<SignUpView> {
               // CustomTextField para confirmar la contraseña
               CustomTextfield(
                 title: capitalizeFirstLetter(
-                    text: AppLocalizations.of(context)!.confirm_password),
+                    text: localization.confirm_password),
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 placeholder: capitalizeFirstLetter(
-                    text: AppLocalizations.of(context)!
+                    text: localization
                         .confirm_password_placeholder),
                 isPassword: true,
                 textEditingController: confirmPasswordController,
@@ -105,7 +111,7 @@ class _SignUpViewState extends State<SignUpView> {
                   onPressed: () {
                     // TODO: Aquí se hace el registro en Firebase
                   },
-                  text: AppLocalizations.of(context)!.create_account),
+                  text: localization.create_account),
 
               const SizedBox(height: 20),
 
@@ -149,7 +155,7 @@ class _SignUpViewState extends State<SignUpView> {
 
               // Texto tiene cuenta
               Text(capitalizeFirstLetter(
-                  text: AppLocalizations.of(context)!.already_have_an_account)),
+                  text: localization.already_have_an_account)),
 
               const SizedBox(
                 height: 5,
@@ -162,7 +168,7 @@ class _SignUpViewState extends State<SignUpView> {
                     // TODO: Aquí va al login
                   },
                   text: upperCaseAfterSpace(
-                      text: AppLocalizations.of(context)!.login))
+                      text: localization.login))
             ],
           ),
         ),
