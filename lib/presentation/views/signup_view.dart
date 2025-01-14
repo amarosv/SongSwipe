@@ -39,113 +39,132 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final width = size.width;
-
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            // Dropdown para los idiomas
-            CustomDropdownLanguage(),
-            const SizedBox(height: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Dropdown para los idiomas
+              CustomDropdownLanguage(),
 
-            // Logo en horizontal
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              child: Image(
-                image: AssetImage('$assetsPath/logo-horizontal-sin-fondo.png'),
+              const SizedBox(height: 10),
+
+              // Logo en horizontal
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                child: Image(
+                  image:
+                      AssetImage('$assetsPath/logo-horizontal-sin-fondo.png'),
+                ),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // CustomTextField para el email
-            CustomTextfield(
-              title: capitalizeFirstLetter(
-                  text: AppLocalizations.of(context)!.email),
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              placeholder: capitalizeFirstLetter(
-                  text: AppLocalizations.of(context)!.email_placeholder),
-              textEditingController: emailController,
-            ),
+              // CustomTextField para el email
+              CustomTextfield(
+                title: capitalizeFirstLetter(
+                    text: AppLocalizations.of(context)!.email),
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                placeholder: capitalizeFirstLetter(
+                    text: AppLocalizations.of(context)!.email_placeholder),
+                textEditingController: emailController,
+              ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // CustomTextField para la contraseña
-            CustomTextfield(
-              title: capitalizeFirstLetter(
-                  text: AppLocalizations.of(context)!.password),
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              placeholder: capitalizeFirstLetter(
-                  text: AppLocalizations.of(context)!.password_placeholder),
-              isPassword: true,
-              textEditingController: passwordController,
-            ),
+              // CustomTextField para la contraseña
+              CustomTextfield(
+                title: capitalizeFirstLetter(
+                    text: AppLocalizations.of(context)!.password),
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                placeholder: capitalizeFirstLetter(
+                    text: AppLocalizations.of(context)!.password_placeholder),
+                isPassword: true,
+                textEditingController: passwordController,
+              ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // CustomTextField para confirmar la contraseña
-            CustomTextfield(
-              title: capitalizeFirstLetter(
-                  text: AppLocalizations.of(context)!.confirm_password),
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              placeholder: capitalizeFirstLetter(
-                  text: AppLocalizations.of(context)!
-                      .confirm_password_placeholder),
-              isPassword: true,
-              textEditingController: confirmPasswordController,
-            ),
+              // CustomTextField para confirmar la contraseña
+              CustomTextfield(
+                title: capitalizeFirstLetter(
+                    text: AppLocalizations.of(context)!.confirm_password),
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                placeholder: capitalizeFirstLetter(
+                    text: AppLocalizations.of(context)!
+                        .confirm_password_placeholder),
+                isPassword: true,
+                textEditingController: confirmPasswordController,
+              ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Button para crear la cuenta
-            CustomButton(
-                backgroundColor: Color(0xFFFF9E16),
-                onPressed: () {
-                  // TODO: Aquí se hace el registro en Firebase
-                },
-                text: AppLocalizations.of(context)!.create_account),
+              // Button para crear la cuenta
+              CustomButton(
+                  backgroundColor: Color(0xFFFF9E16),
+                  onPressed: () {
+                    // TODO: Aquí se hace el registro en Firebase
+                  },
+                  text: AppLocalizations.of(context)!.create_account),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Separación
-            SeparateSections(),
+              // Separación
+              SeparateSections(),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Crear cuenta con proovedores
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Row(
-                spacing: 10,
-                children: [
-                  Expanded(
-                    child: CustomSocialButton(
-                      backgroundColor: Colors.white,
-                      onPressed: () {},
-                      text: 'Apple',
-                      borderColor: Colors.black,
-                      imagePath: 'assets/images/social/apple.png',
-                    ),
-                  ),
-                  Expanded(
-                    child: CustomSocialButton(
-                      backgroundColor: Colors.black,
-                      onPressed: () {},
-                      textStyle: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white
+              // Crear cuenta con proovedores
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50),
+                child: Row(
+                  spacing: 20,
+                  children: [
+                    Expanded(
+                      child: CustomSocialButton(
+                        backgroundColor: Colors.white,
+                        onPressed: () {},
+                        text: 'Apple',
+                        borderColor: Colors.black,
+                        imagePath: 'assets/images/social/apple.png',
                       ),
-                      text: 'Google',
-                      borderColor: Colors.black,
-                      imagePath: 'assets/images/social/google.png',
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: CustomSocialButton(
+                        backgroundColor: Colors.black,
+                        onPressed: () {},
+                        textStyle: TextStyle(fontSize: 16, color: Colors.white),
+                        text: 'Google',
+                        borderColor: Colors.black,
+                        imagePath: 'assets/images/social/google.png',
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            )
-          ],
+
+              const SizedBox(
+                height: 20,
+              ),
+
+              // Texto tiene cuenta
+              Text(capitalizeFirstLetter(
+                  text: AppLocalizations.of(context)!.already_have_an_account)),
+
+              const SizedBox(
+                height: 5,
+              ),
+
+              // Botón para ir al Login
+              CustomButton(
+                  backgroundColor: Color(0xFF349BFB),
+                  onPressed: () {
+                    // TODO: Aquí va al login
+                  },
+                  text: upperCaseAfterSpace(
+                      text: AppLocalizations.of(context)!.login))
+            ],
+          ),
         ),
       ),
     );

@@ -6,5 +6,7 @@
     "password_placeholder": "escribe tu contraseña",
     "confirm_password_placeholder": "confirma tu contraseña",
     "create_account": "crear cuenta",
-    "or": "o"
+    "or": "o",
+    "already_have_an_account": "tengo una cuenta",
+    "login": "iniciar sesión"
 }

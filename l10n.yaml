@@ -1,5 +1,5 @@
-# Tuta donde van a estar los archivos de idiomas
-arb-dir: lib/l10n
+# Ruta donde van a estar los archivos de idiomas
+arb-dir: lib/config/languages
 
 # Archivo principal
 template-arb-file: app_en.arb

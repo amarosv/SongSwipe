@@ -6,5 +6,7 @@
     "password_placeholder": "enter your password",
     "confirm_password_placeholder": "confirm your password",
     "create_account": "create account",
-    "or": "or"
+    "or": "or",
+    "already_have_an_account": "already have an account?",
+    "login": "login"
 }
