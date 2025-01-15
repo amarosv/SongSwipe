@@ -41,46 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBtM6C_TMzVIsyUCzj1Iy-Emxr3rSofdV4',
-    appId: '1:587484748503:web:c5944669c116f3fe4bae92',
-    messagingSenderId: '587484748503',
-    projectId: 'songswipe-tfg',
-    authDomain: 'songswipe-tfg.firebaseapp.com',
-    storageBucket: 'songswipe-tfg.firebasestorage.app',
+    apiKey: 'AIzaSyBGXyEpIWwwQFVQjNANAJ6KTtROk4nwnoM',
+    appId: '1:1080914987712:web:35d22691a42e5e425afb25',
+    messagingSenderId: '1080914987712',
+    projectId: 'songswipe--tfg',
+    authDomain: 'songswipe-tfg-23656.firebaseapp.com',
+    storageBucket: 'songswipe--tfg.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAy5rphozFD8KJDWmNSHW9nWRqDp1v9SuE',
-    appId: '1:587484748503:android:e429f715ac467d074bae92',
-    messagingSenderId: '587484748503',
-    projectId: 'songswipe-tfg',
-    storageBucket: 'songswipe-tfg.firebasestorage.app',
+    apiKey: 'AIzaSyA5I5NYeoFXAWMTOYJUWmi-xzJXcKnJb2g',
+    appId: '1:1080914987712:android:22672416a3a1886e5afb25',
+    messagingSenderId: '1080914987712',
+    projectId: 'songswipe--tfg',
+    storageBucket: 'songswipe--tfg.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDDR8OXA3kkbiE4cqudM2VAFg9dIwl_NCk',
-    appId: '1:587484748503:ios:f5912f28bf2d8ba84bae92',
-    messagingSenderId: '587484748503',
-    projectId: 'songswipe-tfg',
-    storageBucket: 'songswipe-tfg.firebasestorage.app',
+    apiKey: 'AIzaSyBZDhIbFDSyKvPRnwm1UuZ9ZD3xd-xSN68',
+    appId: '1:1080914987712:ios:b1f777659825cb2b5afb25',
+    messagingSenderId: '1080914987712',
+    projectId: 'songswipe--tfg',
+    storageBucket: 'songswipe--tfg.firebasestorage.app',
     iosBundleId: 'com.amarosv.songswipe',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDDR8OXA3kkbiE4cqudM2VAFg9dIwl_NCk',
-    appId: '1:587484748503:ios:f5912f28bf2d8ba84bae92',
-    messagingSenderId: '587484748503',
-    projectId: 'songswipe-tfg',
-    storageBucket: 'songswipe-tfg.firebasestorage.app',
+    apiKey: 'AIzaSyBZDhIbFDSyKvPRnwm1UuZ9ZD3xd-xSN68',
+    appId: '1:1080914987712:ios:b1f777659825cb2b5afb25',
+    messagingSenderId: '1080914987712',
+    projectId: 'songswipe--tfg',
+    storageBucket: 'songswipe--tfg.firebasestorage.app',
     iosBundleId: 'com.amarosv.songswipe',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBtM6C_TMzVIsyUCzj1Iy-Emxr3rSofdV4',
-    appId: '1:587484748503:web:f5f76fc66641b7d14bae92',
-    messagingSenderId: '587484748503',
-    projectId: 'songswipe-tfg',
-    authDomain: 'songswipe-tfg.firebaseapp.com',
-    storageBucket: 'songswipe-tfg.firebasestorage.app',
+    apiKey: 'AIzaSyBGXyEpIWwwQFVQjNANAJ6KTtROk4nwnoM',
+    appId: '1:1080914987712:web:0277f7a6d9c96fe55afb25',
+    messagingSenderId: '1080914987712',
+    projectId: 'songswipe--tfg',
+    authDomain: 'songswipe-tfg-23656.firebaseapp.com',
+    storageBucket: 'songswipe--tfg.firebasestorage.app',
   );
+
 }

@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyDDR8OXA3kkbiE4cqudM2VAFg9dIwl_NCk</string>
+	<string>AIzaSyBZDhIbFDSyKvPRnwm1UuZ9ZD3xd-xSN68</string>
 	<key>GCM_SENDER_ID</key>
-	<string>587484748503</string>
+	<string>1080914987712</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.amarosv.songswipe</string>
 	<key>PROJECT_ID</key>
-	<string>songswipe-tfg</string>
+	<string>songswipe--tfg</string>
 	<key>STORAGE_BUCKET</key>
-	<string>songswipe-tfg.firebasestorage.app</string>
+	<string>songswipe--tfg.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:587484748503:ios:f5912f28bf2d8ba84bae92</string>
+	<string>1:1080914987712:ios:b1f777659825cb2b5afb25</string>
 </dict>
 </plist>
