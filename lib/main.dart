@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -5,10 +6,20 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/config/export_config.dart';
 import 'package:songswipe/config/router/app_router.dart';
+import 'package:songswipe/firebase_options.dart';
 import 'package:songswipe/helpers/preferences.dart';
 import 'package:songswipe/presentation/providers/export_providers.dart';
 
-void main() {
+Future<void> main() async {
+  // Esperamos a que se haya inicializado el widget
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Inicializamos Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Corremos la aplicación
   runApp(
       // Coloco el ProviderScope para que no de error con FlutterProvider
       const ProviderScope(child: MyApp()));
@@ -97,7 +108,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               .putSystemTheme(darkMode: darkMode);
         });
 
-        // Actualizamos el previo
+        // Actualizamos el brillo previo
         _previousBrightness = currentBrightness;
       }
     }

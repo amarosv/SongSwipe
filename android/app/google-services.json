@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "587484748503",
+    "project_id": "songswipe-tfg",
+    "storage_bucket": "songswipe-tfg.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587484748503:android:e429f715ac467d074bae92",
+        "android_client_info": {
+          "package_name": "com.amarosv.songswipe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy5rphozFD8KJDWmNSHW9nWRqDp1v9SuE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

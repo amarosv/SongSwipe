@@ -52,7 +52,9 @@ class _SignUpViewState extends State<SignUpView> {
           child: Column(
             children: [
               // Dropdown para los idiomas
-              CustomDropdownLanguage(onChangeLanguage: widget.onChangeLanguage,),
+              CustomDropdownLanguage(
+                onChangeLanguage: widget.onChangeLanguage,
+              ),
 
               const SizedBox(height: 10),
 
@@ -69,11 +71,10 @@ class _SignUpViewState extends State<SignUpView> {
 
               // CustomTextField para el email
               CustomTextfield(
-                title: capitalizeFirstLetter(
-                    text: localization.email),
+                title: capitalizeFirstLetter(text: localization.email),
                 padding: EdgeInsets.symmetric(horizontal: 50),
-                placeholder: capitalizeFirstLetter(
-                    text: localization.email_placeholder),
+                placeholder:
+                    capitalizeFirstLetter(text: localization.email_placeholder),
                 textEditingController: emailController,
               ),
 
@@ -81,8 +82,7 @@ class _SignUpViewState extends State<SignUpView> {
 
               // CustomTextField para la contraseña
               CustomTextfield(
-                title: capitalizeFirstLetter(
-                    text: localization.password),
+                title: capitalizeFirstLetter(text: localization.password),
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 placeholder: capitalizeFirstLetter(
                     text: localization.password_placeholder),
@@ -94,12 +94,11 @@ class _SignUpViewState extends State<SignUpView> {
 
               // CustomTextField para confirmar la contraseña
               CustomTextfield(
-                title: capitalizeFirstLetter(
-                    text: localization.confirm_password),
+                title:
+                    capitalizeFirstLetter(text: localization.confirm_password),
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 placeholder: capitalizeFirstLetter(
-                    text: localization
-                        .confirm_password_placeholder),
+                    text: localization.confirm_password_placeholder),
                 isPassword: true,
                 textEditingController: confirmPasswordController,
               ),
@@ -111,6 +110,20 @@ class _SignUpViewState extends State<SignUpView> {
                   backgroundColor: Color(0xFFFF9E16),
                   onPressed: () {
                     // TODO: Aquí se hace el registro en Firebase
+                    // Comprobamos si las dos contraseñas coinciden
+                    if (passwordController.text ==
+                        confirmPasswordController.text) {
+                      // Comprobamos si la contraseña cumple con los requisitos
+                      Map<bool, String> resultsCheck = passwordValidator(password: passwordController.text, context: context);
+
+                      if (resultsCheck.keys.first) {
+                        print('Correcto');
+                      } else {
+                        print(resultsCheck.entries.first.value);
+                      }
+                    } else {
+                      print(localization.error_passwords_match);
+                    }
                   },
                   text: localization.create_account),
 
@@ -169,8 +182,7 @@ class _SignUpViewState extends State<SignUpView> {
                     // Vamos al login
                     context.go('/login');
                   },
-                  text: upperCaseAfterSpace(
-                      text: localization.login))
+                  text: upperCaseAfterSpace(text: localization.login))
             ],
           ),
         ),

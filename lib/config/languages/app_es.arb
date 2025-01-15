@@ -13,5 +13,12 @@
     "english": "inglés",
     "italian": "italiano",
     "forgot_password": "recuperar contraseña",
-    "not_registered": "no tengo cuenta"
+    "not_registered": "no tengo cuenta",
+    "error_password_length": "la contraseña debe tener una longitud de 8 caracteres",
+    "error_password_capital": "la contraseña debe tener al menos 1 letra mayúscula",
+    "error_password_lowercase": "la contraseña debe tener al menos 1 letra minúscula",
+    "error_password_number": "la contraseña debe tener al menos 1 número",
+    "error_password_special": "la contraseña debe tener al menos un caracter especial",
+    "error_password_invalid": "la contraseña debe tener una longitud de 8 caracteres, contener 1 mayúscula, 1 minúscula, 1 número y 1 caracter especial",
+    "error_passwords_match": "las contraseñas no coinciden"
 }

@@ -13,5 +13,12 @@
     "english": "english",
     "italian": "italian",
     "forgot_password": "forgot password?",
-    "not_registered": "not registered?"
+    "not_registered": "not registered?",
+    "error_password_length": "password must be 8 characters long",
+    "error_password_capital": "password must contain at least 1 capital letter",
+    "error_password_lowercase": "password must contain at least 1 lowercase letter",
+    "error_password_number": "password must contain at least 1 number",
+    "error_password_special": "password must contain at least 1 special character",
+    "error_password_invalid": "password must be 8 characters long, must contain 1 capital letter, 1 lowercase letter, 1 number and 1 special character",
+    "error_passwords_match": "passwords don't match"
 }
