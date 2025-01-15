@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
-import 'package:songswipe/helpers/strings_methods.dart';
 
 // Widget personalizado del dropdown
 class CustomDropdownLanguage extends StatefulWidget {
@@ -37,6 +36,7 @@ class _CustomDropdownLanguageState extends State<CustomDropdownLanguage> {
     }
 
     // Cambiamos el lenguaje seleccionado
+    setState(() {
       switch (languageCode) {
         case 'es':
           language = Language.spanish;
@@ -48,6 +48,7 @@ class _CustomDropdownLanguageState extends State<CustomDropdownLanguage> {
           language = Language.italian;
           break;
       }
+    });
   }
 
   @override

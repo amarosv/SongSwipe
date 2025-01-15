@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:songswipe/helpers/strings_methods.dart';
+import 'package:songswipe/helpers/export_helpers.dart';
 
 // Widget que personaliza el ElevatedButton
 class CustomButton extends StatelessWidget {
@@ -28,7 +28,9 @@ class CustomButton extends StatelessWidget {
               ),
               elevation: 0,
             ),
-            onPressed: () => onPressed,
+            onPressed: () {
+              onPressed();
+            },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: Text(

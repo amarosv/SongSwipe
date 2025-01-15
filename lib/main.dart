@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:songswipe/config/export_config.dart';
+import 'package:songswipe/config/router/app_router.dart';
 import 'package:songswipe/helpers/preferences.dart';
 import 'package:songswipe/presentation/providers/export_providers.dart';
-import 'package:songswipe/presentation/screens/export_screens.dart';
 
 void main() {
   runApp(
@@ -26,6 +27,9 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   // Variable que almacena el país
   Locale _locale = PlatformDispatcher.instance.locale;
+
+  // Inicializa el router
+  late final AppRouter _router;
 
   // Función que obtiene el lenguaje por defecto
   void _getDefaultLanguage() async {
@@ -58,13 +62,16 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     // Cargamos el lenguaje por defecto
     _getDefaultLanguage();
+
+    // Cargamos el AppRouter
+    _router = AppRouter(onChangeLanguage: changeLanguage);
   }
 
   // Función que cambia el lenguage y es llamada por SignUpView, LoginView y el apartado en ajustes
   void changeLanguage(String languageCode) {
     // Guardamos el nuevo lenguaje
     saveData(tag: 'language', value: languageCode);
-    
+
     // Cambiamos el lenguaje de la app
     setState(() {
       _locale = Locale(languageCode);
@@ -98,7 +105,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     // Obtenemos el tema desde Riverpod
     final appTheme = ref.watch(themeNotifierProvider);
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'SongSwipe',
       locale: _locale,
       debugShowCheckedModeBanner: false,
@@ -114,7 +121,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         Locale('es'), // Spanish
         Locale('it'), // Italian
       ],
-      home: SignUpScreen(onChangeLanguage: changeLanguage,),
+      routerConfig: _router.router,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:songswipe/helpers/strings_methods.dart';
+import 'package:go_router/go_router.dart';
+import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
 class SignUpView extends StatefulWidget {
@@ -165,7 +166,8 @@ class _SignUpViewState extends State<SignUpView> {
               CustomButton(
                   backgroundColor: Color(0xFF349BFB),
                   onPressed: () {
-                    // TODO: Aquí va al login
+                    // Vamos al login
+                    context.push('/login');
                   },
                   text: upperCaseAfterSpace(
                       text: localization.login))

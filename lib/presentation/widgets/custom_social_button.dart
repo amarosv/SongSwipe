@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:songswipe/helpers/strings_methods.dart';
+import 'package:songswipe/helpers/export_helpers.dart';
 
 class CustomSocialButton extends StatelessWidget {
   final Color backgroundColor;
