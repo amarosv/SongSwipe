@@ -11,5 +11,7 @@
     "login": "iniciar sesión",
     "spanish": "español",
     "english": "inglés",
-    "italian": "italiano"
+    "italian": "italiano",
+    "forgot_password": "recuperar contraseña",
+    "not_registered": "no tengo cuenta"
 }

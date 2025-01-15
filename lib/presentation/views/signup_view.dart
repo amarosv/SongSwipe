@@ -167,7 +167,7 @@ class _SignUpViewState extends State<SignUpView> {
                   backgroundColor: Color(0xFF349BFB),
                   onPressed: () {
                     // Vamos al login
-                    context.push('/login');
+                    context.go('/login');
                   },
                   text: upperCaseAfterSpace(
                       text: localization.login))

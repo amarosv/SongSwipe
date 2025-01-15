@@ -11,5 +11,7 @@
     "login": "login",
     "spanish": "spanish",
     "english": "english",
-    "italian": "italian"
+    "italian": "italian",
+    "forgot_password": "forgot password?",
+    "not_registered": "not registered?"
 }

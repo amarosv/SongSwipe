@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
-
 
 class LoginView extends StatefulWidget {
   // Función para cambiar el lenguaje
@@ -38,11 +38,13 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     // Constante que almacena la localización de la app
     final localization = AppLocalizations.of(context)!;
+
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
 
     return Scaffold(
       body: SafeArea(
@@ -50,7 +52,9 @@ class _LoginViewState extends State<LoginView> {
           child: Column(
             children: [
               // Dropdown para los idiomas
-              CustomDropdownLanguage(onChangeLanguage: widget.onChangeLanguage,),
+              CustomDropdownLanguage(
+                onChangeLanguage: widget.onChangeLanguage,
+              ),
 
               const SizedBox(height: 10),
 
@@ -63,17 +67,113 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
 
               // CustomTextField para el email
               CustomTextfield(
-                title: capitalizeFirstLetter(
-                    text: localization.email),
+                title: capitalizeFirstLetter(text: localization.email),
                 padding: EdgeInsets.symmetric(horizontal: 50),
-                placeholder: capitalizeFirstLetter(
-                    text: localization.email_placeholder),
+                placeholder:
+                    capitalizeFirstLetter(text: localization.email_placeholder),
                 textEditingController: emailController,
               ),
+
+              const SizedBox(height: 20),
+
+              // CustomTextField para la contraseña
+              CustomTextfield(
+                title: capitalizeFirstLetter(text: localization.password),
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                placeholder: capitalizeFirstLetter(
+                    text: localization.password_placeholder),
+                textEditingController: passwordController,
+                isPassword: true,
+              ),
+
+              const SizedBox(height: 10),
+
+              // Texto para recuperar contraseña
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50),
+                child: SizedBox(
+                  width: width,
+                  child: Text(
+                    capitalizeFirstLetter(text: localization.forgot_password),
+                    textAlign: TextAlign.end,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+
+              const SizedBox(
+                height: 40,
+              ),
+
+              CustomButton(
+                  backgroundColor: Color(0xFF349BFB),
+                  onPressed: () {},
+                  text: capitalizeFirstLetter(text: localization.login)),
+
+              const SizedBox(height: 40),
+
+              // Separación
+              SeparateSections(),
+
+              const SizedBox(
+                height: 20,
+              ),
+
+              // Iniciar sesión con proovedores
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50),
+                child: Row(
+                  spacing: 20,
+                  children: [
+                    Expanded(
+                      child: CustomSocialButton(
+                        backgroundColor: Colors.white,
+                        onPressed: () {},
+                        text: 'Apple',
+                        borderColor: Colors.black,
+                        imagePath: 'assets/images/social/apple.png',
+                      ),
+                    ),
+                    Expanded(
+                      child: CustomSocialButton(
+                        backgroundColor: Colors.black,
+                        onPressed: () {},
+                        textStyle: TextStyle(fontSize: 16, color: Colors.white),
+                        text: 'Google',
+                        borderColor: Colors.black,
+                        imagePath: 'assets/images/social/google.png',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(
+                height: 40,
+              ),
+
+              // Crear cuenta
+              SizedBox(
+                width: width,
+                child: Text(
+                  capitalizeFirstLetter(text: localization.not_registered),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+              const SizedBox(height: 5),
+
+              // Button para crear la cuenta
+              CustomButton(
+                  backgroundColor: Color(0xFFFF9E16),
+                  onPressed: () {
+                    context.go('/signup');
+                  },
+                  text: localization.create_account),
             ],
           ),
         ),

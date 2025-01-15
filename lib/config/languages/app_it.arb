@@ -11,5 +11,7 @@
     "login": "login",
     "spanish": "spagnolo",
     "english": "inglese",
-    "italian": "italiano"
+    "italian": "italiano",
+    "forgot_password": "ha dimenticato la password?",
+    "not_registered": "non registrato?"
 }
