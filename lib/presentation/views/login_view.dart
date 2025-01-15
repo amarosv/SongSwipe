@@ -67,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
 
               // CustomTextField para el email
               CustomTextfield(
@@ -114,7 +114,7 @@ class _LoginViewState extends State<LoginView> {
                   onPressed: () {},
                   text: capitalizeFirstLetter(text: localization.login)),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
 
               // Separación
               SeparateSections(),
