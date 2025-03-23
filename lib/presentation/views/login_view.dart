@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -111,7 +112,38 @@ class _LoginViewState extends State<LoginView> {
 
               CustomButton(
                   backgroundColor: Color(0xFF349BFB),
-                  onPressed: () {},
+                  onPressed: () async {
+                    String email = emailController.text;
+                    String password = passwordController.text;
+
+                    // Comprobamos que el email sea válido
+                    Map<bool, String> resultsCheck =
+                        emailValidator(email: email, context: context);
+
+                    if (resultsCheck.keys.first) {
+                      // Comprobamos que la contraseña no esté vacía
+                      if (password.isNotEmpty) {
+                        // Intentamos el inicio de sesión
+                        try {
+                          final credential = await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: email, password: password);
+
+                          print(credential.user!.email);
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'invalid-credential') {
+                            print('No user found for that email or password is wrong.');
+                          } else {
+                            print('An error has occurred');
+                          }
+                        }
+                      } else {
+                        print(localization.error_password_empty);
+                      }
+                    } else {
+                      print(resultsCheck.entries.first.value);
+                    }
+                  },
                   text: capitalizeFirstLetter(text: localization.login)),
 
               const SizedBox(height: 30),

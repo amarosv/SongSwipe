@@ -14,11 +14,14 @@
     "italian": "italiano",
     "forgot_password": "ha dimenticato la password?",
     "not_registered": "non registrato?",
+    "error_password_empty": "la password non può essere vuota",
     "error_password_length": "la password deve essere lunga 8 caratteri",
     "error_password_capital": "la password deve contenere almeno 1 lettera maiuscola",
     "error_password_lowercase": "la password deve contenere almeno 1 lettera minuscola",
     "error_password_number": "la password deve contenere almeno 1 numero",
     "error_password_special": "la password deve contenere almeno 1 carattere speciale",
     "error_password_invalid": "la password deve essere lunga 8 caratteri, deve contenere 1 maiuscola, 1 minuscola, 1 numero e 1 carattere speciale",
-    "error_passwords_match": "le passwords non corrispondono"
+    "error_passwords_match": "le passwords non corrispondono",
+    "error_email_empty": "l'e-mail non può essere vuota",
+    "error_email_invalid": "l'e-mail non è valida"
 }

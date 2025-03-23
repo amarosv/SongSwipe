@@ -114,64 +114,73 @@ class _SignUpViewState extends State<SignUpView> {
               CustomButton(
                   backgroundColor: Color(0xFFFF9E16),
                   onPressed: () async {
-                    // TODO: Aquí se hace el registro en Firebase
-                    // Comprobamos si las dos contraseñas coinciden
-                    if (passwordController.text ==
-                        confirmPasswordController.text) {
-                      // Comprobamos si la contraseña cumple con los requisitos
-                      Map<bool, String> resultsCheck = passwordValidator(
-                          password: passwordController.text, context: context);
+                    // Comprobamos que el email sea válido
+                    Map<bool, String> resultsCheckEmail = emailValidator(
+                        email: emailController.text, context: context);
 
-                      if (resultsCheck.keys.first) {
-                        try {
-                          final credential = await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                            email: emailController.text,
+                    if (resultsCheckEmail.keys.first) {
+// Comprobamos si las dos contraseñas coinciden
+                      if (passwordController.text ==
+                          confirmPasswordController.text) {
+                        // Comprobamos si la contraseña cumple con los requisitos
+                        Map<bool, String> resultsCheck = passwordValidator(
                             password: passwordController.text,
-                          );
+                            context: context);
 
-                          String uid = credential.user!.uid;
-                          final response =
-                              await http.post(Uri.parse(Environment.apiUrl),
-                                  headers: {
-                                    'Content-Type':
-                                        'application/json', // Indica que envías JSON
-                                    'Accept':
-                                        'application/json', // Indica que esperas una respuesta en JSON
-                                  },
-                                  body: jsonEncode({
-                                    'uid': uid,
-                                    'name': 'Amaro',
-                                    'lastName': 'Suárez',
-                                    'email': emailController.text,
-                                    'photoURL':
-                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Spider-Man.jpg/1200px-Spider-Man.jpg',
-                                    'dateJoining': 'null',
-                                    'username': emailController.text+uid,
-                                    'userDeleted': false,
-                                    'userBlocked': false
-                                  }));
-                          if (response.statusCode == 200) {
-                            // Do something with the response data
-                            print(response.body);
-                          } else {
-                            // Handle error
-                            print('Error: ${response.body}');
+                        if (resultsCheck.keys.first) {
+                          try {
+                            final credential = await FirebaseAuth.instance
+                                .createUserWithEmailAndPassword(
+                              email: emailController.text,
+                              password: passwordController.text,
+                            );
+
+                            String uid = credential.user!.uid;
+                            final response =
+                                await http.post(Uri.parse(Environment.apiUrl),
+                                    headers: {
+                                      'Content-Type':
+                                          'application/json', // Indica que envías JSON
+                                      'Accept':
+                                          'application/json', // Indica que esperas una respuesta en JSON
+                                    },
+                                    body: jsonEncode({
+                                      'uid': uid,
+                                      'name': 'Amaro',
+                                      'lastName': 'Suárez',
+                                      'email': emailController.text,
+                                      'photoURL':
+                                          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Spider-Man.jpg/1200px-Spider-Man.jpg',
+                                      'dateJoining': 'null',
+                                      'username': emailController.text + uid,
+                                      'userDeleted': false,
+                                      'userBlocked': false
+                                    }));
+                            if (response.statusCode == 200) {
+                              // Do something with the response data
+                              print(response.body);
+                            } else {
+                              // Handle error
+                              print('Error: ${response.body}');
+                            }
+                          } on FirebaseAuthException catch (e) {
+                            if (e.code == 'weak-password') {
+                              print('The password provided is too weak.');
+                            } else if (e.code == 'email-already-in-use') {
+                              print(
+                                  'The account already exists for that email.');
+                            }
+                          } catch (e) {
+                            print('Error ${e.toString()}');
                           }
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == 'weak-password') {
-                            print('The password provided is too weak.');
-                          } else if (e.code == 'email-already-in-use') {
-                            print('The account already exists for that email.');
-                          }
-                        } catch (e) {
-                          print('Error ${e.toString()}');
+                        } else {
+                          print(resultsCheck.entries.first.value);
                         }
                       } else {
-                        print(resultsCheck.entries.first.value);
+                        print(localization.error_passwords_match);
                       }
                     } else {
-                      print(localization.error_passwords_match);
+                      print(resultsCheckEmail.entries.first.value);
                     }
                   },
                   text: localization.create_account),

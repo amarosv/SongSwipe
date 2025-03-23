@@ -14,14 +14,12 @@ class AppRouter {
     // Variable que almacena la ruta
     String location = '/signup';
 
-    // Comprobamos los cambios del usuario
-    FirebaseAuth.instance.userChanges().listen((User? user) {
-      if (user != null) {
-        // El usuario está registrado
-        // TODO: Aquí debe comprobar si el usuario ha completado su perfil
-        location = '/login';
-      }
-    });
+    // Comprobamos si el usuario esta logeado
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      location = '/login';
+    }
 
     // Devolvemos la ruta
     return location;
@@ -41,6 +39,12 @@ class AppRouter {
         name: LoginScreen.name,
         builder: (context, state) =>
             LoginScreen(onChangeLanguage: onChangeLanguage),
+      ),
+      GoRoute(
+        path: '/change-theme',
+        name: ChangeThemeScreen.name,
+        builder: (context, state) =>
+            ChangeThemeScreen(),
       ),
     ],
   );

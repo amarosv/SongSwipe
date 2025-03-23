@@ -1,6 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+/// Función que comprueba si un email cumple los requisitos <br>
+/// @param email Cadena a comprobar <br>
+/// @param context Contexto para obtener la localización <br>
+/// @return Devuelve un mapa con un booleano y un string indicando el error correspondiente
+Map<bool, String> emailValidator({
+  required String email,
+  required BuildContext context,
+}) {
+  final localization = AppLocalizations.of(context)!;
+
+  // Variable que almacena si el email es válido
+  bool isValid = false;
+
+  // Variable que almacena el mensaje de error
+  String error = '';
+
+  // Expresión regular para validar emails
+  final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+  // Comprobamos si el email es válido
+  if (regex.hasMatch(email)) {
+    isValid = true;
+  } else if (email.isEmpty) {
+    // Campo vacío
+    error = localization.error_email_empty;
+  } else {
+    // Formato incorrecto
+    error = localization.error_email_invalid;
+  }
+
+  // Devolvemos el resultado
+  return {isValid: error};
+}
+
 /// Función que comprueba si una contraseña cumple los requisitos <br>
 /// @param password Cadena a comprobar <br>
 /// @param context Contexto para obtener la localización <br>

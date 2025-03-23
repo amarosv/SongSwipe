@@ -4,6 +4,8 @@ import 'package:songswipe/presentation/providers/export_providers.dart';
 import 'package:songswipe/presentation/views/export_views.dart';
 
 class ChangeThemeScreen extends ConsumerWidget {
+  // Nombre de la ruta
+  static const name = 'change-theme-screen';
   const ChangeThemeScreen({super.key});
 
   @override
