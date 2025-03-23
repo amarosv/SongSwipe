@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'package:songswipe/config/constants/environment.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
@@ -108,16 +113,60 @@ class _SignUpViewState extends State<SignUpView> {
               // Button para crear la cuenta
               CustomButton(
                   backgroundColor: Color(0xFFFF9E16),
-                  onPressed: () {
+                  onPressed: () async {
                     // TODO: Aquí se hace el registro en Firebase
                     // Comprobamos si las dos contraseñas coinciden
                     if (passwordController.text ==
                         confirmPasswordController.text) {
                       // Comprobamos si la contraseña cumple con los requisitos
-                      Map<bool, String> resultsCheck = passwordValidator(password: passwordController.text, context: context);
+                      Map<bool, String> resultsCheck = passwordValidator(
+                          password: passwordController.text, context: context);
 
                       if (resultsCheck.keys.first) {
-                        print('Correcto');
+                        try {
+                          final credential = await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+
+                          String uid = credential.user!.uid;
+                          final response =
+                              await http.post(Uri.parse(Environment.apiUrl),
+                                  headers: {
+                                    'Content-Type':
+                                        'application/json', // Indica que envías JSON
+                                    'Accept':
+                                        'application/json', // Indica que esperas una respuesta en JSON
+                                  },
+                                  body: jsonEncode({
+                                    'uid': uid,
+                                    'name': 'Amaro',
+                                    'lastName': 'Suárez',
+                                    'email': emailController.text,
+                                    'photoURL':
+                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Spider-Man.jpg/1200px-Spider-Man.jpg',
+                                    'dateJoining': 'null',
+                                    'username': emailController.text+uid,
+                                    'userDeleted': false,
+                                    'userBlocked': false
+                                  }));
+                          if (response.statusCode == 200) {
+                            // Do something with the response data
+                            print(response.body);
+                          } else {
+                            // Handle error
+                            print('Error: ${response.body}');
+                          }
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'weak-password') {
+                            print('The password provided is too weak.');
+                          } else if (e.code == 'email-already-in-use') {
+                            print('The account already exists for that email.');
+                          }
+                        } catch (e) {
+                          print('Error ${e.toString()}');
+                        }
                       } else {
                         print(resultsCheck.entries.first.value);
                       }
