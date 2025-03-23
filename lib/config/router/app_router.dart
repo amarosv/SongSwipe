@@ -18,7 +18,7 @@ class AppRouter {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      location = '/complete-profile';
+      location = '/login';
     }
 
     // Devolvemos la ruta

@@ -1,9 +1,14 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:songswipe/config/constants/environment.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
@@ -18,16 +23,23 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
   // Constante que almacena la ruta a las imagenes
   final String assetsPath = 'assets/images/useful';
 
+  bool _usernameExists = false;
+  Timer? _debounce;
+
   // Controllers de los TextField
   late TextEditingController usernameController;
   late TextEditingController nameController;
   late TextEditingController lastNameController;
+
+  File? _image; // Imagen seleccionada
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
     // Inicializamos los controllers
     usernameController = TextEditingController();
+    usernameController.addListener(_onUsernameChanged);
     nameController = TextEditingController();
     lastNameController = TextEditingController();
   }
@@ -41,8 +53,37 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     super.dispose();
   }
 
-  File? _image; // Imagen seleccionada
-  final ImagePicker _picker = ImagePicker();
+  // Función que se llama cuando el username ha cambiado
+  void _onUsernameChanged() {
+    _debounce?.cancel();
+    String username = usernameController.text;
+
+    // Primero comprobamos que el username no esté vacío y sea de al menos 4 caracteres
+    if (username.isNotEmpty && username.length >= 4) {
+      _debounce = Timer(const Duration(milliseconds: 700), () {
+        _checkIfUsernameExists(username);
+      });
+    } else {
+      setState(() {});
+    }
+  }
+
+  // Comprueba si ya existe ese username
+  Future<void> _checkIfUsernameExists(String username) async {
+    final url = Uri.parse('${Environment.apiUrl}/check-username/$username');
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          _usernameExists = data;
+        });
+      }
+    } catch (e) {
+      print("Error de conexión: $e");
+    }
+  }
 
   Future<File?> _cropImage(File imageFile) async {
     final croppedFile = await ImageCropper().cropImage(
@@ -80,7 +121,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
   Future<void> _pickImage() async {
     final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.gallery);
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     if (pickedFile != null) {
       File? croppedFile = await _cropImage(File(pickedFile.path));
@@ -91,6 +132,60 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
         });
       }
     }
+  }
+
+  void _register() async {
+    User user = FirebaseAuth.instance.currentUser!;
+    String uid = user.uid;
+    String email = user.email!;
+
+    String urlImage = 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
+
+    // Guardamos la foto y la obtenemos
+    Uri url = Uri.parse('https://api.imgbb.com/1/upload?name=amaro');
+
+    if (_image != null) {
+      // 1. Leer los bytes de la imagen
+      final bytes = await _image!.readAsBytes();
+
+      // 2. Codificar la imagen a base64
+      final base64Image = base64Encode(bytes);
+
+      final response = await http.post(
+        url,
+        body: {
+          'key': Environment.apiKey, // Reemplaza con tu clave de API de ImgBB
+          'image': base64Image,
+        },
+      );
+
+      urlImage = jsonDecode(response.body)['data']['url'];
+    }
+
+    // Creamos al usuario
+    url = Uri.parse(Environment.apiUrl);
+
+    // Llamada a la API para guardar el usuario
+        final response = await http.post(
+          Uri.parse(Environment.apiUrl),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: jsonEncode({
+            'uid': uid,
+            'name': nameController.text,
+            'lastName': lastNameController.text,
+            'email': email,
+            'photoURL': urlImage,
+            'dateJoining': 'null',
+            'username': usernameController.text,
+            'userDeleted': false,
+            'userBlocked': false
+          }),
+        );
+      
+      print(response.body);
   }
 
   @override
@@ -121,6 +216,18 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
               placeholder: capitalizeFirstLetter(
                   text: localization.username_placeholder),
               textEditingController: usernameController,
+              icon: usernameController.text.isNotEmpty &&
+                      usernameController.text.length >= 4
+                  ? _usernameExists
+                      ? Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                        )
+                      : Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                        )
+                  : null,
             ),
 
             // Texto informativo para el username
@@ -197,7 +304,9 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
             // Button para continuar
             CustomButton(
                 backgroundColor: Color(0xFFFF9E16),
-                onPressed: () {},
+                onPressed: () {
+                  _register();
+                },
                 text: localization.continue_s)
           ],
         ),
