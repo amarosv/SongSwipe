@@ -23,5 +23,15 @@
     "error_password_invalid": "la contraseña debe tener una longitud de 8 caracteres, contener 1 mayúscula, 1 minúscula, 1 número y 1 caracter especial",
     "error_passwords_match": "las contraseñas no coinciden",
     "error_email_empty": "el email no puede estar vacío",
-    "error_email_invalid": "el email no es válido"
+    "error_email_invalid": "el email no es válido",
+    "complete_profile": "completa tu perfil",
+    "username": "nombre de usuario",
+    "username_placeholder": "escribe tu nombre de usuario",
+    "username_info": "puedes cambiar tu nombre de usuario más tarde en la página del perfil",
+    "name": "nombre",
+    "name_placeholder": "escribe tu nombre",
+    "lastname": "apellidos",
+    "lastname_placeholder": "escribe tus apellidos",
+    "upload_your_photo": "sube tu foto",
+    "continue_s": "continuar"
 }

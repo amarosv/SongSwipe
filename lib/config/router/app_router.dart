@@ -18,7 +18,7 @@ class AppRouter {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      location = '/login';
+      location = '/complete-profile';
     }
 
     // Devolvemos la ruta
@@ -45,6 +45,12 @@ class AppRouter {
         name: ChangeThemeScreen.name,
         builder: (context, state) =>
             ChangeThemeScreen(),
+      ),
+      GoRoute(
+        path: '/complete-profile',
+        name: CompleteProfileScreen.name,
+        builder: (context, state) =>
+            CompleteProfileScreen(),
       ),
     ],
   );

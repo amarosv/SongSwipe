@@ -132,7 +132,7 @@ class _SignUpViewState extends State<SignUpView> {
               ),
 
               const SizedBox(height: 20),
-
+              
               // CustomTextField para el email
               CustomTextfield(
                 title: capitalizeFirstLetter(text: localization.email),
@@ -194,13 +194,16 @@ class _SignUpViewState extends State<SignUpView> {
                               password: passwordController.text,
                             );
 
+                            // Vamos a completar el perfil
+                            context.push('/complete-profile');
+
                             // Enviamos el correo de verificación
-                            await credential.user!.sendEmailVerification();
-                            print(
-                                'Correo de verificación enviado a ${credential.user!.email}');
+                            // await credential.user!.sendEmailVerification();
+                            // print(
+                            //     'Correo de verificación enviado a ${credential.user!.email}');
                           
-                            // Inicia la verificación periódica del correo electrónico
-                            _startEmailVerificationCheck();
+                            // // Inicia la verificación periódica del correo electrónico
+                            // _startEmailVerificationCheck();
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
                               print('The password provided is too weak.');

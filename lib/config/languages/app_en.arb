@@ -23,5 +23,15 @@
     "error_password_invalid": "password must be 8 characters long, must contain 1 capital letter, 1 lowercase letter, 1 number and 1 special character",
     "error_passwords_match": "passwords don't match",
     "error_email_empty": "email can't be empty",
-    "error_email_invalid": "email isn't valid"
+    "error_email_invalid": "email isn't valid",
+    "complete_profile": "complete your profile",
+    "username": "username",
+    "username_placeholder": "enter your username",
+    "username_info": "you can change your username later on the profile page.",
+    "name": "name",
+    "name_placeholder": "enter your name",
+    "lastname": "last name",
+    "lastname_placeholder": "enter your last name",
+    "upload_your_photo": "upload your photo",
+    "continue_s": "continue"
 }
