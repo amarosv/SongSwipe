@@ -18,7 +18,7 @@ Map<bool, String> emailValidator({
   String error = '';
 
   // Expresión regular para validar emails
-  final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  final regex = RegExp(r'^[\w\-\.\+]+@([\w\-]+\.)+[\w\-]{2,4}$');
 
   // Comprobamos si el email es válido
   if (regex.hasMatch(email)) {
