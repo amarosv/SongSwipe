@@ -33,5 +33,9 @@
     "lastname": "apellidos",
     "lastname_placeholder": "escribe tus apellidos",
     "upload_your_photo": "sube tu foto",
-    "continue_s": "continuar"
+    "continue_s": "continuar",
+    "sent_email": "hemos enviado un email a ",
+    "verify": "por favor verifique el email para continuar.",
+    "resend": "reenviar email",
+    "change_email": "cambiar email"
 }

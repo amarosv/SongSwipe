@@ -142,7 +142,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     String urlImage = 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
 
     // Guardamos la foto y la obtenemos
-    Uri url = Uri.parse('https://api.imgbb.com/1/upload?name=amaro');
+    Uri url = Uri.parse('https://api.imgbb.com/1/upload?name=$uid-${DateTime.now()}');
 
     if (_image != null) {
       // 1. Leer los bytes de la imagen
@@ -151,6 +151,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
       // 2. Codificar la imagen a base64
       final base64Image = base64Encode(bytes);
 
+      // Subimos la imagen
       final response = await http.post(
         url,
         body: {
@@ -159,6 +160,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
         },
       );
 
+      // Obtenemos la url de la imagen
       urlImage = jsonDecode(response.body)['data']['url'];
     }
 
@@ -166,26 +168,24 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     url = Uri.parse(Environment.apiUrl);
 
     // Llamada a la API para guardar el usuario
-        final response = await http.post(
-          Uri.parse(Environment.apiUrl),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode({
-            'uid': uid,
-            'name': nameController.text,
-            'lastName': lastNameController.text,
-            'email': email,
-            'photoURL': urlImage,
-            'dateJoining': 'null',
-            'username': usernameController.text,
-            'userDeleted': false,
-            'userBlocked': false
-          }),
-        );
-      
-      print(response.body);
+    final response = await http.post(
+      Uri.parse(Environment.apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode({
+        'uid': uid,
+        'name': nameController.text,
+        'lastName': lastNameController.text,
+        'email': email,
+        'photoURL': urlImage,
+        'dateJoining': 'null',
+        'username': usernameController.text,
+        'userDeleted': false,
+        'userBlocked': false
+      }),
+    );
   }
 
   @override

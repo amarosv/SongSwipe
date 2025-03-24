@@ -18,7 +18,8 @@ class AppRouter {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      location = '/login';
+      // location = '/login';
+      location = '/verify-email';
     }
 
     // Devolvemos la ruta
@@ -51,6 +52,12 @@ class AppRouter {
         name: CompleteProfileScreen.name,
         builder: (context, state) =>
             CompleteProfileScreen(),
+      ),
+      GoRoute(
+        path: '/verify-email',
+        name: VerifyEmailScreen.name,
+        builder: (context, state) =>
+            VerifyEmailScreen(),
       ),
     ],
   );

@@ -33,5 +33,9 @@
     "lastname": "last name",
     "lastname_placeholder": "enter your last name",
     "upload_your_photo": "upload your photo",
-    "continue_s": "continue"
+    "continue_s": "continue",
+    "sent_email": "we've sent an email to ",
+    "verify": "please verify the email to continue.",
+    "resend": "resend email",
+    "change_email": "change email"
 }

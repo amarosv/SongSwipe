@@ -1,4 +1,4 @@
-/// Función que recibe un texto y pone sus iniciales tras los espacios en mayúscula <br>
+/// Función que recibe un texto y pone la primera letra y sus iniciales tras los espacios en mayúscula <br>
 /// @param text Texto a convertir <br>
 /// @return Texto con las iniciales tras los espacios en mayúscula
 String upperCaseAfterSpace({required String text}) {
