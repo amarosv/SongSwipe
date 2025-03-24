@@ -19,7 +19,7 @@ class AppRouter {
 
     if (user != null) {
       // location = '/login';
-      location = '/verify-email';
+      location = '/login';
     }
 
     // Devolvemos la ruta

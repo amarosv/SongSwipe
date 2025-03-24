@@ -37,5 +37,9 @@
     "sent_email": "abbiamo inviato un'e-mail a ",
     "verify": "per favor verificare l'email per continuare.",
     "resend": "inviare nuovamente l'email",
-    "change_email": "cambia email"
+    "change_email": "cambia email",
+    "sent": "inviato!",
+    "resent": "abbiamo inviato un nuovo e-mail",
+    "verified": "verificato!",
+    "verified_email": "hai verificato la tua email"
 }

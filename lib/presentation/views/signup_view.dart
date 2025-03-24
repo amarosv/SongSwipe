@@ -1,12 +1,7 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'package:songswipe/config/constants/environment.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
@@ -29,8 +24,6 @@ class _SignUpViewState extends State<SignUpView> {
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
 
-  Timer? _verificationTimer; // Timer para verificar el correo electrónico
-
   @override
   void initState() {
     super.initState();
@@ -46,63 +39,7 @@ class _SignUpViewState extends State<SignUpView> {
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
-    _verificationTimer?.cancel();
     super.dispose();
-  }
-
-  // Función para iniciar la verificación periódica del correo electrónico
-  void _startEmailVerificationCheck() {
-    const checkInterval = Duration(seconds: 5); // Verifica cada 5 segundos
-
-    _verificationTimer = Timer.periodic(checkInterval, (timer) async {
-      await _checkEmailVerification();
-    });
-  }
-
-  // Función para comprobar si el usuario verificó el correo
-  Future<void> _checkEmailVerification() async {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      await user.reload(); // Recargamos la información del usuario
-
-      if (user.emailVerified) {
-        print('✅ Correo verificado. Registrando en la API...');
-
-        // Detén el Timer ya que el correo ha sido verificado
-        _verificationTimer?.cancel();
-
-        // Llamada a la API para guardar el usuario
-        final response = await http.post(
-          Uri.parse(Environment.apiUrl),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode({
-            'uid': user.uid,
-            'name': 'Amaro',
-            'lastName': 'Suárez',
-            'email': emailController.text,
-            'photoURL':
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Spider-Man.jpg/1200px-Spider-Man.jpg',
-            'dateJoining': 'null',
-            'username': emailController.text + user.uid,
-            'userDeleted': false,
-            'userBlocked': false
-          }),
-        );
-
-        if (response.statusCode == 200) {
-          print('✅ Usuario registrado en la API.');
-          // context.go('/home'); // Redirigir al home
-        } else {
-          print('❌ Error al registrar en la API: ${response.body}');
-        }
-      } else {
-        print('⚠️ Aún no ha verificado el correo.');
-      }
-    }
   }
 
   @override
@@ -194,16 +131,11 @@ class _SignUpViewState extends State<SignUpView> {
                               password: passwordController.text,
                             );
 
-                            // Vamos a completar el perfil
-                            context.push('/complete-profile');
-
-                            // Enviamos el correo de verificación
+                            // Enviamos el email de verificación
                             await credential.user!.sendEmailVerification();
-                            print(
-                                'Correo de verificación enviado a ${credential.user!.email}');
-                          
-                            // Inicia la verificación periódica del correo electrónico
-                            _startEmailVerificationCheck();
+
+                            // Vamos a completar a verificar el correo
+                            context.push('/verify-email');
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
                               print('The password provided is too weak.');

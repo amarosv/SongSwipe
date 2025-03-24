@@ -1,16 +1,107 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:songswipe/helpers/strings_methods.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
+import 'package:toastification/toastification.dart';
 
-class VerifyEmailView extends StatelessWidget {
+class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
 
   @override
+  State<VerifyEmailView> createState() => _VerifyEmailViewState();
+}
+
+class _VerifyEmailViewState extends State<VerifyEmailView> {
+  late BuildContext? _context;
+  late AppLocalizations localization;
+  bool _isButtonDisabled = false;
+  int _counter = 60;
+  Timer? _timer;
+  Timer? _verificationTimer; // Timer para verificar el correo electrónico
+
+  @override
+  void initState() {
+    super.initState();
+    _startCountdown();
+    _startEmailVerificationCheck();
+  }
+
+  void _startCountdown() {
+    setState(() {
+      _isButtonDisabled = true;
+      _counter = 60;
+    });
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_counter > 0) {
+        setState(() {
+          _counter--;
+        });
+      } else {
+        timer.cancel();
+        setState(() {
+          _isButtonDisabled = false;
+        });
+      }
+    });
+  }
+
+  // Función para iniciar la verificación periódica del correo electrónico
+  void _startEmailVerificationCheck() {
+    const checkInterval = Duration(seconds: 5); // Verifica cada 5 segundos
+
+    _verificationTimer = Timer.periodic(checkInterval, (timer) async {
+      await _checkEmailVerification();
+    });
+  }
+
+  // Función para comprobar si el usuario verificó el correo
+  Future<void> _checkEmailVerification() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      await user.reload(); // Recargamos la información del usuario
+
+      if (user.emailVerified) {
+        // Mostramos la notificación
+        toastification.show(
+          context: context,
+          style: ToastificationStyle.flatColored,
+          title: Text(capitalizeFirstLetter(text: localization.verified)),
+          description: RichText(
+              text: TextSpan(
+                  text: capitalizeFirstLetter(text: localization.verified_email),
+                  style: TextStyle(color: Colors.black))),
+          autoCloseDuration: const Duration(seconds: 3),
+        );
+
+        // Detén el Timer ya que el correo ha sido verificado
+        _verificationTimer?.cancel();
+
+        // Vamos a la pantalla de completar el perfil
+        context.go("/complete-profile");
+      } else {
+        print('⚠️ Aún no ha verificado el correo.');
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _verificationTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Constante que almacena la localización de la app
-    final localization = AppLocalizations.of(context)!;
+    _context = context; // Aseguramos que el context se actualiza
+    localization = AppLocalizations.of(context)!;
+
     User user = FirebaseAuth.instance.currentUser!;
 
     return Scaffold(
@@ -25,7 +116,6 @@ class VerifyEmailView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Texto
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),
               child: Text.rich(
@@ -47,20 +137,35 @@ class VerifyEmailView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Botón para reenviar el email
             CustomButton(
-                backgroundColor: Color(0xFF349BFB),
-                onPressed: () {},
-                text: upperCaseAfterSpace(text: localization.resend)),
-            const SizedBox(height: 20),
-            // Botón para cambiar el email
-            CustomButton(
-              backgroundColor: Colors.transparent,
-              onPressed: () {},
-              text: upperCaseAfterSpace(text: localization.change_email),
-              textColor: Colors.black,
-              border: BorderSide(color: Colors.black),
-            ),
+              backgroundColor:
+                  _isButtonDisabled ? Colors.grey : Color(0xFF349BFB),
+              onPressed: () async {
+                if (!_isButtonDisabled) {
+                  // Enviamos el email
+                  await user.sendEmailVerification();
+
+                  // Mostramos la notificación
+                  toastification.show(
+                    context: context,
+                    style: ToastificationStyle.flatColored,
+                    title: Text(capitalizeFirstLetter(text: localization.sent)),
+                    description: RichText(
+                        text: TextSpan(
+                            text: capitalizeFirstLetter(
+                                text: localization.resent),
+                            style: TextStyle(color: Colors.black))),
+                    autoCloseDuration: const Duration(seconds: 3),
+                  );
+
+                  // "Deshabilitamos el botón" e iniciamos la cuenta atrás
+                  _startCountdown();
+                }
+              },
+              text: _isButtonDisabled
+                  ? '${_counter}s'
+                  : upperCaseAfterSpace(text: localization.resend),
+            )
           ],
         ),
       ),
