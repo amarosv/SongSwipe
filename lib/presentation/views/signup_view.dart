@@ -20,7 +20,13 @@ class _SignUpViewState extends State<SignUpView> {
   // Constante que almacena la ruta a los logos
   final String assetsPath = 'assets/images/logos';
 
-  bool _passwordNotMatch = false;
+  // Booleanos que controlan cuando se muestran los mensajes de error
+  bool _showErrorEmail = false;
+  bool _showErrorPassword = false;
+
+  // Cadenas que almacenan los mensajes de error
+  String _emailError = '';
+  String _passwordError = '';
 
   // Controllers de los TextField
   late TextEditingController emailController;
@@ -32,8 +38,23 @@ class _SignUpViewState extends State<SignUpView> {
     super.initState();
     // Inicializamos los controllers
     emailController = TextEditingController();
+    emailController.addListener(() {
+      setState(() {
+        _showErrorEmail = false;
+      });
+    });
     passwordController = TextEditingController();
+    passwordController.addListener(() {
+      setState(() {
+        _showErrorPassword = false;
+      });
+    });
     confirmPasswordController = TextEditingController();
+    confirmPasswordController.addListener(() {
+      setState(() {
+        _showErrorPassword = false;
+      });
+    });
   }
 
   @override
@@ -45,10 +66,30 @@ class _SignUpViewState extends State<SignUpView> {
     super.dispose();
   }
 
+  /// Función que recibe un titulo y una descripción y muestra
+  /// una notificación de error
+  /// @param title Título de la notificación
+  /// @param body Descripción de la notificación
+  void _showNotification(String title, String body) {
+    // Mostramos la notificación
+    toastification.show(
+      type: ToastificationType.error,
+      context: context,
+      style: ToastificationStyle.flatColored,
+      title: Text(title),
+      description: RichText(
+          text: TextSpan(text: body, style: TextStyle(color: Colors.black))),
+      autoCloseDuration: const Duration(seconds: 3),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Constante que almacena la localización de la app
     final localization = AppLocalizations.of(context)!;
+
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
 
     return Scaffold(
       body: SafeArea(
@@ -80,7 +121,27 @@ class _SignUpViewState extends State<SignUpView> {
                 placeholder:
                     capitalizeFirstLetter(text: localization.email_placeholder),
                 textEditingController: emailController,
+                icon: _showErrorEmail
+                    ? Icon(
+                        Icons.warning,
+                        color: Colors.red,
+                      )
+                    : null,
               ),
+
+              // Mensaje de error del email
+              _showErrorEmail
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: SizedBox(
+                          width: width,
+                          child: Text(
+                            _emailError,
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          )),
+                    )
+                  : Container(),
 
               const SizedBox(height: 20),
 
@@ -107,6 +168,20 @@ class _SignUpViewState extends State<SignUpView> {
                 textEditingController: confirmPasswordController,
               ),
 
+              // Mensaje de error de la contraseña
+              _showErrorPassword
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: SizedBox(
+                          width: width,
+                          child: Text(
+                            _passwordError,
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          )),
+                    )
+                  : Container(),
+
               const SizedBox(height: 20),
 
               // Button para crear la cuenta
@@ -128,6 +203,11 @@ class _SignUpViewState extends State<SignUpView> {
                             password: password, context: context);
 
                         if (resultsCheck.keys.first) {
+                          setState(() {
+                            _showErrorEmail = false;
+                            _showErrorPassword = false;
+                          });
+
                           try {
                             final credential = await FirebaseAuth.instance
                                 .createUserWithEmailAndPassword(
@@ -142,35 +222,33 @@ class _SignUpViewState extends State<SignUpView> {
                             context.push('/verify-email');
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
-                              print('The password provided is too weak.');
+                              _showNotification(capitalizeFirstLetter(text: localization.attention), capitalizeFirstLetter(text: localization.error_password_weak));
                             } else if (e.code == 'email-already-in-use') {
-                              print(
-                                  'The account already exists for that email.');
+                              _showNotification(capitalizeFirstLetter(text: localization.attention), capitalizeFirstLetter(text: localization.error_account));
                             }
                           } catch (e) {
                             print('Error ${e.toString()}');
                           }
                         } else {
-                          print(resultsCheck.entries.first.value);
+                          setState(() {
+                            _showErrorPassword = true;
+                            _passwordError = capitalizeFirstLetter(
+                                text: resultsCheck.entries.first.value);
+                          });
                         }
                       } else {
-                        // Mostramos la notificación
-                        toastification.show(
-                          type: ToastificationType.error,
-                          context: context,
-                          style: ToastificationStyle.flatColored,
-                          title: Text(capitalizeFirstLetter(
-                              text: localization.attention)),
-                          description: RichText(
-                              text: TextSpan(
-                                  text: capitalizeFirstLetter(
-                                      text: localization.error_passwords_match),
-                                  style: TextStyle(color: Colors.black))),
-                          autoCloseDuration: const Duration(seconds: 3),
-                        );
+                        setState(() {
+                          _showErrorPassword = true;
+                          _passwordError = capitalizeFirstLetter(
+                              text: localization.error_passwords_match);
+                        });
                       }
                     } else {
-                      print(resultsCheckEmail.entries.first.value);
+                      setState(() {
+                        _showErrorEmail = true;
+                        _emailError = capitalizeFirstLetter(
+                            text: resultsCheckEmail.entries.first.value);
+                      });
                     }
                   },
                   text: localization.create_account),

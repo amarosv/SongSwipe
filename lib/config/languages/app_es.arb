@@ -22,6 +22,8 @@
     "error_password_special": "la contraseña debe tener al menos un caracter especial",
     "error_password_invalid": "la contraseña debe tener una longitud de 8 caracteres, contener 1 mayúscula, 1 minúscula, 1 número y 1 caracter especial",
     "error_passwords_match": "las contraseñas no coinciden",
+    "error_password_weak": "la contraseña proporcionada es demasiado débil.",
+    "error_account": "la cuenta ya existe para ese correo electrónico.",
     "error_email_empty": "el email no puede estar vacío",
     "error_email_invalid": "el email no es válido",
     "complete_profile": "completa tu perfil",
