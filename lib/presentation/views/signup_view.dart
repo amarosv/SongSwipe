@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
+import 'package:toastification/toastification.dart';
 
 class SignUpView extends StatefulWidget {
   // Función para cambiar el lenguaje
@@ -18,6 +19,8 @@ class SignUpView extends StatefulWidget {
 class _SignUpViewState extends State<SignUpView> {
   // Constante que almacena la ruta a los logos
   final String assetsPath = 'assets/images/logos';
+
+  bool _passwordNotMatch = false;
 
   // Controllers de los TextField
   late TextEditingController emailController;
@@ -69,7 +72,7 @@ class _SignUpViewState extends State<SignUpView> {
               ),
 
               const SizedBox(height: 20),
-              
+
               // CustomTextField para el email
               CustomTextfield(
                 title: capitalizeFirstLetter(text: localization.email),
@@ -110,25 +113,26 @@ class _SignUpViewState extends State<SignUpView> {
               CustomButton(
                   backgroundColor: Color(0xFFFF9E16),
                   onPressed: () async {
+                    String password = passwordController.text;
+                    String confirmPassword = confirmPasswordController.text;
+
                     // Comprobamos que el email sea válido
                     Map<bool, String> resultsCheckEmail = emailValidator(
                         email: emailController.text, context: context);
 
                     if (resultsCheckEmail.keys.first) {
-// Comprobamos si las dos contraseñas coinciden
-                      if (passwordController.text ==
-                          confirmPasswordController.text) {
+                      // Comprobamos si las dos contraseñas coinciden
+                      if (password == confirmPassword) {
                         // Comprobamos si la contraseña cumple con los requisitos
                         Map<bool, String> resultsCheck = passwordValidator(
-                            password: passwordController.text,
-                            context: context);
+                            password: password, context: context);
 
                         if (resultsCheck.keys.first) {
                           try {
                             final credential = await FirebaseAuth.instance
                                 .createUserWithEmailAndPassword(
                               email: emailController.text,
-                              password: passwordController.text,
+                              password: password,
                             );
 
                             // Enviamos el email de verificación
@@ -150,7 +154,20 @@ class _SignUpViewState extends State<SignUpView> {
                           print(resultsCheck.entries.first.value);
                         }
                       } else {
-                        print(localization.error_passwords_match);
+                        // Mostramos la notificación
+                        toastification.show(
+                          type: ToastificationType.error,
+                          context: context,
+                          style: ToastificationStyle.flatColored,
+                          title: Text(capitalizeFirstLetter(
+                              text: localization.attention)),
+                          description: RichText(
+                              text: TextSpan(
+                                  text: capitalizeFirstLetter(
+                                      text: localization.error_passwords_match),
+                                  style: TextStyle(color: Colors.black))),
+                          autoCloseDuration: const Duration(seconds: 3),
+                        );
                       }
                     } else {
                       print(resultsCheckEmail.entries.first.value);
