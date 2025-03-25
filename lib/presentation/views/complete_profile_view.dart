@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:songswipe/config/constants/environment.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
+import 'package:toastification/toastification.dart';
 
 class CompleteProfileView extends StatefulWidget {
   const CompleteProfileView({super.key});
@@ -22,6 +23,10 @@ class CompleteProfileView extends StatefulWidget {
 class _CompleteProfileViewState extends State<CompleteProfileView> {
   // Constante que almacena la ruta a las imagenes
   final String assetsPath = 'assets/images/useful';
+
+  bool _usernameRequired = false;
+  bool _nameRequired = false;
+  bool _lastNameRequired = false;
 
   bool _usernameExists = false;
   Timer? _debounce;
@@ -41,7 +46,19 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     usernameController = TextEditingController();
     usernameController.addListener(_onUsernameChanged);
     nameController = TextEditingController();
+    nameController.addListener(() {
+      // Quitamos el alert
+      setState(() {
+        _nameRequired = false;
+      });
+    });
     lastNameController = TextEditingController();
+    lastNameController.addListener(() {
+      // Quitamos el alert
+      setState(() {
+        _lastNameRequired = false;
+      });
+    });
   }
 
   @override
@@ -57,6 +74,11 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
   void _onUsernameChanged() {
     _debounce?.cancel();
     String username = usernameController.text;
+
+    // Quitamos el alert
+    setState(() {
+      _usernameRequired = false;
+    });
 
     // Primero comprobamos que el username no esté vacío y sea de al menos 4 caracteres
     if (username.isNotEmpty && username.length >= 4) {
@@ -138,11 +160,15 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     User user = FirebaseAuth.instance.currentUser!;
     String uid = user.uid;
     String email = user.email!;
+    String name = nameController.text;
+    String lastName = lastNameController.text;
+    String username = usernameController.text;
 
     String urlImage = 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
 
     // Guardamos la foto y la obtenemos
-    Uri url = Uri.parse('https://api.imgbb.com/1/upload?name=$uid-${DateTime.now()}');
+    Uri url =
+        Uri.parse('https://api.imgbb.com/1/upload?name=$uid-${DateTime.now()}');
 
     if (_image != null) {
       // 1. Leer los bytes de la imagen
@@ -176,16 +202,18 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
       },
       body: jsonEncode({
         'uid': uid,
-        'name': nameController.text,
-        'lastName': lastNameController.text,
+        'name': name,
+        'lastName': lastName,
         'email': email,
         'photoURL': urlImage,
         'dateJoining': 'null',
-        'username': usernameController.text,
+        'username': username,
         'userDeleted': false,
         'userBlocked': false
       }),
     );
+
+    print(response.body);
   }
 
   @override
@@ -216,18 +244,23 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
               placeholder: capitalizeFirstLetter(
                   text: localization.username_placeholder),
               textEditingController: usernameController,
-              icon: usernameController.text.isNotEmpty &&
-                      usernameController.text.length >= 4
-                  ? _usernameExists
-                      ? Icon(
-                          Icons.cancel,
-                          color: Colors.red,
-                        )
-                      : Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                        )
-                  : null,
+              icon: _usernameRequired
+                  ? Icon(
+                      Icons.warning,
+                      color: Colors.red,
+                    )
+                  : usernameController.text.isNotEmpty &&
+                          usernameController.text.length >= 4
+                      ? _usernameExists
+                          ? Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            )
+                          : Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                            )
+                      : null,
             ),
 
             // Texto informativo para el username
@@ -239,24 +272,34 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
             // CustomTextField para el nombre
             CustomTextfield(
-              title: capitalizeFirstLetter(text: localization.name),
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              placeholder:
-                  capitalizeFirstLetter(text: localization.name_placeholder),
-              textEditingController: nameController,
-            ),
+                title: capitalizeFirstLetter(text: localization.name),
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                placeholder:
+                    capitalizeFirstLetter(text: localization.name_placeholder),
+                textEditingController: nameController,
+                icon: _nameRequired
+                    ? Icon(
+                        Icons.warning,
+                        color: Colors.red,
+                      )
+                    : null),
 
             // Espaciado
             Padding(padding: EdgeInsets.symmetric(vertical: 20)),
 
             // CustomTextField para los apellidos
             CustomTextfield(
-              title: capitalizeFirstLetter(text: localization.lastname),
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              placeholder: capitalizeFirstLetter(
-                  text: localization.lastname_placeholder),
-              textEditingController: lastNameController,
-            ),
+                title: capitalizeFirstLetter(text: localization.lastname),
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                placeholder: capitalizeFirstLetter(
+                    text: localization.lastname_placeholder),
+                textEditingController: lastNameController,
+                icon: _lastNameRequired
+                    ? Icon(
+                        Icons.warning,
+                        color: Colors.red,
+                      )
+                    : null),
 
             // Espaciado
             Padding(padding: EdgeInsets.symmetric(vertical: 20)),
@@ -305,7 +348,45 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
             CustomButton(
                 backgroundColor: Color(0xFFFF9E16),
                 onPressed: () {
-                  _register();
+                  String name = nameController.text;
+                  String lastName = lastNameController.text;
+                  String username = usernameController.text;
+
+                  // Primero comprueba que estén los campos rellenos
+                  if (username.isNotEmpty &&
+                      name.isNotEmpty &&
+                      lastName.isNotEmpty) {
+                    _register();
+                  } else {
+                    // Mostramos la notificación
+                    toastification.show(
+                      type: ToastificationType.error,
+                      context: context,
+                      style: ToastificationStyle.flatColored,
+                      title: Text(
+                          capitalizeFirstLetter(text: localization.attention)),
+                      description: RichText(
+                          text: TextSpan(
+                              text: capitalizeFirstLetter(
+                                  text: localization.fill_fields),
+                              style: TextStyle(color: Colors.black))),
+                      autoCloseDuration: const Duration(seconds: 3),
+                    );
+
+                    setState(() {
+                      if (username.isEmpty) {
+                        _usernameRequired = true;
+                      }
+
+                      if (name.isEmpty) {
+                        _nameRequired = true;
+                      }
+
+                      if (lastName.isEmpty) {
+                        _lastNameRequired = true;
+                      }
+                    });
+                  }
                 },
                 text: localization.continue_s)
           ],

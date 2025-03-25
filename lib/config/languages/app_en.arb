@@ -41,5 +41,7 @@
     "sent": "sent!",
     "resent": "we've sent you another email",
     "verified": "verified!",
-    "verified_email": "you have verified your email"
+    "verified_email": "you have verified your email",
+    "attention": "attention!",
+    "fill_fields": "please fill in all fields"
 }
