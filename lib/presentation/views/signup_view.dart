@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
-import 'package:toastification/toastification.dart';
 
 class SignUpView extends StatefulWidget {
   // Función para cambiar el lenguaje
@@ -64,23 +63,6 @@ class _SignUpViewState extends State<SignUpView> {
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
-  }
-
-  /// Función que recibe un titulo y una descripción y muestra
-  /// una notificación de error
-  /// @param title Título de la notificación
-  /// @param body Descripción de la notificación
-  void _showNotification(String title, String body) {
-    // Mostramos la notificación
-    toastification.show(
-      type: ToastificationType.error,
-      context: context,
-      style: ToastificationStyle.flatColored,
-      title: Text(title),
-      description: RichText(
-          text: TextSpan(text: body, style: TextStyle(color: Colors.black))),
-      autoCloseDuration: const Duration(seconds: 3),
-    );
   }
 
   @override
@@ -222,9 +204,9 @@ class _SignUpViewState extends State<SignUpView> {
                             context.push('/verify-email');
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
-                              _showNotification(capitalizeFirstLetter(text: localization.attention), capitalizeFirstLetter(text: localization.error_password_weak));
+                              showNotification(capitalizeFirstLetter(text: localization.attention), capitalizeFirstLetter(text: localization.error_password_weak), context);
                             } else if (e.code == 'email-already-in-use') {
-                              _showNotification(capitalizeFirstLetter(text: localization.attention), capitalizeFirstLetter(text: localization.error_account));
+                              showNotification(capitalizeFirstLetter(text: localization.attention), capitalizeFirstLetter(text: localization.error_account), context);
                             }
                           } catch (e) {
                             print('Error ${e.toString()}');

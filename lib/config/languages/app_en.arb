@@ -45,5 +45,7 @@
     "verified": "verified!",
     "verified_email": "you have verified your email",
     "attention": "attention!",
-    "fill_fields": "please fill in all fields"
+    "fill_fields": "please fill in all fields",
+    "error_account_not_exists": "no user found for that email or password is wrong",
+    "error": "an error has occurred"
 }

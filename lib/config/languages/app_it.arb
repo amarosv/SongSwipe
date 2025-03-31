@@ -45,5 +45,7 @@
     "verified": "verificato!",
     "verified_email": "hai verificato la tua email",
     "attention": "attenzione!",
-    "fill_fields": "si prega di compilare tutti i campi"
+    "fill_fields": "si prega di compilare tutti i campi",
+    "error_account_not_exists": "nessun utente trovato per quell'email o la password è errata",
+    "error": "si è verificato un errore"
 }

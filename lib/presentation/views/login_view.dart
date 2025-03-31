@@ -19,6 +19,14 @@ class _LoginViewState extends State<LoginView> {
   // Constante que almacena la ruta a los logos
   final String assetsPath = 'assets/images/logos';
 
+  // Booleanos que controlan cuando se muestran los mensajes de error
+  bool _showErrorEmail = false;
+  bool _showErrorPassword = false;
+
+  // Cadenas que almacenan los mensajes de error
+  String _emailError = '';
+  String _passwordError = '';
+
   // Controllers de los TextField
   late TextEditingController emailController;
   late TextEditingController passwordController;
@@ -28,7 +36,17 @@ class _LoginViewState extends State<LoginView> {
     super.initState();
     // Inicializamos los controllers
     emailController = TextEditingController();
+    emailController.addListener(() {
+      setState(() {
+        _showErrorEmail = false;
+      });
+    });
     passwordController = TextEditingController();
+    passwordController.addListener(() {
+      setState(() {
+        _showErrorPassword = false;
+      });
+    });
   }
 
   @override
@@ -79,6 +97,20 @@ class _LoginViewState extends State<LoginView> {
                 textEditingController: emailController,
               ),
 
+              // Mensaje de error del email
+              _showErrorEmail
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: SizedBox(
+                          width: width,
+                          child: Text(
+                            _emailError,
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          )),
+                    )
+                  : Container(),
+
               const SizedBox(height: 20),
 
               // CustomTextField para la contraseña
@@ -90,6 +122,20 @@ class _LoginViewState extends State<LoginView> {
                 textEditingController: passwordController,
                 isPassword: true,
               ),
+
+              // Mensaje de error de la contraseña
+              _showErrorPassword
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: SizedBox(
+                          width: width,
+                          child: Text(
+                            _passwordError,
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          )),
+                    )
+                  : Container(),
 
               const SizedBox(height: 10),
 
@@ -121,6 +167,11 @@ class _LoginViewState extends State<LoginView> {
                         emailValidator(email: email, context: context);
 
                     if (resultsCheck.keys.first) {
+                      setState(() {
+                        _showErrorEmail = false;
+                        _showErrorPassword = false;
+                      });
+
                       // Comprobamos que la contraseña no esté vacía
                       if (password.isNotEmpty) {
                         // Intentamos el inicio de sesión
@@ -132,15 +183,38 @@ class _LoginViewState extends State<LoginView> {
                           print(credential.user!.email);
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'invalid-credential') {
-                            print('No user found for that email or password is wrong.');
+                            print(
+                                'No user found for that email or password is wrong.');
+
+                            showNotification(
+                                capitalizeFirstLetter(
+                                    text: localization.attention),
+                                capitalizeFirstLetter(
+                                    text:
+                                        localization.error_account_not_exists),
+                                context);
                           } else {
-                            print('An error has occurred');
+                            showNotification(
+                                capitalizeFirstLetter(
+                                    text: localization.attention),
+                                capitalizeFirstLetter(text: localization.error),
+                                context);
                           }
                         }
                       } else {
+                        setState(() {
+                          _showErrorPassword = true;
+                          _passwordError = capitalizeFirstLetter(
+                              text: localization.error_password_empty);
+                        });
                         print(localization.error_password_empty);
                       }
                     } else {
+                      setState(() {
+                        _showErrorEmail = true;
+                        _emailError = capitalizeFirstLetter(
+                            text: resultsCheck.entries.first.value);
+                      });
                       print(resultsCheck.entries.first.value);
                     }
                   },

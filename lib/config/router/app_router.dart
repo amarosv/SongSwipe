@@ -17,10 +17,11 @@ class AppRouter {
     // Comprobamos si el usuario esta logeado
     final user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      // location = '/login';
-      location = '/login';
+    if (user != null && !user.emailVerified) {
+      location = '/verify-email';
     }
+
+    location = '/signup';
 
     // Devolvemos la ruta
     return location;
@@ -44,20 +45,22 @@ class AppRouter {
       GoRoute(
         path: '/change-theme',
         name: ChangeThemeScreen.name,
-        builder: (context, state) =>
-            ChangeThemeScreen(),
+        builder: (context, state) => ChangeThemeScreen(),
       ),
       GoRoute(
         path: '/complete-profile',
         name: CompleteProfileScreen.name,
-        builder: (context, state) =>
-            CompleteProfileScreen(),
+        builder: (context, state) => CompleteProfileScreen(),
       ),
       GoRoute(
         path: '/verify-email',
         name: VerifyEmailScreen.name,
-        builder: (context, state) =>
-            VerifyEmailScreen(),
+        builder: (context, state) => VerifyEmailScreen(),
+      ),
+      GoRoute(
+        path: '/select-artists-screen',
+        name: SelectArtistsScreen.name,
+        builder: (context, state) => SelectArtistsScreen(),
       ),
     ],
   );

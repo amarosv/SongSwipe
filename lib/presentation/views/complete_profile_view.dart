@@ -27,6 +27,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
   bool _usernameRequired = false;
   bool _nameRequired = false;
   bool _lastNameRequired = false;
+  bool _activatedButton = false;
 
   bool _usernameExists = false;
   Timer? _debounce;
@@ -51,6 +52,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
       setState(() {
         _nameRequired = false;
       });
+      checkIfButtonIsActived();
     });
     lastNameController = TextEditingController();
     lastNameController.addListener(() {
@@ -58,6 +60,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
       setState(() {
         _lastNameRequired = false;
       });
+      checkIfButtonIsActived();
     });
   }
 
@@ -100,6 +103,10 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
         final data = json.decode(response.body);
         setState(() {
           _usernameExists = data;
+
+          if (_usernameExists) {
+            checkIfButtonIsActived();
+          }
         });
       }
     } catch (e) {
@@ -156,6 +163,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     }
   }
 
+  /// Función que registra al usuario en la base de datos
   void _register() async {
     User user = FirebaseAuth.instance.currentUser!;
     String uid = user.uid;
@@ -213,7 +221,23 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
       }),
     );
 
-    print(response.body);
+    print(jsonDecode(response.body));
+
+    // if (jsonDecode(response.body)['']) {
+
+    // }
+  }
+
+  /// Función que comprueba que los campos requeridos estén rellenos
+  /// y activa el botón para continuar
+  void checkIfButtonIsActived() {
+    if (usernameController.text.isNotEmpty &&
+        nameController.text.isNotEmpty &&
+        lastNameController.text.isNotEmpty) {
+      setState(() {
+        _activatedButton = true;
+      });
+    }
   }
 
   @override
@@ -317,6 +341,10 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
               ),
             ),
 
+            const SizedBox(
+              height: 10,
+            ),
+
             // Imagen para subir la foto
             GestureDetector(
               onTap: _pickImage,
@@ -346,48 +374,51 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
             // Button para continuar
             CustomButton(
-                backgroundColor: Color(0xFFFF9E16),
-                onPressed: () {
-                  String name = nameController.text;
-                  String lastName = lastNameController.text;
-                  String username = usernameController.text;
+                backgroundColor:
+                    _activatedButton ? Color(0xFFFF9E16) : Colors.grey,
+                onPressed: _activatedButton
+                    ? () {
+                        String name = nameController.text;
+                        String lastName = lastNameController.text;
+                        String username = usernameController.text;
 
-                  // Primero comprueba que estén los campos rellenos
-                  if (username.isNotEmpty &&
-                      name.isNotEmpty &&
-                      lastName.isNotEmpty) {
-                    _register();
-                  } else {
-                    // Mostramos la notificación
-                    toastification.show(
-                      type: ToastificationType.error,
-                      context: context,
-                      style: ToastificationStyle.flatColored,
-                      title: Text(
-                          capitalizeFirstLetter(text: localization.attention)),
-                      description: RichText(
-                          text: TextSpan(
-                              text: capitalizeFirstLetter(
-                                  text: localization.fill_fields),
-                              style: TextStyle(color: Colors.black))),
-                      autoCloseDuration: const Duration(seconds: 3),
-                    );
+                        // Primero comprueba que estén los campos rellenos
+                        if (username.isNotEmpty &&
+                            name.isNotEmpty &&
+                            lastName.isNotEmpty) {
+                          _register();
+                        } else {
+                          // Mostramos la notificación
+                          toastification.show(
+                            type: ToastificationType.error,
+                            context: context,
+                            style: ToastificationStyle.flatColored,
+                            title: Text(capitalizeFirstLetter(
+                                text: localization.attention)),
+                            description: RichText(
+                                text: TextSpan(
+                                    text: capitalizeFirstLetter(
+                                        text: localization.fill_fields),
+                                    style: TextStyle(color: Colors.black))),
+                            autoCloseDuration: const Duration(seconds: 3),
+                          );
 
-                    setState(() {
-                      if (username.isEmpty) {
-                        _usernameRequired = true;
+                          setState(() {
+                            if (username.isEmpty) {
+                              _usernameRequired = true;
+                            }
+
+                            if (name.isEmpty) {
+                              _nameRequired = true;
+                            }
+
+                            if (lastName.isEmpty) {
+                              _lastNameRequired = true;
+                            }
+                          });
+                        }
                       }
-
-                      if (name.isEmpty) {
-                        _nameRequired = true;
-                      }
-
-                      if (lastName.isEmpty) {
-                        _lastNameRequired = true;
-                      }
-                    });
-                  }
-                },
+                    : () {},
                 text: localization.continue_s)
           ],
         ),
