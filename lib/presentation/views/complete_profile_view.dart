@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -221,11 +222,11 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
       }),
     );
 
-    print(jsonDecode(response.body));
+    print(response.statusCode);
 
-    // if (jsonDecode(response.body)['']) {
-
-    // }
+    if (response.statusCode == 200) {
+      context.push('/select-artists-screen');
+    }
   }
 
   /// Función que comprueba que los campos requeridos estén rellenos

@@ -19,9 +19,11 @@ class AppRouter {
 
     if (user != null && !user.emailVerified) {
       location = '/verify-email';
+    } else if (user != null && user.emailVerified) {
+      location = '/select-artists-screen';
     }
 
-    location = '/signup';
+    // location = '/signup';
 
     // Devolvemos la ruta
     return location;

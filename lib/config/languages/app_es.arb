@@ -47,5 +47,6 @@
     "attention": "atención!",
     "fill_fields": "por favor, rellena todos los campos",
     "error_account_not_exists": "no se ha encontrado un usuario para ese email o la contraseña es incorrecta",
-    "error": "ha ocurrido un error"
+    "error": "ha ocurrido un error",
+    "select_artists": "selecciona al menos 5 artistas"
 }

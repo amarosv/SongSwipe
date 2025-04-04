@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 
+/// Widget que personaliza los botones de social buttons
 class CustomSocialButton extends StatelessWidget {
+  /// Color del fondo
   final Color backgroundColor;
+  /// Color del borde
   final Color borderColor;
+  /// Estilo del texto
   final TextStyle? textStyle;
+  /// Ruta a la imagen del logo
   final String imagePath;
+  /// Función al ser pulsado
   final Function onPressed;
+  /// Nombre del proovedor
   final String text;
+  /// Ancho del botón
   final double? width;
 
   const CustomSocialButton({

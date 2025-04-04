@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 
-// Widget personalizado del dropdown
+/// Widget personalizado del dropdown
 class CustomDropdownLanguage extends StatefulWidget {
-  // Función para cambiar el lenguaje
+  /// Función para cambiar el lenguaje
   final Function(String) onChangeLanguage;
 
   const CustomDropdownLanguage({super.key, required this.onChangeLanguage});

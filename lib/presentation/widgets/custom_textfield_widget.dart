@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
-// Widget personalizado del TextField
+/// Widget personalizado del TextField
 class CustomTextfield extends StatefulWidget {
+  /// Padding
   final EdgeInsets? padding;
+  /// Icono
   final Icon? icon;
+  /// Texto de ejemplo
   final String? placeholder;
+  /// Título
   final String? title;
+  /// Boolean que indica si es una contraseña
   final bool? isPassword;
+  /// Controller del texto
   final TextEditingController textEditingController;
 
   const CustomTextfield({

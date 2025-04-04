@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 
-// Widget que personaliza el ElevatedButton
+/// Widget que personaliza el ElevatedButton
 class CustomButton extends StatelessWidget {
+  /// Color del fondo
   final Color backgroundColor;
+  /// Función al ser pulsado
   final Function onPressed;
+  /// Texto del botón
   final String text;
+  /// Borde del botón
   final BorderSide? border;
+  /// Color del texto
   final Color? textColor;
 
   const CustomButton({
