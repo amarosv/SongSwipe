@@ -3,6 +3,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:songswipe/helpers/strings_methods.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
+/// Vista para la pantalla de seleccionar artistas <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class SelectArtistsView extends StatelessWidget {
   const SelectArtistsView({super.key});
 

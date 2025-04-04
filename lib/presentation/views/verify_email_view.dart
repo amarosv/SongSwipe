@@ -8,6 +8,9 @@ import 'package:songswipe/helpers/strings_methods.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:toastification/toastification.dart';
 
+/// Vista para la pantalla de verificación del email <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
 

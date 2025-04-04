@@ -1,6 +1,6 @@
-export 'custom_button.dart';
-export 'custom_dropdownbutton.dart';
-export 'custom_search.dart';
-export 'custom_social_button.dart';
-export 'custom_textfield.dart';
-export 'separate_sections.dart';
+export 'custom_button_widget.dart';
+export 'custom_dropdownbutton_widget.dart';
+export 'custom_search_widget.dart';
+export 'custom_social_button_widget.dart';
+export 'custom_textfield_widget.dart';
+export 'separate_sections_widget.dart';

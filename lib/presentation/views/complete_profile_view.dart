@@ -14,6 +14,9 @@ import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:toastification/toastification.dart';
 
+/// Vista de la pantalla completar perfil <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class CompleteProfileView extends StatefulWidget {
   const CompleteProfileView({super.key});
 

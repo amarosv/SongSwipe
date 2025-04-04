@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
+/// Vista para la pantalla de login <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class LoginView extends StatefulWidget {
   // Función para cambiar el lenguaje
   final Function(String) onChangeLanguage;
