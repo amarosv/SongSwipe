@@ -2,6 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/presentation/screens/export_screens.dart';
 
+/// Clase que almacena las rutas de navegación de la app <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class AppRouter {
   final Function(String) onChangeLanguage;
 

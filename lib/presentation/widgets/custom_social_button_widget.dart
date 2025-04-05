@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 
-/// Widget que personaliza los botones de social buttons
+/// Widget que personaliza los botones de social buttons <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class CustomSocialButton extends StatelessWidget {
   /// Color del fondo
   final Color backgroundColor;

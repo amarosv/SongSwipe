@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:songswipe/config/constants/environment.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
+import 'package:songswipe/services/api/internal_api.dart';
 import 'package:toastification/toastification.dart';
 
 /// Vista de la pantalla completar perfil <br>
@@ -168,69 +168,69 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
   }
 
   /// Función que registra al usuario en la base de datos
-  void _register() async {
-    User user = FirebaseAuth.instance.currentUser!;
-    String uid = user.uid;
-    String email = user.email!;
-    String name = nameController.text;
-    String lastName = lastNameController.text;
-    String username = usernameController.text;
+  // void _register() async {
+  //   User user = FirebaseAuth.instance.currentUser!;
+  //   String uid = user.uid;
+  //   String email = user.email!;
+  //   String name = nameController.text;
+  //   String lastName = lastNameController.text;
+  //   String username = usernameController.text;
 
-    String urlImage = 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
+  //   String urlImage = 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
 
-    // Guardamos la foto y la obtenemos
-    Uri url =
-        Uri.parse('https://api.imgbb.com/1/upload?name=$uid-${DateTime.now()}');
+  //   // Guardamos la foto y la obtenemos
+  //   Uri url =
+  //       Uri.parse('https://api.imgbb.com/1/upload?name=$uid-${DateTime.now()}');
 
-    if (_image != null) {
-      // 1. Leer los bytes de la imagen
-      final bytes = await _image!.readAsBytes();
+  //   if (_image != null) {
+  //     // 1. Leer los bytes de la imagen
+  //     final bytes = await _image!.readAsBytes();
 
-      // 2. Codificar la imagen a base64
-      final base64Image = base64Encode(bytes);
+  //     // 2. Codificar la imagen a base64
+  //     final base64Image = base64Encode(bytes);
 
-      // Subimos la imagen
-      final response = await http.post(
-        url,
-        body: {
-          'key': Environment.apiKey, // Reemplaza con tu clave de API de ImgBB
-          'image': base64Image,
-        },
-      );
+  //     // Subimos la imagen
+  //     final response = await http.post(
+  //       url,
+  //       body: {
+  //         'key': Environment.apiKey, // Reemplaza con tu clave de API de ImgBB
+  //         'image': base64Image,
+  //       },
+  //     );
 
-      // Obtenemos la url de la imagen
-      urlImage = jsonDecode(response.body)['data']['url'];
-    }
+  //     // Obtenemos la url de la imagen
+  //     urlImage = jsonDecode(response.body)['data']['url'];
+  //   }
 
-    // Creamos al usuario
-    url = Uri.parse(Environment.apiUrl);
+  //   // Creamos al usuario
+  //   url = Uri.parse(Environment.apiUrl);
 
-    // Llamada a la API para guardar el usuario
-    final response = await http.post(
-      Uri.parse(Environment.apiUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: jsonEncode({
-        'uid': uid,
-        'name': name,
-        'lastName': lastName,
-        'email': email,
-        'photoURL': urlImage,
-        'dateJoining': 'null',
-        'username': username,
-        'userDeleted': false,
-        'userBlocked': false
-      }),
-    );
+  //   // Llamada a la API para guardar el usuario
+  //   final response = await http.post(
+  //     Uri.parse(Environment.apiUrl),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json',
+  //     },
+  //     body: jsonEncode({
+  //       'uid': uid,
+  //       'name': name,
+  //       'lastName': lastName,
+  //       'email': email,
+  //       'photoURL': urlImage,
+  //       'dateJoining': 'null',
+  //       'username': username,
+  //       'userDeleted': false,
+  //       'userBlocked': false
+  //     }),
+  //   );
 
-    print(response.statusCode);
+  //   print(response.statusCode);
 
-    if (response.statusCode == 200) {
-      context.push('/select-artists-screen');
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     context.push('/select-artists-screen');
+  //   }
+  // }
 
   /// Función que comprueba que los campos requeridos estén rellenos
   /// y activa el botón para continuar
@@ -381,7 +381,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
                 backgroundColor:
                     _activatedButton ? Color(0xFFFF9E16) : Colors.grey,
                 onPressed: _activatedButton
-                    ? () {
+                    ? () async {
                         String name = nameController.text;
                         String lastName = lastNameController.text;
                         String username = usernameController.text;
@@ -390,7 +390,24 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
                         if (username.isNotEmpty &&
                             name.isNotEmpty &&
                             lastName.isNotEmpty) {
-                          _register();
+                          String? base64Image;
+
+                          // Si hay imagen, la convertimos a base 64
+                          if (_image != null) {
+                            base64Image = await convertFileToBase64(_image!);
+                          }
+
+                          // Registramos al usuario en la base de datos
+                          bool registered = await registerUserInDatabase(
+                              name: name,
+                              lastName: lastName,
+                              username: username,
+                              base64Image: base64Image);
+
+                          // Si se ha registrado correctamente, vamos a la siguiente pantalla
+                          if (registered) {
+                            context.push('/select-artists-screen');
+                          }
                         } else {
                           // Mostramos la notificación
                           toastification.show(

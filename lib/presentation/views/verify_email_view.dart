@@ -19,7 +19,6 @@ class VerifyEmailView extends StatefulWidget {
 }
 
 class _VerifyEmailViewState extends State<VerifyEmailView> {
-  late BuildContext? _context;
   late AppLocalizations localization;
   bool _isButtonDisabled = false;
   int _counter = 60;
@@ -102,7 +101,6 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
 
   @override
   Widget build(BuildContext context) {
-    _context = context; // Aseguramos que el context se actualiza
     localization = AppLocalizations.of(context)!;
 
     User user = FirebaseAuth.instance.currentUser!;

@@ -48,5 +48,7 @@
     "fill_fields": "por favor, rellena todos los campos",
     "error_account_not_exists": "no se ha encontrado un usuario para ese email o la contraseña es incorrecta",
     "error": "ha ocurrido un error",
-    "select_artists": "selecciona al menos 5 artistas"
+    "select_artists": "selecciona al menos 5 artistas",
+    "search_artist": "busca un artista...",
+    "done": "hecho"
 }

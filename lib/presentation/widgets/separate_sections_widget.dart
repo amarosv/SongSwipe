@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-/// Widget para separar secciones
+/// Widget para separar secciones <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class SeparateSections extends StatelessWidget {
   const SeparateSections({super.key});
 

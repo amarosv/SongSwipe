@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// Widget personalizado del TextField
+/// Widget personalizado del TextField <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class CustomTextfield extends StatefulWidget {
   /// Padding
   final EdgeInsets? padding;
