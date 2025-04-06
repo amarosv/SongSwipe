@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -45,7 +44,6 @@ class _SelectArtistsViewState extends State<SelectArtistsView> {
     _textController = TextEditingController();
     _textController.addListener(_onArtistNameChanged);
     _getArtists();
-    print(FirebaseAuth.instance.currentUser!.uid);
   }
 
   // Función que obtiene los artistas de la api
@@ -102,6 +100,8 @@ class _SelectArtistsViewState extends State<SelectArtistsView> {
 
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
+        centerTitle: true,
         title: Text(capitalizeFirstLetter(text: localization.select_artists)),
       ),
       body: Column(
