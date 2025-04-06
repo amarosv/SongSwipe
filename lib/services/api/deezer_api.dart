@@ -92,6 +92,7 @@ Future<List<Genre>> searchGenre(String query) async {
     final data = jsonDecode(response.body);
     final List<dynamic> results = data['data'];
 
+    // Convertimos la lista de data en una lista de géneros
     listaGeneros = results.map((json) => Genre.fromJson(json)).toList();
   }
 

@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/presentation/providers/export_providers.dart';
 import 'package:songswipe/presentation/views/export_views.dart';
 
+/// Pantalla para cambiar de tema <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class ChangeThemeScreen extends ConsumerWidget {
-  // Nombre de la ruta
+  /// Nombre de la ruta
   static const name = 'change-theme-screen';
   const ChangeThemeScreen({super.key});
 

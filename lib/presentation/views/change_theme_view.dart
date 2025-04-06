@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/presentation/providers/export_providers.dart';
 
+/// Vista de la pantalla de cambiar el tema <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class ChangeThemeView extends ConsumerWidget {
   const ChangeThemeView({super.key});
 
