@@ -1,6 +1,6 @@
 /// Función que recibe un texto y pone la primera letra y sus iniciales tras los espacios en mayúscula <br>
 /// @param text Texto a convertir <br>
-/// @return Texto con las iniciales tras los espacios en mayúscula
+/// @returns Texto con las iniciales tras los espacios en mayúscula
 String upperCaseAfterSpace({required String text}) {
   // Variable donde se almacenará el texto convertido
   String textUpper = '';
@@ -24,7 +24,7 @@ String upperCaseAfterSpace({required String text}) {
 
 /// Función que recibe un texto y pone en mayúscula la primera letra <br>
 /// @param text Texto a capitalizar <br>
-/// @return Texto con la primera letra en mayúscula
+/// @returns Texto con la primera letra en mayúscula
 String capitalizeFirstLetter({required String text}) {
   return text[0].toUpperCase() + text.substring(1);
 }

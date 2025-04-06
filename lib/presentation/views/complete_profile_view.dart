@@ -294,8 +294,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
             // Texto informativo para el username
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-              child: Text(
-                  'You can change your username later on the profile page.'),
+              child: Text(capitalizeFirstLetter(text: localization.username_info)),
             ),
 
             // CustomTextField para el nombre
@@ -406,7 +405,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
                           // Si se ha registrado correctamente, vamos a la siguiente pantalla
                           if (registered) {
-                            context.push('/select-artists-screen');
+                            context.go('/select-artists-screen');
                           }
                         } else {
                           // Mostramos la notificación

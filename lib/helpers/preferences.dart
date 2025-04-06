@@ -20,7 +20,7 @@ void saveData({required String tag, required dynamic value}) async {
 
 /// Función que carga un String desde SharedPreferences <br>
 /// @param tag Título de la etiqueta donde está almacenado el String <br>
-/// @return String almacenado en la etiqueta
+/// @returns String almacenado en la etiqueta
 Future<String> loadDataString({required String tag}) async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getString(tag) ?? '';
@@ -28,7 +28,7 @@ Future<String> loadDataString({required String tag}) async {
 
 /// Función que carga un int desde SharedPreferences <br>
 /// @param tag Título de la etiqueta donde está almacenado el int <br>
-/// @return int almacenado en la etiqueta
+/// @returns int almacenado en la etiqueta
 Future<int> loadDataInt({required String tag}) async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getInt(tag) ?? 0;
@@ -36,7 +36,7 @@ Future<int> loadDataInt({required String tag}) async {
 
 /// Función que carga un bool desde SharedPreferences <br>
 /// @param tag Título de la etiqueta donde está almacenado el bool <br>
-/// @return bool almacenado en la etiqueta
+/// @returns bool almacenado en la etiqueta
 Future<bool> loadDataBool({required String tag}) async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getBool(tag) ?? false;
@@ -44,7 +44,7 @@ Future<bool> loadDataBool({required String tag}) async {
 
 /// Función que carga un double desde SharedPreferences <br>
 /// @param tag Título de la etiqueta donde está almacenado el double <br>
-/// @return double almacenado en la etiqueta
+/// @returns double almacenado en la etiqueta
 Future<double> loadDataDouble({required String tag}) async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getDouble(tag) ?? 0;

@@ -8,7 +8,9 @@ const colorList = {
   'Pink': Colors.pink
 };
 
-/// Clase donde se almacena la configuración del tema de la aplicación
+/// Clase donde se almacena la configuración del tema de la aplicación <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class AppTheme {
   /// Atributo que almacena el índice del color seleccionado
   final int selectedColor;
@@ -26,7 +28,7 @@ class AppTheme {
             'Selected colormut be less or equal than ${colorList.length - 1}');
 
   /// Función que devuelve el tema con las configuraciones cargadas <br>
-  /// @return Devuelve el tema con las configuraciones cargadas
+  /// @returns Devuelve el tema con las configuraciones cargadas
   ThemeData getTheme() => ThemeData(
       useMaterial3: true,
       brightness: isDarkMode ? Brightness.dark : Brightness.light,
@@ -35,7 +37,7 @@ class AppTheme {
 
   /// Método que permite crear una copia de la instancia actual de AppTheme,
   /// pero con la posibilidad de sobrescribir algunos de sus valores.
-  /// @return Copia del tema de la app
+  /// @returns Copia del tema de la app
   AppTheme copyWith({int? selectedColor, bool? isDarkMode, bool? isUsingSystem}) => AppTheme(
       selectedColor: selectedColor ?? this.selectedColor,
       isDarkMode: isDarkMode ?? this.isDarkMode,

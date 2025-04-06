@@ -10,7 +10,7 @@ import 'package:songswipe/config/constants/environment.dart';
 /// @param lastName Apellidos del usuario <br>
 /// @param username Nombre de usuario <br>
 /// @param base64Image Imagen del usuario <br>
-/// @return boolean que indica si el usuario se pudo crear en la base de datos
+/// @returns boolean que indica si el usuario se pudo crear en la base de datos
 Future<bool> registerUserInDatabase(
     {required String name,
     required String lastName,
@@ -77,7 +77,7 @@ Future<bool> registerUserInDatabase(
 /// Función que recibe una lista de ids de artistas y los guarda en la base de datos
 /// como favoritos <br>
 /// @param artists Lista de ids de artistas
-/// @return Número de artistas que se han guardado como favoritos
+/// @returns Número de artistas que se han guardado como favoritos
 Future<int> addArtistToFavorites({required List<int> artists}) async {
   // Variable que almacena el número de artistas guardados como favoritos
   int numArtistas = 0;
@@ -104,4 +104,36 @@ Future<int> addArtistToFavorites({required List<int> artists}) async {
   }
 
   return numArtistas;
+}
+
+/// Función que recibe una lista de ids de géneros y los guarda en la base de datos
+/// como favoritos <br>
+/// @param artists Lista de ids de géneros
+/// @returns Número de géneros que se han guardado como favoritos
+Future<int> addGenreToFavorites({required List<int> genres}) async {
+  // Variable que almacena el número de géneros guardados como favoritos
+  int numGeneros = 0;
+
+  // Obtenemos el UID del usuario
+  User user = FirebaseAuth.instance.currentUser!;
+  String uid = user.uid;
+
+  // Formamos la url del endpoint
+  Uri url = Uri.parse('${Environment.apiUrl}/$uid/genres');
+
+  // Llamada a la API para guardar los géneros como favoritos
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: jsonEncode(genres),
+  );
+
+  if (response.statusCode == 200) {
+    numGeneros = jsonDecode(response.body);
+  }
+
+  return numGeneros;
 }

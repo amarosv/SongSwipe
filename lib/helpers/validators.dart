@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// Función que comprueba si un email cumple los requisitos <br>
 /// @param email Cadena a comprobar <br>
 /// @param context Contexto para obtener la localización <br>
-/// @return Devuelve un mapa con un booleano y un string indicando el error correspondiente
+/// @returns Devuelve un mapa con un booleano y un string indicando el error correspondiente
 Map<bool, String> emailValidator({
   required String email,
   required BuildContext context,
@@ -38,7 +38,7 @@ Map<bool, String> emailValidator({
 /// Función que comprueba si una contraseña cumple los requisitos <br>
 /// @param password Cadena a comprobar <br>
 /// @param context Contexto para obtener la localización <br>
-/// @return Devuelve un mapa con un booleano y un string indicando el error correspondiente
+/// @returns Devuelve un mapa con un booleano y un string indicando el error correspondiente
 Map<bool, String> passwordValidator({
   required String password,
   required BuildContext context,

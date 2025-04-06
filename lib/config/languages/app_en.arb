@@ -50,5 +50,7 @@
     "error": "an error has occurred",
     "select_artists": "select at least 5 artists",
     "search_artist": "search an artist...",
-    "done": "done"
+    "done": "done",
+    "select_genres": "select at least 3 genres",
+    "search_genre": "search an genre..."
 }

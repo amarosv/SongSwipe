@@ -4,36 +4,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/helpers/strings_methods.dart';
-import 'package:songswipe/models/artist.dart';
+import 'package:songswipe/models/genre.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/deezer_api.dart';
 import 'package:songswipe/services/api/internal_api.dart';
 
-/// Vista para la pantalla de seleccionar artistas <br>
+/// Vista para la pantalla de seleccionar géneros <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class SelectArtistsView extends StatefulWidget {
-  const SelectArtistsView({super.key});
+class SelectGenresView extends StatefulWidget {
+  const SelectGenresView({super.key});
 
   @override
-  State<SelectArtistsView> createState() => _SelectArtistsViewState();
+  State<SelectGenresView> createState() => _SelectGenresViewState();
 }
 
-class _SelectArtistsViewState extends State<SelectArtistsView> {
+class _SelectGenresViewState extends State<SelectGenresView> {
   // Controlador de la barra de búsqueda
   late TextEditingController _textController;
 
-  // Lista de artistas
-  List<Artist> artistsList = [];
+  // Lista de géneros
+  List<Genre> genresList = [];
 
-  // Lista de artistas filtrados
-  List<Artist> filteredArtistsList = [];
+  // Lista de géneros filtrados
+  List<Genre> filteredGenresList = [];
 
-  // Lista de nombres de artistas que contiene los artistas seleccionados
-  List<String> selectedArtistsList = [];
+  // Lista de nombres de géneros que contiene los géneros seleccionados
+  List<String> selectedGenresList = [];
 
-  // Lista de ids de artistas que contiene los artistas seleccionados
-  List<int> selectedArtistsIdsList = [];
+  // Lista de ids de géneros que contiene los géneros seleccionados
+  List<int> selectedGenresIdsList = [];
 
   // Timer que controla el tiempo de ejecución
   Timer? _debounce;
@@ -42,53 +42,57 @@ class _SelectArtistsViewState extends State<SelectArtistsView> {
   void initState() {
     super.initState();
     _textController = TextEditingController();
-    _textController.addListener(_onArtistNameChanged);
-    _getArtists();
+    _textController.addListener(_onGenreNameChanged);
+    _getgenres();
   }
 
-  // Función que obtiene los artistas de la api
-  void _getArtists() async {
-    List<Artist> artists = await getRecommendedArtists();
+  // Función que obtiene los géneros de la api
+  void _getgenres() async {
+    List<Genre> genres = await getAllGenres();
+
+    // Quitamos el género 'todos' cuya ID es el 0
+    genres.removeWhere((g) => g.id == 0);
+
     setState(() {
-      artistsList = artists;
-      filteredArtistsList = artists;
+      genresList = genres;
+      filteredGenresList = genres;
     });
   }
 
-  // Función que se llama cuando el nombre del artista a buscar ha cambiado
-  void _onArtistNameChanged() {
+  // Función que se llama cuando el nombre del género a buscar ha cambiado
+  void _onGenreNameChanged() {
     _debounce?.cancel();
-    String artistName = _textController.text;
+    String genreName = _textController.text;
 
-    // Primero comprobamos que el nombre del artista no esté vacío
-    if (artistName.isNotEmpty) {
+    // Primero comprobamos que el nombre del género no esté vacío
+    if (genreName.isNotEmpty) {
       _debounce = Timer(const Duration(milliseconds: 700), () {
-        _searchArtist(artistName);
+        _searchGenre(genreName);
       });
     } else {
       setState(() {
-        filteredArtistsList = artistsList;
+        filteredGenresList = genresList;
       });
     }
   }
 
-  // Función que busca a los artistas
-  Future<void> _searchArtist(String query) async {
-    // Primero busca en la lista local de artistas
-    List<Artist> localResults = artistsList
+  // Función que busca a los géneros
+  Future<void> _searchGenre(String query) async {
+    // Primero busca en la lista local de géneros
+    List<Genre> localResults = genresList
         .where(
-            (artist) => artist.name.toLowerCase().contains(query.toLowerCase()))
+            (genre) => genre.name.toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     if (localResults.isNotEmpty) {
       setState(() {
-        filteredArtistsList = localResults;
+        filteredGenresList = localResults;
       });
     } else {
-      // Si no está en la lista local, busca en Deezer usando searchArtist
-      List<Artist> externalResults = await searchArtist(query);
+      // Si no está en la lista local, busca en Deezer usando searchgenre
+      List<Genre> externalResults = await searchGenre(query);
       setState(() {
-        filteredArtistsList = externalResults;
+        filteredGenresList = externalResults;
       });
     }
   }
@@ -102,7 +106,7 @@ class _SelectArtistsViewState extends State<SelectArtistsView> {
       appBar: AppBar(
         forceMaterialTransparency: true,
         centerTitle: true,
-        title: Text(capitalizeFirstLetter(text: localization.select_artists)),
+        title: Text(capitalizeFirstLetter(text: localization.select_genres)),
       ),
       body: Column(
         children: [
@@ -111,14 +115,14 @@ class _SelectArtistsViewState extends State<SelectArtistsView> {
           // Barra de búsqueda
           CustomSearch(
             placeholder:
-                capitalizeFirstLetter(text: localization.search_artist),
+                capitalizeFirstLetter(text: localization.search_genre),
             suffixIcon: Icon(Icons.search),
             textEditingController: _textController,
           ),
 
           SizedBox(height: 20),
 
-          // Contenedor donde se muestran los artistas
+          // Contenedor donde se muestran los géneros
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -128,56 +132,56 @@ class _SelectArtistsViewState extends State<SelectArtistsView> {
                     crossAxisSpacing: 16.0,
                     mainAxisSpacing: 16.0,
                   ),
-                  itemCount: filteredArtistsList.length,
+                  itemCount: filteredGenresList.length,
                   itemBuilder: (context, index) {
-                    // Cogemos al artista
-                    final artist = filteredArtistsList[index];
+                    // Cogemos al genrea
+                    final genre = filteredGenresList[index];
 
-                    // Pasamos el nombre del artista a minúsculas
-                    String artistNameLower = artist.name.toLowerCase();
+                    // Pasamos el nombre del genrea a minúsculas
+                    String genreNameLower = genre.name.toLowerCase();
 
                     // Comprobamos si está seleccionado
                     final isSelected =
-                        selectedArtistsList.contains(artistNameLower);
+                        selectedGenresList.contains(genreNameLower);
 
                     return GestureDetector(
                       onTap: () {
                         setState(() {
                           // Si ya está seleccionado lo eliminamos de la lista
                           if (isSelected) {
-                            selectedArtistsList.remove(artistNameLower);
-                            selectedArtistsIdsList.remove(artist.id);
+                            selectedGenresList.remove(genreNameLower);
+                            selectedGenresIdsList.remove(genre.id);
                           } else {
                             // En caso contrario, los añadimos
-                            selectedArtistsList.add(artistNameLower);
-                            selectedArtistsIdsList.add(artist.id);
+                            selectedGenresList.add(genreNameLower);
+                            selectedGenresIdsList.add(genre.id);
                           }
                         });
                       },
                       child: SelectArtistWidget(
-                          photoUrl: artist.picture,
-                          artistName: artist.name,
+                          photoUrl: genre.picture,
+                          artistName: genre.name,
                           isSelected: isSelected),
                     );
                   }),
             ),
           ),
 
-          // Botón para guardar los artistas seleccionados
+          // Botón para guardar los géneros seleccionados
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
             child: CustomButton(
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 onPressed: () async {
-                  // Obtenemos el número de artistas guardados
-                  int numArtistsSaved = await addArtistToFavorites(artists: selectedArtistsIdsList);
+                  // Obtenemos el número de géneros guardados
+                  int numGenresSaved = await addGenreToFavorites(genres: selectedGenresIdsList);
 
-                  if (numArtistsSaved > 0) {
-                    context.go('/select-genres-screen');
+                  if (numGenresSaved > 0) {
+                    context.go('/profile-screen');
                   }
                 },
                 text: localization.done.toUpperCase(),
-                disabled: selectedArtistsIdsList.length < 5,
+                disabled: selectedGenresIdsList.length < 3,
             ),
           )
         ],

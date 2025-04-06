@@ -6,13 +6,14 @@ import 'package:songswipe/presentation/screens/export_screens.dart';
 /// @author Amaro Suárez <br>
 /// @version 1.0
 class AppRouter {
+  /// Función para cambiar el lenguaje
   final Function(String) onChangeLanguage;
 
   AppRouter({required this.onChangeLanguage});
 
   /// Función que comprueba si el usuario esta logeado
   /// y devuelve la ruta correspondiente
-  /// @return Ruta inicial de la aplicación
+  /// @returns Ruta inicial de la aplicación
   String initialLocation() {
     // Variable que almacena la ruta
     String location = '/signup';
@@ -26,7 +27,8 @@ class AppRouter {
       location = '/select-artists-screen';
     }
 
-    // location = '/signup';
+    location = '/signup';
+    // location = '/select-genres-screen';
 
     // Devolvemos la ruta
     return location;
@@ -66,6 +68,16 @@ class AppRouter {
         path: '/select-artists-screen',
         name: SelectArtistsScreen.name,
         builder: (context, state) => SelectArtistsScreen(),
+      ),
+      GoRoute(
+        path: '/select-genres-screen',
+        name: SelectGenresScreen.name,
+        builder: (context, state) => SelectGenresScreen(),
+      ),
+      GoRoute(
+        path: '/profile-screen',
+        name: ProfileScreen.name,
+        builder: (context, state) => ProfileScreen(),
       ),
     ],
   );

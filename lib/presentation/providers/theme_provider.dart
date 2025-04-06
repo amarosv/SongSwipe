@@ -19,7 +19,9 @@ final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, AppTheme>(
   (ref) => ThemeNotifier(ref: ref),
 );
 
-/// Clase que almacena los atributos del ThemeNotifier y que extiende de AppTheme
+/// Clase que almacena los atributos del ThemeNotifier y que extiende de AppTheme <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class ThemeNotifier extends StateNotifier<AppTheme> {
   /// Ref del provider
   final Ref ref;

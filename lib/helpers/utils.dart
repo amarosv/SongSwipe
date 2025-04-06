@@ -24,7 +24,7 @@ void showNotification(String title, String body, BuildContext context) {
 
 /// Función que recibe un file y lo convierte a base 64 <br>
 /// @param file Archivo a convertir <br>
-/// @return String con el archivo en base 64
+/// @returns String con el archivo en base 64
 Future<String> convertFileToBase64(File file) async {
   // 1. Leer los bytes de la imagen
   final bytes = await file.readAsBytes();
