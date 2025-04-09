@@ -154,7 +154,7 @@ class _SelectArtistsViewState extends State<SelectArtistsView> {
                           }
                         });
                       },
-                      child: SelectArtistWidget(
+                      child: SelectWidget(
                           photoUrl: artist.picture,
                           artistName: artist.name,
                           isSelected: isSelected),

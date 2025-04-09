@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 /// Widget que muestra la imagen del artista y su nombre <br>
 /// @author Amaro Suárez <br>
-/// @version 1.0
-class SelectArtistWidget extends StatelessWidget {
-  /// Url de la imagen del artista
+/// @version 1.1
+class SelectWidget extends StatelessWidget {
+  /// Url de la imagen
   final String photoUrl;
 
-  /// Nombre del artista
+  /// Nombre
   final String artistName;
 
-  /// Booleano que indica si el artista está seleccionado o no
+  /// Booleano que indica si está seleccionado o no
   final bool isSelected;
 
-  const SelectArtistWidget(
+  const SelectWidget(
       {super.key,
       required this.photoUrl,
       required this.artistName,
@@ -23,7 +23,7 @@ class SelectArtistWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Imagen del artista
+        // Imagen
         CircleAvatar(
           radius: 36,
           backgroundImage: NetworkImage(photoUrl),
@@ -64,7 +64,7 @@ class SelectArtistWidget extends StatelessWidget {
 
         SizedBox(height: 5),
 
-        // Nombre del artista
+        // Nombre
         Text(
           artistName,
           textAlign: TextAlign.center,

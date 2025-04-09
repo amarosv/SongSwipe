@@ -1,6 +1,6 @@
 /// Clase que representa un género y sus atributos <br>
 /// @author Amaro Suárez <br>
-/// @version 1.0
+/// @version 1.1
 class Genre {
   /// ID del género
   final int id;
@@ -17,6 +17,7 @@ class Genre {
   /// Imagen xl del género
   final String pictureXL;
 
+  /// Constructor del género
   Genre({
     required this.id,
     required this.name,
@@ -27,6 +28,7 @@ class Genre {
     required this.pictureXL
   });
 
+  /// Método que parsea un JSON en Género
   factory Genre.fromJson(Map<String, dynamic> json) {
     return Genre(
       id: json['id'],
@@ -39,6 +41,7 @@ class Genre {
     );
   }
 
+  /// Método que crea un género vacío
   factory Genre.empty() {
     return Genre(
       id: 0,

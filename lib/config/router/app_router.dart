@@ -27,7 +27,7 @@ class AppRouter {
       location = '/select-artists-screen';
     }
 
-    location = '/signup';
+    location = '/profile-screen';
     // location = '/select-genres-screen';
 
     // Devolvemos la ruta

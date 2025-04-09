@@ -1,6 +1,6 @@
 /// Clase que representa a un artista con sus atributos <br>
 /// @author Amaro Suárez <br>
-/// @version 1.0
+/// @version 1.1
 class Artist {
   /// ID del artista
   final int id;
@@ -31,6 +31,7 @@ class Artist {
   /// Número de canciones guardadas del artista
   final int savedTracks;
 
+  /// Constructor del Artist
   Artist({
     required this.id,
     required this.name,
@@ -48,6 +49,7 @@ class Artist {
     required this.savedTracks,
   });
 
+  /// Método que parsea un JSON en Artist
   factory Artist.fromJson(Map<String, dynamic> json, int savedTracks) {
     return Artist(
       id: json['id'] ?? 0,
@@ -67,6 +69,7 @@ class Artist {
     );
   }
 
+  /// Método que crea un Artist vacío
   factory Artist.empty() {
     return Artist(
       id: 0,

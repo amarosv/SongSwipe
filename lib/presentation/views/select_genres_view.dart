@@ -158,7 +158,7 @@ class _SelectGenresViewState extends State<SelectGenresView> {
                           }
                         });
                       },
-                      child: SelectArtistWidget(
+                      child: SelectWidget(
                           photoUrl: genre.picture,
                           artistName: genre.name,
                           isSelected: isSelected),

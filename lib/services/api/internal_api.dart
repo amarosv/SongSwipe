@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:songswipe/config/constants/environment.dart';
+import 'package:songswipe/models/user_profile.dart';
+import 'package:songswipe/services/api/externals_api.dart';
 
 /// Función que recibe un nombre, apellidos, nombre de usuario y una imagen (opcional) y registra
 /// al usuario en la base de datos <br>
@@ -59,32 +61,6 @@ Future<bool> registerUserInDatabase(
   registered = response.statusCode == 200;
 
   return registered;
-}
-
-/// Función que recibe un UID de un usuario y una imagen en base 64 y la sube a imgbb <br>
-/// @param uid UID del usuario <br>
-/// @param base64Image Imagen en base 64 <br>
-/// @returns Url de la imagen
-Future<String> saveImageInImgbb(String uid, String base64Image) async {
-  // Variable donde se almacenará la url de la imagen
-  String urlImage;
-
-  Uri url =
-      Uri.parse('https://api.imgbb.com/1/upload?name=$uid-${DateTime.now()}');
-
-  // Subimos la imagen
-  final response = await http.post(
-    url,
-    body: {
-      'key': Environment.apiKey,
-      'image': base64Image,
-    },
-  );
-
-  // Obtenemos la url de la imagen
-  urlImage = jsonDecode(response.body)['data']['url'];
-
-  return urlImage;
 }
 
 /// Función que recibe una lista de ids de artistas y los guarda en la base de datos
@@ -149,4 +125,31 @@ Future<int> addGenreToFavorites({required List<int> genres}) async {
   }
 
   return numGeneros;
+}
+
+/// Función que recibe un UID de usuario y obtiene los datos a mostrar en la pantalla de perfil <br>
+/// @param uid UID del usuario <br>
+/// @returns UserProfile
+Future<UserProfile> getUserProfile({required String uid}) async {
+  // Variable donde se almacenará el resultado
+  UserProfile userProfile = UserProfile.empty();
+
+  // Formamos la url del endpoint
+  Uri url = Uri.parse('${Environment.apiUrl}/profile?uid=$uid');
+
+  // Llamada a la API para obtener los datos del perfil del usuario
+  final response = await http.get(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+  );
+  
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    userProfile = UserProfile.fromJson(jsonDecode(response.body));
+  }
+
+  return userProfile;
 }
