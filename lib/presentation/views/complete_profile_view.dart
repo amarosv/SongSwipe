@@ -81,6 +81,9 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
   void _onUsernameChanged() {
     _debounce?.cancel();
 
+    // Variable que almacena si el nombre de usuario no contiene espacios ni caracteres especiales
+    bool isValid = false;
+
     // Forzamos minúsculas en tiempo real
     final currentText = usernameController.text;
     final lowerText = currentText.toLowerCase();
@@ -92,13 +95,17 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
       return; // evitamos duplicar acciones mientras se sincroniza el texto
     }
 
+    // Validar caracteres permitidos
+    isValid = RegExp(r'^[a-z0-9_]*$').hasMatch(lowerText);
+
     // Quitamos el alert
     setState(() {
       _usernameRequired = false;
     });
 
-    // Primero comprobamos que el username no esté vacío y sea de al menos 4 caracteres
-    if (lowerText.isNotEmpty && lowerText.length >= 4) {
+    // Primero comprobamos que el username no esté vacío, sea de al menos 4 caracteres y no contenga
+    // espacios ni caracteres especiales
+    if (lowerText.isNotEmpty && lowerText.length >= 4 && isValid) {
       _debounce = Timer(const Duration(milliseconds: 700), () {
         _checkIfUsernameExists(lowerText);
       });
