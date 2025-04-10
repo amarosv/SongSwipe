@@ -95,7 +95,7 @@ class _ProfileViewState extends State<ProfileView> {
                   )
                 ],
               ),
-            
+
               const SizedBox(height: 30),
 
               // Información de canciones y seguidores
@@ -106,7 +106,8 @@ class _ProfileViewState extends State<ProfileView> {
                     children: [
                       Flexible(
                         child: CustomColumn(
-                          title: capitalizeFirstLetter(text: localization.swipes),
+                          title:
+                              capitalizeFirstLetter(text: localization.swipes),
                           value: humanReadbleNumber(userProfile.savedSongs),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
                           textStyle: TextStyle(fontSize: 28),
@@ -114,7 +115,8 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                       Flexible(
                         child: CustomColumn(
-                          title: upperCaseAfterSpace(text: localization.followers),
+                          title:
+                              upperCaseAfterSpace(text: localization.followers),
                           value: humanReadbleNumber(userProfile.followers),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
                           textStyle: TextStyle(fontSize: 28),
@@ -122,7 +124,8 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                       Flexible(
                         child: CustomColumn(
-                          title: upperCaseAfterSpace(text: localization.following),
+                          title:
+                              upperCaseAfterSpace(text: localization.following),
                           value: humanReadbleNumber(userProfile.following),
                           hasDivider: false,
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -134,20 +137,19 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
               ),
 
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
 
               // Information
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   capitalizeFirstLetter(text: localization.info),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
               ),
-              
+
               // Container con la información
               CustomContainer(
                 child: Padding(
@@ -155,125 +157,77 @@ class _ProfileViewState extends State<ProfileView> {
                   child: Column(
                     children: [
                       const SizedBox(height: 10),
-                      CustomRow(title: 'Full name', value: '${userProfile.name} ${userProfile.lastName}',),
-                      const SizedBox(height: 20),
-                      CustomRow(title: 'Email', value: userProfile.email,),
-                      const SizedBox(height: 20),
-                      CustomRow(title: 'Fecha de unión',
-                        value: languageCode != 'en'
-                          ? convertDate(userProfile.dateJoining)
-                          : userProfile.dateJoining
+                      CustomRow(
+                        title: 'Full name',
+                        value: '${userProfile.name} ${userProfile.lastName}',
                       ),
+                      const SizedBox(height: 20),
+                      CustomRow(
+                        title: 'Email',
+                        value: userProfile.email,
+                      ),
+                      const SizedBox(height: 20),
+                      CustomRow(
+                          title: 'Fecha de unión',
+                          value: languageCode != 'en'
+                              ? convertDate(userProfile.dateJoining)
+                              : userProfile.dateJoining),
                       const SizedBox(height: 10),
                     ],
                   ),
                 ),
               ),
 
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
 
               // Ver artistas favoritos
-              GestureDetector(
-                onTap: () {
-                  // TODO: Que lleve a la página de ver los artistas favoritos
-                },
-                child: CustomContainer(
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          capitalizeFirstLetter(text: localization.see_fav_artists),
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios_outlined
-                        )
-                      ],
-                    ),
-                  ),
+              CustomNavigator(
+                title: Text(
+                  capitalizeFirstLetter(text: localization.see_fav_artists),
+                  style: TextStyle(fontSize: 18),
                 ),
               ),
 
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
 
               // Ver géneros favoritas
-              GestureDetector(
-                onTap: () {
-                  // TODO: Que lleve a la página de ver los géneros favoritos
-                },
-                child: CustomContainer(
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          capitalizeFirstLetter(text: localization.see_fav_genres),
+              CustomNavigator(
+                title: Text(
+                          capitalizeFirstLetter(
+                              text: localization.see_fav_genres),
                           style: TextStyle(fontSize: 18),
                         ),
-                        Icon(
-                          Icons.arrow_forward_ios_outlined
-                        )
-                      ],
-                    ),
-                  ),
-                ),
               ),
 
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
 
               // Ver estadísticas
-              GestureDetector(
-                onTap: () {
-                  // TODO: Que lleve a la págian de ver las estadísticas
-                },
-                child: CustomContainer(
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
+              CustomNavigator(
+                title: Text(
                           capitalizeFirstLetter(text: localization.see_stats),
                           style: TextStyle(fontSize: 18),
                         ),
-                        Icon(
-                          Icons.arrow_forward_ios_outlined
-                        )
-                      ],
-                    ),
-                  ),
-                ),
               ),
 
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
 
               // Editar perfil
-              GestureDetector(
-                onTap: () {
-                  // TODO: Que lleve a la página de editar perfil
-                },
-                child: CustomContainer(
-                  color: Theme.of(context).colorScheme.primary,
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          capitalizeFirstLetter(text: localization.edit_profile),
+              CustomNavigator(
+                color: Theme.of(context).colorScheme.primary,
+                title: Text(
+                          capitalizeFirstLetter(
+                              text: localization.edit_profile),
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
-                        Icon(
-                          Icons.arrow_forward_ios_outlined,
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                      foregroundColor: Colors.white,
               ),
             ],
           ),
