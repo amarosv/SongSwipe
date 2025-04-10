@@ -52,5 +52,16 @@
     "search_artist": "search an artist...",
     "done": "done",
     "select_genres": "select at least 3 genres",
-    "search_genre": "search an genre..."
+    "search_genre": "search an genre...",
+    "info": "information",
+    "full_name": "full name",
+    "date_joining": "date of joining",
+    "saved_songs": "saved songs",
+    "followers": "followers",
+    "following": "following",
+    "see_fav_artists": "see my favorite artists",
+    "see_fav_genres": "see my favorite genres",
+    "see_stats": "see my stats",
+    "edit_profile": "edit profile",
+    "swipes": "swipes"
 }

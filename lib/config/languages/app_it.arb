@@ -52,5 +52,16 @@
     "search_artist": "trova un artista..",
     "done": "fatto",
     "select_genres": "seleziona almeno 3 generi",
-    "search_genre": "trova un genere..."
+    "search_genre": "trova un genere...",
+    "info": "informazione",
+    "full_name": "nome e cognome",
+    "date_joining": "data dell'unione",
+    "saved_songs": "canzoni salvate",
+    "followers": "seguaci",
+    "following": "seguente",
+    "see_fav_artists": "vedi i miei artisti preferiti",
+    "see_fav_genres": "vedi i miei generi preferiti",
+    "see_stats": "vedi le mie statistiche",
+    "edit_profile": "modifica profilo",
+    "swipes": "swipes"
 }

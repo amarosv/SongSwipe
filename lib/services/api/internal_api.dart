@@ -31,7 +31,7 @@ Future<bool> registerUserInDatabase(
   String urlImage = 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
 
   if (base64Image != null) {
-    saveImageInImgbb(uid, base64Image);
+    urlImage = await saveImageInImgbb(uid, base64Image);
   }
 
   // 2. Creamos al usuario
@@ -135,7 +135,7 @@ Future<UserProfile> getUserProfile({required String uid}) async {
   UserProfile userProfile = UserProfile.empty();
 
   // Formamos la url del endpoint
-  Uri url = Uri.parse('${Environment.apiUrl}/profile?uid=$uid');
+  Uri url = Uri.parse('${Environment.apiUrl}/$uid/profile');
 
   // Llamada a la API para obtener los datos del perfil del usuario
   final response = await http.get(

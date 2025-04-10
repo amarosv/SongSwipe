@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:toastification/toastification.dart';
 
 /// Función que recibe un titulo y una descripción y muestra
@@ -33,4 +34,30 @@ Future<String> convertFileToBase64(File file) async {
   final base64Image = base64Encode(bytes);
 
   return base64Image;
+}
+
+/// Función que recibe una fecha en formato inglés y lo convierte a formato español <br>
+/// @param date Fecha en formato inglés
+/// @returns Fecha en formato español
+String convertDate(String date) {
+  // Definimos el formato de entrada y salida
+  final formatoEntrada = DateFormat('MM/dd/yyyy hh:mm:ss a');
+  final formatoSalida = DateFormat('dd/MM/yyyy HH:mm:ss');
+
+  try {
+    final fecha = formatoEntrada.parse(date);
+    return formatoSalida.format(fecha);
+  } catch (e) {
+    return 'Formato inválido';
+  }
+}
+
+/// Función que formatea los números para que 1000 pase 1k <br>
+/// @param number Número a convertir
+/// @returns Número convertido
+String humanReadbleNumber(int number) {
+  final formattedNumber =
+      NumberFormat.compactCurrency(decimalDigits: 0, symbol: '').format(number);
+
+  return formattedNumber;
 }

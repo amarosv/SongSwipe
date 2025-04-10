@@ -80,7 +80,17 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
   // Función que se llama cuando el username ha cambiado
   void _onUsernameChanged() {
     _debounce?.cancel();
-    String username = usernameController.text;
+
+    // Forzamos minúsculas en tiempo real
+    final currentText = usernameController.text;
+    final lowerText = currentText.toLowerCase();
+    if (currentText != lowerText) {
+      usernameController.value = usernameController.value.copyWith(
+        text: lowerText,
+        selection: TextSelection.collapsed(offset: lowerText.length),
+      );
+      return; // evitamos duplicar acciones mientras se sincroniza el texto
+    }
 
     // Quitamos el alert
     setState(() {
@@ -88,9 +98,9 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     });
 
     // Primero comprobamos que el username no esté vacío y sea de al menos 4 caracteres
-    if (username.isNotEmpty && username.length >= 4) {
+    if (lowerText.isNotEmpty && lowerText.length >= 4) {
       _debounce = Timer(const Duration(milliseconds: 700), () {
-        _checkIfUsernameExists(username);
+        _checkIfUsernameExists(lowerText);
       });
     } else {
       setState(() {});
@@ -99,6 +109,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
   // Comprueba si ya existe ese username
   Future<void> _checkIfUsernameExists(String username) async {
+    print(username);
     final url = Uri.parse('${Environment.apiUrl}/check-username/$username');
 
     try {
@@ -167,71 +178,6 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     }
   }
 
-  /// Función que registra al usuario en la base de datos
-  // void _register() async {
-  //   User user = FirebaseAuth.instance.currentUser!;
-  //   String uid = user.uid;
-  //   String email = user.email!;
-  //   String name = nameController.text;
-  //   String lastName = lastNameController.text;
-  //   String username = usernameController.text;
-
-  //   String urlImage = 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
-
-  //   // Guardamos la foto y la obtenemos
-  //   Uri url =
-  //       Uri.parse('https://api.imgbb.com/1/upload?name=$uid-${DateTime.now()}');
-
-  //   if (_image != null) {
-  //     // 1. Leer los bytes de la imagen
-  //     final bytes = await _image!.readAsBytes();
-
-  //     // 2. Codificar la imagen a base64
-  //     final base64Image = base64Encode(bytes);
-
-  //     // Subimos la imagen
-  //     final response = await http.post(
-  //       url,
-  //       body: {
-  //         'key': Environment.apiKey, // Reemplaza con tu clave de API de ImgBB
-  //         'image': base64Image,
-  //       },
-  //     );
-
-  //     // Obtenemos la url de la imagen
-  //     urlImage = jsonDecode(response.body)['data']['url'];
-  //   }
-
-  //   // Creamos al usuario
-  //   url = Uri.parse(Environment.apiUrl);
-
-  //   // Llamada a la API para guardar el usuario
-  //   final response = await http.post(
-  //     Uri.parse(Environment.apiUrl),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json',
-  //     },
-  //     body: jsonEncode({
-  //       'uid': uid,
-  //       'name': name,
-  //       'lastName': lastName,
-  //       'email': email,
-  //       'photoURL': urlImage,
-  //       'dateJoining': 'null',
-  //       'username': username,
-  //       'userDeleted': false,
-  //       'userBlocked': false
-  //     }),
-  //   );
-
-  //   print(response.statusCode);
-
-  //   if (response.statusCode == 200) {
-  //     context.push('/select-artists-screen');
-  //   }
-  // }
-
   /// Función que comprueba que los campos requeridos estén rellenos
   /// y activa el botón para continuar
   void checkIfButtonIsActived() {
@@ -294,7 +240,8 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
             // Texto informativo para el username
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-              child: Text(capitalizeFirstLetter(text: localization.username_info)),
+              child:
+                  Text(capitalizeFirstLetter(text: localization.username_info)),
             ),
 
             // CustomTextField para el nombre
@@ -405,7 +352,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
                           // Si se ha registrado correctamente, vamos a la siguiente pantalla
                           if (registered) {
-                            context.go('/select-artists-screen');
+                            context.go('/select-artists');
                           }
                         } else {
                           // Mostramos la notificación

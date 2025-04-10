@@ -173,7 +173,7 @@ class _SelectArtistsViewState extends State<SelectArtistsView> {
                   int numArtistsSaved = await addArtistToFavorites(artists: selectedArtistsIdsList);
 
                   if (numArtistsSaved > 0) {
-                    context.go('/select-genres-screen');
+                    context.go('/select-genres');
                   }
                 },
                 text: localization.done.toUpperCase(),

@@ -24,10 +24,11 @@ class AppRouter {
     if (user != null && !user.emailVerified) {
       location = '/verify-email';
     } else if (user != null && user.emailVerified) {
-      location = '/select-artists-screen';
+      location = '/select-artists';
     }
 
-    location = '/profile-screen';
+    location = '/profile';
+    // location = '/signup';
     // location = '/select-genres-screen';
 
     // Devolvemos la ruta
@@ -65,17 +66,17 @@ class AppRouter {
         builder: (context, state) => VerifyEmailScreen(),
       ),
       GoRoute(
-        path: '/select-artists-screen',
+        path: '/select-artists',
         name: SelectArtistsScreen.name,
         builder: (context, state) => SelectArtistsScreen(),
       ),
       GoRoute(
-        path: '/select-genres-screen',
+        path: '/select-genres',
         name: SelectGenresScreen.name,
         builder: (context, state) => SelectGenresScreen(),
       ),
       GoRoute(
-        path: '/profile-screen',
+        path: '/profile',
         name: ProfileScreen.name,
         builder: (context, state) => ProfileScreen(),
       ),

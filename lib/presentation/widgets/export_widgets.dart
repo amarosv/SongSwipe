@@ -1,4 +1,5 @@
 export 'custom_button_widget.dart';
+export 'custom_column_widget.dart';
 export 'custom_container_widget.dart';
 export 'custom_dropdownbutton_widget.dart';
 export 'custom_row_widget.dart';

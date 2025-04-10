@@ -177,7 +177,7 @@ class _SelectGenresViewState extends State<SelectGenresView> {
                   int numGenresSaved = await addGenreToFavorites(genres: selectedGenresIdsList);
 
                   if (numGenresSaved > 0) {
-                    context.go('/profile-screen');
+                    context.go('/profile');
                   }
                 },
                 text: localization.done.toUpperCase(),
