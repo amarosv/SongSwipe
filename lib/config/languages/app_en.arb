@@ -63,5 +63,10 @@
     "see_fav_genres": "see my favorite genres",
     "see_stats": "see my stats",
     "edit_profile": "edit profile",
-    "swipes": "swipes"
+    "swipes": "swipes",
+    "profile": "profile",
+    "library": "library",
+    "discover": "discover",
+    "friends": "friends",
+    "settings": "settings"
 }

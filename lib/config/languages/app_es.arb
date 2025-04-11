@@ -63,5 +63,10 @@
     "see_fav_genres": "ver mis géneros favoritos",
     "see_stats": "ver mis estadísticas",
     "edit_profile": "editar perfil",
-    "swipes": "swipes"
+    "swipes": "swipes",
+    "profile": "perfil",
+    "library": "biblioteca",
+    "discover": "descubrir",
+    "friends": "amigos",
+    "settings": "ajustes"
 }

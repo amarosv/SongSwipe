@@ -27,7 +27,7 @@ class AppRouter {
       location = '/select-artists';
     }
 
-    location = '/profile';
+    location = '/home/4';
     // location = '/signup';
     // location = '/select-genres-screen';
 
@@ -76,9 +76,13 @@ class AppRouter {
         builder: (context, state) => SelectGenresScreen(),
       ),
       GoRoute(
-        path: '/profile',
-        name: ProfileScreen.name,
-        builder: (context, state) => ProfileScreen(),
+        path: '/home/:page',
+        name: HomeScreen.name,
+        builder: (context, state) {
+          final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
+
+          return HomeScreen(pageIndex: pageIndex);
+        },
       ),
     ],
   );

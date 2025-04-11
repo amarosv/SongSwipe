@@ -5,11 +5,25 @@ import 'package:songswipe/presentation/widgets/export_widgets.dart';
 /// @author Amaro Suárez <br>
 /// @version 1.0
 class CustomNavigator extends StatelessWidget {
+  /// Icono
   final IconData? icon;
+
+  /// Color del icono
   final Color? colorIcon;
+
+  /// Tamaño del icono
+  final double? iconSize;
+
+  /// Título
   final Text title;
+
+  /// Color de fondo
   final Color? color;
+
+  /// Color de foreground
   final Color? foregroundColor;
+
+  /// Función
   final Function()? function;
 
   const CustomNavigator(
@@ -19,7 +33,8 @@ class CustomNavigator extends StatelessWidget {
       this.color = const Color.fromARGB(65, 136, 142, 147),
       this.foregroundColor,
       this.colorIcon,
-      this.function});
+      this.function,
+      this.iconSize});
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +51,9 @@ class CustomNavigator extends StatelessWidget {
                 Icon(
                   icon,
                   color: colorIcon,
+                  size: iconSize,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 20),
               ],
               Expanded(child: title),
               Icon(

@@ -4,5 +4,6 @@ export 'login_view.dart';
 export 'profile_view.dart';
 export 'select_artists_view.dart';
 export 'select_genres_view.dart';
+export 'settings_view.dart';
 export 'signup_view.dart';
 export 'verify_email_view.dart';
