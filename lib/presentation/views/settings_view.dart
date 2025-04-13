@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:songswipe/config/icons/song_swipe_icons.dart';
 import 'package:songswipe/helpers/strings_methods.dart';
@@ -132,9 +134,38 @@ class _SettingsViewState extends State<SettingsView> {
 
               const SizedBox(height: 40,),
 
+              // Cerrar sesión
               CustomButton(
                 backgroundColor: Colors.red,
-                onPressed: () {},
+                onPressed: () async {
+                  final localization = AppLocalizations.of(context)!;
+
+                  final shouldLogout = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog.adaptive(
+                      title: Text(capitalizeFirstLetter(text: localization.logout)),
+                      content: Text(capitalizeFirstLetter(text: localization.logout_dialog_content)),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text(
+                            capitalizeFirstLetter(text: localization.no),
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text(capitalizeFirstLetter(text: localization.yes)),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (shouldLogout == true) {
+                    await FirebaseAuth.instance.signOut();
+                    context.go('/login');
+                  }
+                },
                 text: localization.logout,
                 textSize: 24,
                 icon: Icons.logout,
@@ -145,6 +176,7 @@ class _SettingsViewState extends State<SettingsView> {
 
               const SizedBox(height: 40),
 
+              // Versión de la app
               Text(_version)
             ],
           ),

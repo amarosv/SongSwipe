@@ -75,5 +75,8 @@
     "audio": "audio",
     "notifications": "notificaciones",
     "about_songswipe": "acerca de ",
-    "logout": "cerrar sesión"
+    "logout": "cerrar sesión",
+    "logout_dialog_content": "¿está seguro de que desea cerrar sesión?",
+    "yes": "sí",
+    "no": "no"
 }

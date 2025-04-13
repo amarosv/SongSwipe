@@ -75,5 +75,8 @@
     "audio": "audio",
     "notifications": "notifications",
     "about_songswipe": "about ",
-    "logout": "logout"
+    "logout": "log out",
+    "logout_dialog_content": "are you sure you want to log out?",
+    "yes": "yes",
+    "no": "no"
 }

@@ -28,7 +28,10 @@ class AppRouter {
     }
 
     location = '/home/4';
-    // location = '/signup';
+
+    if (user == null) {
+      location = '/login';
+    }
     // location = '/select-genres-screen';
 
     // Devolvemos la ruta

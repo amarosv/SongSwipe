@@ -183,7 +183,8 @@ class _LoginViewState extends State<LoginView> {
                               .signInWithEmailAndPassword(
                                   email: email, password: password);
 
-                          print(credential.user!.email);
+                          // Vamos al home
+                          context.go('/home/4');
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'invalid-credential') {
                             print(

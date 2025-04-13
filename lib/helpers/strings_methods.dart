@@ -26,5 +26,14 @@ String upperCaseAfterSpace({required String text}) {
 /// @param text Texto a capitalizar <br>
 /// @returns Texto con la primera letra en mayúscula
 String capitalizeFirstLetter({required String text}) {
-  return text[0].toUpperCase() + text.substring(1);
+  // Variable que almacena el texto final
+  String finalText;
+
+  if (text[0] == '¿') {
+    finalText = text[0] + text[1].toUpperCase() + text.substring(2);
+  } else {
+    finalText = text[0].toUpperCase() + text.substring(1);
+  }
+
+  return finalText;
 }
