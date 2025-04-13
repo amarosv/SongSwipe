@@ -18,21 +18,21 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   // Obtenemos el usuario actual
-  User user = FirebaseAuth.instance.currentUser!;
+  final User _user = FirebaseAuth.instance.currentUser!;
 
   // Variable que almacena el uid del usuario
-  late String uid;
+  late String _uid;
   // Variable que almacena al userprofile con sus datos
-  UserProfile userProfile = UserProfile.empty();
+  UserProfile _userProfile = UserProfile.empty();
 
   // Variable que almacena el código del idioma
-  String languageCode = '';
+  String _languageCode = '';
 
   @override
   void initState() {
     super.initState();
     // Almacenamos el uid del usuario
-    uid = user.uid;
+    _uid = _user.uid;
     // Obtenemos los datos del usuario
     _getUserProfile();
     // Obtenemos el código del idioma
@@ -41,9 +41,9 @@ class _ProfileViewState extends State<ProfileView> {
 
   // Función que obtiene los datos del usuario de la api
   void _getUserProfile() async {
-    UserProfile user = await getUserProfile(uid: uid);
+    UserProfile user = await getUserProfile(uid: _uid);
     setState(() {
-      userProfile = user;
+      _userProfile = user;
     });
   }
 
@@ -51,7 +51,7 @@ class _ProfileViewState extends State<ProfileView> {
   void _getLanguageCode() async {
     String code = await loadDataString(tag: 'language');
     setState(() {
-      languageCode = code;
+      _languageCode = code;
     });
   }
 
@@ -80,7 +80,7 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     child: CircleAvatar(
                       radius: 42,
-                      backgroundImage: NetworkImage(userProfile.photoUrl),
+                      backgroundImage: NetworkImage(_userProfile.photoUrl),
                     ),
                   ),
 
@@ -88,7 +88,7 @@ class _ProfileViewState extends State<ProfileView> {
 
                   // Username
                   Expanded(
-                    child: Text('@${userProfile.username}',
+                    child: Text('@${_userProfile.username}',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                         overflow: TextOverflow.ellipsis),
@@ -108,7 +108,7 @@ class _ProfileViewState extends State<ProfileView> {
                         child: CustomColumn(
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
-                          value: humanReadbleNumber(userProfile.savedSongs),
+                          value: humanReadbleNumber(_userProfile.savedSongs),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
                           textStyle: TextStyle(fontSize: 28),
                         ),
@@ -117,7 +117,7 @@ class _ProfileViewState extends State<ProfileView> {
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.followers),
-                          value: humanReadbleNumber(userProfile.followers),
+                          value: humanReadbleNumber(_userProfile.followers),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
                           textStyle: TextStyle(fontSize: 28),
                         ),
@@ -126,7 +126,7 @@ class _ProfileViewState extends State<ProfileView> {
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.following),
-                          value: humanReadbleNumber(userProfile.following),
+                          value: humanReadbleNumber(_userProfile.following),
                           hasDivider: false,
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
                           textStyle: TextStyle(fontSize: 28),
@@ -159,19 +159,19 @@ class _ProfileViewState extends State<ProfileView> {
                       const SizedBox(height: 10),
                       CustomRow(
                         title: 'Full name',
-                        value: '${userProfile.name} ${userProfile.lastName}',
+                        value: '${_userProfile.name} ${_userProfile.lastName}',
                       ),
                       const SizedBox(height: 20),
                       CustomRow(
                         title: 'Email',
-                        value: userProfile.email,
+                        value: _userProfile.email,
                       ),
                       const SizedBox(height: 20),
                       CustomRow(
                           title: 'Fecha de unión',
-                          value: languageCode != 'en'
-                              ? convertDate(userProfile.dateJoining)
-                              : userProfile.dateJoining),
+                          value: _languageCode != 'en'
+                              ? convertDate(_userProfile.dateJoining)
+                              : _userProfile.dateJoining),
                       const SizedBox(height: 10),
                     ],
                   ),

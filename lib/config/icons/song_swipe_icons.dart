@@ -13,6 +13,7 @@
 ///
 /// 
 ///
+library;
 import 'package:flutter/widgets.dart';
 
 class SongSwipe {
@@ -22,9 +23,9 @@ class SongSwipe {
   static const String? _kFontPkg = null;
 
   static const IconData info = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData circle_notifications = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData circleNotifications = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData headphones = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData language = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData design_services = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData designServices = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData person = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

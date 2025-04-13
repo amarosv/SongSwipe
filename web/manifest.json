@@ -1,6 +1,6 @@
 {
-    "name": "songswipe",
-    "short_name": "songswipe",
+    "name": "SongSwipe",
+    "short_name": "SongSwipe",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

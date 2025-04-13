@@ -68,5 +68,12 @@
     "library": "biblioteca",
     "discover": "scoprire",
     "friends": "amici",
-    "settings": "impostazioni"
+    "settings": "impostazioni",
+    "appearance": "aspetto",
+    "profile_privacy": "profilo e privacy",
+    "language": "lingua",
+    "audio": "audio",
+    "notifications": "notifiche",
+    "about_songswipe": "informazioni su ",
+    "logout": "disconnettersi"
 }

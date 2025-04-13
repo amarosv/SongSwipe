@@ -43,6 +43,7 @@ dependencies:
   image_cropper: ^9.0.0
   image_picker: ^1.1.2
   intl: any
+  package_info_plus: ^8.3.0
   shared_preferences: ^2.3.5
   toastification: ^3.0.1
 
@@ -67,7 +68,7 @@ flutter:
     - assets/images/social/
     - assets/images/useful/
     - .env
-  
+
   fonts:
     - family: SongSwipe
       fonts:

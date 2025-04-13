@@ -5,7 +5,7 @@
 
     <application
         android:label="songswipe"
-        android:name="${applicationName}"
+        android:name="@string/app_name"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
