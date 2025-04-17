@@ -53,5 +53,20 @@
 
 		<key>NSPhotoLibraryAddUsageDescription</key>
 		<string>Permite guardar imágenes en la galería.</string>
+
+		<key>GIDClientID</key>
+		<string>272733974943-k8uo66fqpnvjoiadbgvl2pkg25e35ujn.apps.googleusercontent.com</string>
+
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.272733974943-k8uo66fqpnvjoiadbgvl2pkg25e35ujn</string>
+				</array>
+			</dict>
+		</array>
 	</dict>
 </plist>

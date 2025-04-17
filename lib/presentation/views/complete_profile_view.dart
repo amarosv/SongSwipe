@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:songswipe/config/constants/environment.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/internal_api.dart';
@@ -37,9 +34,9 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
   Timer? _debounce;
 
   // Controllers de los TextField
-  late TextEditingController usernameController;
-  late TextEditingController nameController;
-  late TextEditingController lastNameController;
+  late TextEditingController _usernameController;
+  late TextEditingController _nameController;
+  late TextEditingController _lastNameController;
 
   File? _image; // Imagen seleccionada
   final ImagePicker _picker = ImagePicker();
@@ -48,18 +45,18 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
   void initState() {
     super.initState();
     // Inicializamos los controllers
-    usernameController = TextEditingController();
-    usernameController.addListener(_onUsernameChanged);
-    nameController = TextEditingController();
-    nameController.addListener(() {
+    _usernameController = TextEditingController();
+    _usernameController.addListener(_onUsernameChanged);
+    _nameController = TextEditingController();
+    _nameController.addListener(() {
       // Quitamos el alert
       setState(() {
         _nameRequired = false;
       });
       checkIfButtonIsActived();
     });
-    lastNameController = TextEditingController();
-    lastNameController.addListener(() {
+    _lastNameController = TextEditingController();
+    _lastNameController.addListener(() {
       // Quitamos el alert
       setState(() {
         _lastNameRequired = false;
@@ -71,9 +68,9 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
   @override
   void dispose() {
     // Destruimos los controllers
-    usernameController.dispose();
-    nameController.dispose();
-    lastNameController.dispose();
+    _usernameController.dispose();
+    _nameController.dispose();
+    _lastNameController.dispose();
     super.dispose();
   }
 
@@ -85,10 +82,10 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     bool isValid = false;
 
     // Forzamos minúsculas en tiempo real
-    final currentText = usernameController.text;
+    final currentText = _usernameController.text;
     final lowerText = currentText.toLowerCase();
     if (currentText != lowerText) {
-      usernameController.value = usernameController.value.copyWith(
+      _usernameController.value = _usernameController.value.copyWith(
         text: lowerText,
         selection: TextSelection.collapsed(offset: lowerText.length),
       );
@@ -106,36 +103,20 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     // Primero comprobamos que el username no esté vacío, sea de al menos 4 caracteres y no contenga
     // espacios ni caracteres especiales
     if (lowerText.isNotEmpty && lowerText.length >= 4 && isValid) {
-      _debounce = Timer(const Duration(milliseconds: 700), () {
-        _checkIfUsernameExists(lowerText);
+      _debounce = Timer(const Duration(milliseconds: 700), () async {
+        _usernameExists = await checkIfUsernameExists(_usernameController.text);
+        setState(() {
+          if (_usernameExists) {
+            checkIfButtonIsActived();
+          }
+        });
       });
     } else {
       setState(() {});
     }
   }
 
-  // Comprueba si ya existe ese username
-  Future<void> _checkIfUsernameExists(String username) async {
-    print(username);
-    final url = Uri.parse('${Environment.apiUrl}/check-username/$username');
-
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          _usernameExists = data;
-
-          if (_usernameExists) {
-            checkIfButtonIsActived();
-          }
-        });
-      }
-    } catch (e) {
-      print("Error de conexión: $e");
-    }
-  }
-
+  // Función para recortar la imagen
   Future<File?> _cropImage(File imageFile) async {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
@@ -170,6 +151,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     return null;
   }
 
+  // Función para elegir la imagen
   Future<void> _pickImage() async {
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
@@ -188,9 +170,9 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
   /// Función que comprueba que los campos requeridos estén rellenos
   /// y activa el botón para continuar
   void checkIfButtonIsActived() {
-    if (usernameController.text.isNotEmpty &&
-        nameController.text.isNotEmpty &&
-        lastNameController.text.isNotEmpty) {
+    if (_usernameController.text.isNotEmpty &&
+        _nameController.text.isNotEmpty &&
+        _lastNameController.text.isNotEmpty) {
       setState(() {
         _activatedButton = true;
       });
@@ -224,14 +206,14 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
               padding: EdgeInsets.symmetric(horizontal: 50),
               placeholder: capitalizeFirstLetter(
                   text: localization.username_placeholder),
-              textEditingController: usernameController,
+              textEditingController: _usernameController,
               icon: _usernameRequired
                   ? Icon(
                       Icons.warning,
                       color: Colors.red,
                     )
-                  : usernameController.text.isNotEmpty &&
-                          usernameController.text.length >= 4
+                  : _usernameController.text.isNotEmpty &&
+                          _usernameController.text.length >= 4
                       ? _usernameExists
                           ? Icon(
                               Icons.cancel,
@@ -257,7 +239,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 placeholder:
                     capitalizeFirstLetter(text: localization.name_placeholder),
-                textEditingController: nameController,
+                textEditingController: _nameController,
                 icon: _nameRequired
                     ? Icon(
                         Icons.warning,
@@ -274,7 +256,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 placeholder: capitalizeFirstLetter(
                     text: localization.lastname_placeholder),
-                textEditingController: lastNameController,
+                textEditingController: _lastNameController,
                 icon: _lastNameRequired
                     ? Icon(
                         Icons.warning,
@@ -335,9 +317,9 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
                     _activatedButton ? Color(0xFFFF9E16) : Colors.grey,
                 onPressed: _activatedButton
                     ? () async {
-                        String name = nameController.text;
-                        String lastName = lastNameController.text;
-                        String username = usernameController.text;
+                        String name = _nameController.text;
+                        String lastName = _lastNameController.text;
+                        String username = _usernameController.text;
 
                         // Primero comprueba que estén los campos rellenos
                         if (username.isNotEmpty &&

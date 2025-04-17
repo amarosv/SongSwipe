@@ -78,5 +78,6 @@
     "logout": "log out",
     "logout_dialog_content": "are you sure you want to log out?",
     "yes": "yes",
-    "no": "no"
+    "no": "no",
+    "select_your_username": "select your username"
 }

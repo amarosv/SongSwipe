@@ -32,7 +32,7 @@ class AppRouter {
     if (user == null) {
       location = '/login';
     }
-    // location = '/select-genres-screen';
+    // location = '/complete-profile-simple';
 
     // Devolvemos la ruta
     return location;
@@ -62,6 +62,11 @@ class AppRouter {
         path: '/complete-profile',
         name: CompleteProfileScreen.name,
         builder: (context, state) => CompleteProfileScreen(),
+      ),
+      GoRoute(
+        path: '/complete-profile-simple',
+        name: CompleteProfileSimpleScreen.name,
+        builder: (context, state) => CompleteProfileSimpleScreen(),
       ),
       GoRoute(
         path: '/verify-email',

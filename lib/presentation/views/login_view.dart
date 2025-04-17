@@ -82,7 +82,7 @@ class _LoginViewState extends State<LoginView> {
 
               // Logo en horizontal
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Image(
                   image:
                       AssetImage('$assetsPath/logo-horizontal-sin-fondo.png'),
@@ -94,16 +94,19 @@ class _LoginViewState extends State<LoginView> {
               // CustomTextField para el email
               CustomTextfield(
                 title: capitalizeFirstLetter(text: localization.email),
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 placeholder:
                     capitalizeFirstLetter(text: localization.email_placeholder),
                 textEditingController: emailController,
+                icon: _showErrorEmail
+                  ? Icon(Icons.warning, color: Colors.red,)
+                  : null,
               ),
 
               // Mensaje de error del email
               _showErrorEmail
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: SizedBox(
                           width: width,
                           child: Text(
@@ -119,7 +122,7 @@ class _LoginViewState extends State<LoginView> {
               // CustomTextField para la contraseña
               CustomTextfield(
                 title: capitalizeFirstLetter(text: localization.password),
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 placeholder: capitalizeFirstLetter(
                     text: localization.password_placeholder),
                 textEditingController: passwordController,
@@ -129,7 +132,7 @@ class _LoginViewState extends State<LoginView> {
               // Mensaje de error de la contraseña
               _showErrorPassword
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: SizedBox(
                           width: width,
                           child: Text(
@@ -144,7 +147,7 @@ class _LoginViewState extends State<LoginView> {
 
               // Texto para recuperar contraseña
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SizedBox(
                   width: width,
                   child: Text(
@@ -235,7 +238,7 @@ class _LoginViewState extends State<LoginView> {
 
               // Iniciar sesión con proovedores
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   spacing: 20,
                   children: [

@@ -65,7 +65,7 @@ class _CustomDropdownLanguageState extends State<CustomDropdownLanguage> {
     final localization = AppLocalizations.of(context)!;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Align(
         alignment: Alignment.topRight,
         child: Container(

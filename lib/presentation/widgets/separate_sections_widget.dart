@@ -17,7 +17,7 @@ class SeparateSections extends StatelessWidget {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(left: 50),
+            padding: const EdgeInsets.only(left: 20),
             child: Divider(
               thickness: 1,
               color: Colors.black,
@@ -30,7 +30,7 @@ class SeparateSections extends StatelessWidget {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(right: 50),
+            padding: const EdgeInsets.only(right: 20),
             child: Divider(
               thickness: 1,
               color: Colors.black,

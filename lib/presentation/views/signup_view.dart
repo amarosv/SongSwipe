@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:songswipe/helpers/auth_methods.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
@@ -90,7 +91,7 @@ class _SignUpViewState extends State<SignUpView> {
 
               // Logo en horizontal
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Image(
                   image:
                       AssetImage('$assetsPath/logo-horizontal-sin-fondo.png'),
@@ -102,7 +103,7 @@ class _SignUpViewState extends State<SignUpView> {
               // CustomTextField para el email
               CustomTextfield(
                 title: capitalizeFirstLetter(text: localization.email),
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 placeholder:
                     capitalizeFirstLetter(text: localization.email_placeholder),
                 textEditingController: emailController,
@@ -117,7 +118,7 @@ class _SignUpViewState extends State<SignUpView> {
               // Mensaje de error del email
               _showErrorEmail
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: SizedBox(
                           width: width,
                           child: Text(
@@ -133,7 +134,7 @@ class _SignUpViewState extends State<SignUpView> {
               // CustomTextField para la contraseña
               CustomTextfield(
                 title: capitalizeFirstLetter(text: localization.password),
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 placeholder: capitalizeFirstLetter(
                     text: localization.password_placeholder),
                 isPassword: true,
@@ -146,7 +147,7 @@ class _SignUpViewState extends State<SignUpView> {
               CustomTextfield(
                 title:
                     capitalizeFirstLetter(text: localization.confirm_password),
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 placeholder: capitalizeFirstLetter(
                     text: localization.confirm_password_placeholder),
                 isPassword: true,
@@ -156,7 +157,7 @@ class _SignUpViewState extends State<SignUpView> {
               // Mensaje de error de la contraseña
               _showErrorPassword
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: SizedBox(
                           width: width,
                           child: Text(
@@ -207,9 +208,19 @@ class _SignUpViewState extends State<SignUpView> {
                             context.push('/verify-email');
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
-                              showNotification(capitalizeFirstLetter(text: localization.attention), capitalizeFirstLetter(text: localization.error_password_weak), context);
+                              showNotification(
+                                  capitalizeFirstLetter(
+                                      text: localization.attention),
+                                  capitalizeFirstLetter(
+                                      text: localization.error_password_weak),
+                                  context);
                             } else if (e.code == 'email-already-in-use') {
-                              showNotification(capitalizeFirstLetter(text: localization.attention), capitalizeFirstLetter(text: localization.error_account), context);
+                              showNotification(
+                                  capitalizeFirstLetter(
+                                      text: localization.attention),
+                                  capitalizeFirstLetter(
+                                      text: localization.error_account),
+                                  context);
                             }
                           } catch (e) {
                             print('Error ${e.toString()}');
@@ -247,7 +258,7 @@ class _SignUpViewState extends State<SignUpView> {
 
               // Crear cuenta con proovedores
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   spacing: 20,
                   children: [
@@ -263,7 +274,16 @@ class _SignUpViewState extends State<SignUpView> {
                     Expanded(
                       child: CustomSocialButton(
                         backgroundColor: Colors.black,
-                        onPressed: () {},
+                        onPressed: () async {
+                          User? userCredential =
+                              await signInWithGoogle();
+
+                          print(userCredential);
+
+                          if (userCredential != null) {
+                            context.go('/complete-profile-simple');
+                          }
+                        },
                         textStyle: TextStyle(fontSize: 16, color: Colors.white),
                         text: 'Google',
                         borderColor: Colors.black,

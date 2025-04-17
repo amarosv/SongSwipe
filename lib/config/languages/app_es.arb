@@ -78,5 +78,6 @@
     "logout": "cerrar sesión",
     "logout_dialog_content": "¿está seguro de que desea cerrar sesión?",
     "yes": "sí",
-    "no": "no"
+    "no": "no",
+    "select_your_username": "selecciona tu username"
 }

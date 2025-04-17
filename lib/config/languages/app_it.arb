@@ -78,5 +78,6 @@
     "logout": "logout",
     "logout_dialog_content": "sei sicuro di voler effettuare il logout?",
     "yes": "si",
-    "no": "no"
+    "no": "no",
+    "select_your_username": "seleziona tuo username"
 }

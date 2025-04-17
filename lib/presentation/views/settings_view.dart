@@ -51,7 +51,7 @@ class _SettingsViewState extends State<SettingsView> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               const SizedBox(height: 20),
@@ -67,7 +67,7 @@ class _SettingsViewState extends State<SettingsView> {
                 colorIcon: Theme.of(context).colorScheme.primary,
               ),
               
-              const SizedBox(height: 40,),
+              const SizedBox(height: 30,),
 
               // Perfil y privacidad
               CustomNavigator(
@@ -80,7 +80,7 @@ class _SettingsViewState extends State<SettingsView> {
                 colorIcon: Theme.of(context).colorScheme.primary,
               ),
               
-              const SizedBox(height: 40,),
+              const SizedBox(height: 30,),
 
               // Idioma
               CustomNavigator(
@@ -93,7 +93,7 @@ class _SettingsViewState extends State<SettingsView> {
                 colorIcon: Theme.of(context).colorScheme.primary,
               ),
               
-              const SizedBox(height: 40,),
+              const SizedBox(height: 30,),
 
               // Audio
               CustomNavigator(
@@ -106,7 +106,7 @@ class _SettingsViewState extends State<SettingsView> {
                 colorIcon: Theme.of(context).colorScheme.primary,
               ),
               
-              const SizedBox(height: 40,),
+              const SizedBox(height: 30,),
 
               // Notificaciones
               CustomNavigator(
@@ -119,12 +119,12 @@ class _SettingsViewState extends State<SettingsView> {
                 colorIcon: Theme.of(context).colorScheme.primary,
               ),
               
-              const SizedBox(height: 40,),
+              const SizedBox(height: 30,),
 
               // Acerca de SongSwipe
               CustomNavigator(
                 title: Text(
-                  '${capitalizeFirstLetter(text: localization.about_songswipe)} SongSwipe',
+                  '${capitalizeFirstLetter(text: localization.about_songswipe)}SongSwipe',
                   style: TextStyle(fontSize: 20),
                 ),
                 icon: SongSwipe.info,
@@ -132,11 +132,11 @@ class _SettingsViewState extends State<SettingsView> {
                 colorIcon: Theme.of(context).colorScheme.primary,
               ),
 
-              const SizedBox(height: 40,),
+              const SizedBox(height: 30,),
 
               // Cerrar sesión
               CustomButton(
-                backgroundColor: Colors.red,
+                backgroundColor: const Color.fromARGB(255, 177, 12, 1),
                 onPressed: () async {
                   final localization = AppLocalizations.of(context)!;
 

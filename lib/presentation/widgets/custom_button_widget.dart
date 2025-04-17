@@ -57,7 +57,7 @@ class CustomButton extends StatelessWidget {
       width: double.infinity,
       child: Padding(
         padding: applyPadding != false
-          ? EdgeInsets.symmetric(horizontal: 50)
+          ? EdgeInsets.symmetric(horizontal: 20)
           : EdgeInsets.all(0),
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(

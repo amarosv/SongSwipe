@@ -138,18 +138,38 @@ Future<UserProfile> getUserProfile({required String uid}) async {
   Uri url = Uri.parse('${Environment.apiUrl}/$uid/profile');
 
   // Llamada a la API para obtener los datos del perfil del usuario
-  final response = await http.get(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    }
-  );
-  
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
     userProfile = UserProfile.fromJson(jsonDecode(response.body));
   }
 
   return userProfile;
+}
+
+// Comprueba si ya existe ese username
+/// Función que comprueba si un username existe <br>
+/// @param username Nombre de usuario
+/// @returns Existe el username
+Future<bool> checkIfUsernameExists(String username) async {
+  // Variable que almacena si el nombre de usuario existe
+  bool usernameExists = false;
+
+  final url = Uri.parse('${Environment.apiUrl}/check-username/$username');
+
+  try {
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      usernameExists = data;
+    }
+  } catch (e) {
+    print("Error de conexión: $e");
+  }
+
+  return usernameExists;
 }
