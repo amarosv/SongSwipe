@@ -66,7 +66,10 @@ class AppRouter {
       GoRoute(
         path: '/complete-profile-simple',
         name: CompleteProfileSimpleScreen.name,
-        builder: (context, state) => CompleteProfileSimpleScreen(),
+        builder: (context, state) {
+          final supplier = state.uri.queryParameters['supplier'];
+          return CompleteProfileSimpleScreen(supplier: supplier!);
+        },
       ),
       GoRoute(
         path: '/verify-email',

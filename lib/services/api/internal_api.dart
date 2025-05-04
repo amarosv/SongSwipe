@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -11,13 +12,15 @@ import 'package:songswipe/services/api/externals_api.dart';
 /// @param name Nombre del usuario <br>
 /// @param lastName Apellidos del usuario <br>
 /// @param username Nombre de usuario <br>
-/// @param base64Image Imagen del usuario <br>
+/// @param image Imagen del usuario <br>
+/// @param supplier Proovedor
 /// @returns boolean que indica si el usuario se pudo crear en la base de datos
 Future<bool> registerUserInDatabase(
     {required String name,
     required String lastName,
     required String username,
-    String? base64Image}) async {
+    File? image,
+    String? supplier}) async {
   // Variable donde se almacena si el usuario se ha podido registrar
   // en la base de datos
   bool registered = false;
@@ -28,10 +31,10 @@ Future<bool> registerUserInDatabase(
   String email = user.email!;
 
   // 1. Guardamos la imagen del usuario en Imgbb
-  String urlImage = 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
+  String urlImage = user.photoURL ?? 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
 
-  if (base64Image != null) {
-    urlImage = await saveImageInImgbb(uid, base64Image);
+  if (image != null) {
+    urlImage = await saveImageInImagekit(uid, image);
   }
 
   // 2. Creamos al usuario
@@ -53,9 +56,12 @@ Future<bool> registerUserInDatabase(
       'dateJoining': 'null', // Null porque la bbdd coge la fecha actual
       'username': username,
       'userDeleted': false,
-      'userBlocked': false
+      'userBlocked': false,
+      'Supplier': supplier ?? 'Email'
     }),
   );
+
+  print(response.body);
 
   // Si devuelve un 200, entonces se ha guardado al usuario
   registered = response.statusCode == 200;
@@ -172,4 +178,27 @@ Future<bool> checkIfUsernameExists(String username) async {
   }
 
   return usernameExists;
+}
+
+// Comprueba si ya existe ese email
+/// Función que comprueba si un email existe <br>
+/// @param email Email
+/// @returns Existe el email
+Future<bool> checkIfEmailExists(String email) async {
+  // Variable que almacena si el email existe
+  bool emailExists = false;
+
+  final url = Uri.parse('${Environment.apiUrl}/check-email/$email');
+
+  try {
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      emailExists = data;
+    }
+  } catch (e) {
+    print("Error de conexión: $e");
+  }
+
+  return emailExists;
 }

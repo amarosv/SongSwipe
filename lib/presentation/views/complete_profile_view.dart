@@ -105,9 +105,14 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     if (lowerText.isNotEmpty && lowerText.length >= 4 && isValid) {
       _debounce = Timer(const Duration(milliseconds: 700), () async {
         _usernameExists = await checkIfUsernameExists(_usernameController.text);
+        print(_usernameExists);
         setState(() {
-          if (_usernameExists) {
+          if (!_usernameExists) {
             checkIfButtonIsActived();
+          } else {
+            setState(() {
+              _activatedButton = false;
+            });
           }
         });
       });
@@ -203,7 +208,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
             // CustomTextField para el username
             CustomTextfield(
               title: capitalizeFirstLetter(text: localization.username),
-              padding: EdgeInsets.symmetric(horizontal: 50),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               placeholder: capitalizeFirstLetter(
                   text: localization.username_placeholder),
               textEditingController: _usernameController,
@@ -228,7 +233,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
             // Texto informativo para el username
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child:
                   Text(capitalizeFirstLetter(text: localization.username_info)),
             ),
@@ -236,7 +241,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
             // CustomTextField para el nombre
             CustomTextfield(
                 title: capitalizeFirstLetter(text: localization.name),
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 placeholder:
                     capitalizeFirstLetter(text: localization.name_placeholder),
                 textEditingController: _nameController,
@@ -253,7 +258,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
             // CustomTextField para los apellidos
             CustomTextfield(
                 title: capitalizeFirstLetter(text: localization.lastname),
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 placeholder: capitalizeFirstLetter(
                     text: localization.lastname_placeholder),
                 textEditingController: _lastNameController,
@@ -269,7 +274,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
             // Texto para subir la imagen
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: SizedBox(
                 width: width,
                 child: Text(
@@ -337,7 +342,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
                               name: name,
                               lastName: lastName,
                               username: username,
-                              base64Image: base64Image);
+                              image: _image);
 
                           // Si se ha registrado correctamente, vamos a la siguiente pantalla
                           if (registered) {

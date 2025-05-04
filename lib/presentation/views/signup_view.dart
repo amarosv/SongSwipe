@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:songswipe/helpers/auth_methods.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
+import 'package:songswipe/services/api/internal_api.dart';
+import 'package:toastification/toastification.dart';
 
 /// Vista para la pantalla de sign up <br>
 /// @author Amaro Suárez <br>
@@ -275,13 +277,33 @@ class _SignUpViewState extends State<SignUpView> {
                       child: CustomSocialButton(
                         backgroundColor: Colors.black,
                         onPressed: () async {
-                          User? userCredential =
-                              await signInWithGoogle();
-
-                          print(userCredential);
+                          User? userCredential = await signInWithGoogle();
 
                           if (userCredential != null) {
-                            context.go('/complete-profile-simple');
+                            print('${userCredential.email!} aa');
+                            bool emailExists =
+                                await checkIfEmailExists(userCredential.email!);
+
+                            print(emailExists);
+                            if (!emailExists) {
+                              context.go(
+                                  '/complete-profile-simple?supplier=Google');
+                            } else {
+                              // Mostramos la notificación
+                              toastification.show(
+                                type: ToastificationType.error,
+                                context: context,
+                                style: ToastificationStyle.flatColored,
+                                title: Text(capitalizeFirstLetter(
+                                    text: localization.attention)),
+                                description: RichText(
+                                    text: TextSpan(
+                                        text: capitalizeFirstLetter(
+                                            text: localization.error_account),
+                                        style: TextStyle(color: Colors.black))),
+                                autoCloseDuration: const Duration(seconds: 3),
+                              );
+                            }
                           }
                         },
                         textStyle: TextStyle(fontSize: 16, color: Colors.white),

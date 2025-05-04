@@ -68,5 +68,31 @@
 				</array>
 			</dict>
 		</array>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true />
+			<key>NSExceptionDomains</key>
+			<dict>
+				<key>googleapis.com</key>
+				<dict>
+					<key>NSIncludesSubdomains</key>
+					<true />
+					<key>NSExceptionAllowsInsecureHTTPLoads</key>
+					<true />
+					<key>NSExceptionRequiresForwardSecrecy</key>
+					<false />
+				</dict>
+				<key>google.com</key>
+				<dict>
+					<key>NSIncludesSubdomains</key>
+					<true />
+					<key>NSExceptionAllowsInsecureHTTPLoads</key>
+					<true />
+					<key>NSExceptionRequiresForwardSecrecy</key>
+					<false />
+				</dict>
+			</dict>
+		</dict>
 	</dict>
 </plist>

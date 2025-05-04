@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:toastification/toastification.dart';
 
@@ -60,4 +61,20 @@ String humanReadbleNumber(int number) {
       NumberFormat.compactCurrency(decimalDigits: 0, symbol: '').format(number);
 
   return formattedNumber;
+}
+
+/// Función que comprime una imagen <br>
+/// @param file Imagen
+/// @param uid UID del
+/// @returns Imagen comprimida
+Future<File> compressImage(File file, String uid) async {
+  final compressedFile = await FlutterImageCompress.compressAndGetFile(
+    file.absolute.path,
+    '${file.parent.path}/$uid-${DateTime.now().toIso8601String().replaceAll(':', '-')}.jpg',
+    quality: 70, // 0 - 100
+    minWidth: 800, // opcional
+    minHeight: 800, // opcional
+  );
+
+  return File(compressedFile!.path);
 }

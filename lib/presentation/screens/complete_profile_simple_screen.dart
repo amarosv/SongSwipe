@@ -7,10 +7,12 @@ import 'package:songswipe/presentation/views/complete_profile_simple_view.dart';
 class CompleteProfileSimpleScreen extends StatelessWidget {
   /// Nombre de la ruta
   static const name = 'complete-profile-simple-screen';
-  const CompleteProfileSimpleScreen({super.key});
+  /// Proveedor (Apple o Google)
+  final String supplier;
+  const CompleteProfileSimpleScreen({super.key, required this.supplier});
 
   @override
   Widget build(BuildContext context) {
-    return const CompleteProfileSimpleView();
+    return CompleteProfileSimpleView(supplier: supplier);
   }
 }

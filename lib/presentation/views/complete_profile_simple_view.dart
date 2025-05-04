@@ -1,16 +1,21 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/internal_api.dart';
+import 'package:toastification/toastification.dart';
 
 /// Vista de la pantalla completar perfil simple <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
 class CompleteProfileSimpleView extends StatefulWidget {
-  const CompleteProfileSimpleView({super.key});
+  /// Proveedor (Apple o Google)
+  final String supplier;
+  const CompleteProfileSimpleView({super.key, required this.supplier});
 
   @override
   State<CompleteProfileSimpleView> createState() =>
@@ -74,8 +79,12 @@ class _CompleteProfileSimpleViewState extends State<CompleteProfileSimpleView> {
       _debounce = Timer(const Duration(milliseconds: 700), () async {
         _usernameExists = await checkIfUsernameExists(_usernameController.text);
         setState(() {
-          if (_usernameExists) {
+          if (!_usernameExists) {
             checkIfButtonIsActived();
+          } else {
+            setState(() {
+              _activatedButton = false;
+            });
           }
         });
       });
@@ -113,7 +122,7 @@ class _CompleteProfileSimpleViewState extends State<CompleteProfileSimpleView> {
             // CustomTextField para el username
             CustomTextfield(
               title: capitalizeFirstLetter(text: localization.username),
-              padding: EdgeInsets.symmetric(horizontal: 50),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               placeholder: capitalizeFirstLetter(
                   text: localization.username_placeholder),
               textEditingController: _usernameController,
@@ -138,10 +147,60 @@ class _CompleteProfileSimpleViewState extends State<CompleteProfileSimpleView> {
 
             // Texto informativo para el username
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child:
                   Text(capitalizeFirstLetter(text: localization.username_info)),
             ),
+
+            const SizedBox(height: 20,),
+
+            // Button para continuar
+            CustomButton(
+                backgroundColor:
+                    _activatedButton ? Color(0xFFFF9E16) : Colors.grey,
+                onPressed: _activatedButton
+                    ? () async {
+                        User user = FirebaseAuth.instance.currentUser!;
+                        String username = _usernameController.text;
+
+                        // Primero comprueba que estén los campos rellenos
+                        if (username.isNotEmpty) {
+                          // Registramos al usuario en la base de datos
+                          bool registered = await registerUserInDatabase(
+                              name: user.displayName!,
+                              lastName: ' ',
+                              username: username,
+                              supplier: widget.supplier);
+
+                          // Si se ha registrado correctamente, vamos a la siguiente pantalla
+                          if (registered) {
+                            context.go('/select-artists');
+                          }
+                        } else {
+                          // Mostramos la notificación
+                          toastification.show(
+                            type: ToastificationType.error,
+                            context: context,
+                            style: ToastificationStyle.flatColored,
+                            title: Text(capitalizeFirstLetter(
+                                text: localization.attention)),
+                            description: RichText(
+                                text: TextSpan(
+                                    text: capitalizeFirstLetter(
+                                        text: localization.fill_fields),
+                                    style: TextStyle(color: Colors.black))),
+                            autoCloseDuration: const Duration(seconds: 3),
+                          );
+
+                          setState(() {
+                            if (username.isEmpty) {
+                              _usernameRequired = true;
+                            }
+                          });
+                        }
+                      }
+                    : () {},
+                text: localization.continue_s)
           ],
         ),
       ),

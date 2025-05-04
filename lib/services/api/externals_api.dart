@@ -1,30 +1,58 @@
-import 'dart:convert';
+import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:flutter_imagekit/flutter_imagekit.dart';
 import 'package:songswipe/config/constants/environment.dart';
+import 'package:songswipe/helpers/utils.dart';
 
-/// Función que recibe un UID de un usuario y una imagen en base 64 y la sube a imgbb <br>
+/// Función que recibe un UID de un usuario y una imagen en base 64 y la sube a imagekit <br>
 /// @param uid UID del usuario <br>
-/// @param base64Image Imagen en base 64 <br>
+/// @param image Imagen <br>
 /// @returns Url de la imagen
-Future<String> saveImageInImgbb(String uid, String base64Image) async {
-  // Variable donde se almacenará la url de la imagen
-  String urlImage;
+Future<String> saveImageInImagekit(String uid, File image) async {
+  // // Variable donde se almacenará la url de la imagen
+  // String urlImage = '';
 
-  Uri url =
-      Uri.parse('https://api.imgbb.com/1/upload?name=$uid-${DateTime.now()}');
+  // Uri url = Uri.parse('https://upload.imagekit.io/api/v1/files/upload');
 
-  // Subimos la imagen
-  final response = await http.post(
-    url,
-    body: {
-      'key': Environment.apiKey,
-      'image': base64Image,
+  // // Subimos la imagen
+  // final response = await http.post(
+  //   url,
+  //   headers: {
+  //     'Authorization':
+  //         'Basic ${base64Encode(utf8.encode(Environment.apiKeyPublicImageKit))}', // sin private key aquí
+  //   },
+  //   body: {
+  //     'file': base64Image,
+  //     'fileName': '$uid-${DateTime.now()}',
+  //   },
+  // );
+
+  // // Obtenemos la url de la imagen
+  // if (response.statusCode == 200) {
+  //   urlImage = jsonDecode(response.body)['url'];
+  // } else {
+  //   print('Error');
+  // }
+
+  // return urlImage;
+
+  String urlImage = '';
+
+  File compressedFile = await compressImage(image, uid);
+
+  await ImageKit.io(
+    compressedFile,
+    folder: "users/$uid/", // (Optional)
+    privateKey: Environment.apiKeyPrivateImageKit, // (Keep Confidential)
+    onUploadProgress: (progressValue) {
+      // print(progressValue);
     },
-  );
 
-  // Obtenemos la url de la imagen
-  urlImage = jsonDecode(response.body)['data']['url'];
+  ).then((String url) {
+    // Get your uploaded Image file link from ImageKit.io
+    //then save it anywhere you want. For Example- Firebase, MongoDB etc.
+    urlImage = url;
+  });
 
   return urlImage;
 }
