@@ -91,6 +91,9 @@ class _SettingsViewState extends State<SettingsView> {
                 icon: SongSwipe.language,
                 iconSize: 32,
                 colorIcon: Theme.of(context).colorScheme.primary,
+                function: () {
+                  context.push('/language-settings');
+                },
               ),
               
               const SizedBox(height: 30,),

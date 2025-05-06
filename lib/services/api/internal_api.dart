@@ -61,8 +61,6 @@ Future<bool> registerUserInDatabase(
     }),
   );
 
-  print(response.body);
-
   // Si devuelve un 200, entonces se ha guardado al usuario
   registered = response.statusCode == 200;
 
@@ -202,3 +200,5 @@ Future<bool> checkIfEmailExists(String email) async {
 
   return emailExists;
 }
+
+// Future<int> updateUserSettings()

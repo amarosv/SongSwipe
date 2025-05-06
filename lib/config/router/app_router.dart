@@ -87,6 +87,11 @@ class AppRouter {
         builder: (context, state) => SelectGenresScreen(),
       ),
       GoRoute(
+        path: '/language-settings',
+        name: LanguageScreen.name,
+        builder: (context, state) => LanguageScreen(onChangeLanguage: onChangeLanguage,),
+      ),
+      GoRoute(
         path: '/home/:page',
         name: HomeScreen.name,
         builder: (context, state) {
