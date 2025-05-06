@@ -3,49 +3,70 @@
 /// @author Amaro Suárez <br>
 /// @version 1.0
 class UserSettings {
-    final int mode;
-    final int theme;
-    final bool cardAnimatedCover;
-    final bool cardSkipSongs;
-    final bool cardBlurredCoverAsBackground;
-    final int privacyVisSavedSongs;
-    final int privacyVisStats;
-    final int privacyVisFol;
-    final bool privateAccount;
-    final String language;
-    final bool audioLoop;
-    final bool audioAutoPlay;
-    final bool audioOnlyAudio;
-    final bool notifications;
-    final bool notiFriendsRequest;
-    final bool notiFriendsApproved;
-    final bool notiAppUpdate;
-    final bool notiAppRecap;
-    final bool notiAccountBlocked;
+  /// Modo de la aplicación
+  int mode;
+  /// Tema de la aplicación
+  int theme;
+  /// Portada animada para la carta
+  bool cardAnimatedCover;
+  /// Poder saltar canciones
+  bool cardSkipSongs;
+  /// Fondo blur de la portada de la canción
+  bool cardBlurredCoverAsBackground;
+  /// Privacidad de las canciones guardadas
+  int privacyVisSavedSongs;
+  /// Privacidad de las estadísticas
+  int privacyVisStats;
+  /// Privacidad de los seguidores y seguidos
+  int privacyVisFol;
+  /// Cuenta privada
+  bool privateAccount;
+  /// Lenguaje de la aplicación
+  String language;
+  /// Audio de la canción en loop
+  bool audioLoop;
+  /// Auto play en la canción
+  bool audioAutoPlay;
+  /// Mostrar solo audio
+  bool audioOnlyAudio;
+  /// Recibir notificaciones
+  bool notifications;
+  /// Recibir notificaciones de las solicitudes de amistad
+  bool notiFriendsRequest;
+  /// Recibir notificaciones de las solicitudes aprobadas
+  bool notiFriendsApproved;
+  /// Recibir notificaciones de las actualizaciones de la app
+  bool notiAppUpdate;
+  /// Recibir notificaciones de los recap semanales
+  bool notiAppRecap;
+  /// Recibir notificaciones de bloqueo de la cuenta
+  bool notiAccountBlocked;
 
-    UserSettings({
-        required this.mode,
-        required this.theme,
-        required this.cardAnimatedCover,
-        required this.cardSkipSongs,
-        required this.cardBlurredCoverAsBackground,
-        required this.privacyVisSavedSongs,
-        required this.privacyVisStats,
-        required this.privacyVisFol,
-        required this.privateAccount,
-        required this.language,
-        required this.audioLoop,
-        required this.audioAutoPlay,
-        required this.audioOnlyAudio,
-        required this.notifications,
-        required this.notiFriendsRequest,
-        required this.notiFriendsApproved,
-        required this.notiAppUpdate,
-        required this.notiAppRecap,
-        required this.notiAccountBlocked,
-    });
+  /// Constructor de los ajustes del usuario
+  UserSettings({
+    required this.mode,
+    required this.theme,
+    required this.cardAnimatedCover,
+    required this.cardSkipSongs,
+    required this.cardBlurredCoverAsBackground,
+    required this.privacyVisSavedSongs,
+    required this.privacyVisStats,
+    required this.privacyVisFol,
+    required this.privateAccount,
+    required this.language,
+    required this.audioLoop,
+    required this.audioAutoPlay,
+    required this.audioOnlyAudio,
+    required this.notifications,
+    required this.notiFriendsRequest,
+    required this.notiFriendsApproved,
+    required this.notiAppUpdate,
+    required this.notiAppRecap,
+    required this.notiAccountBlocked,
+  });
 
-    factory UserSettings.fromJson(Map<String, dynamic> json) => UserSettings(
+  /// Método que parsea un JSON a UserSettings
+  factory UserSettings.fromJson(Map<String, dynamic> json) => UserSettings(
         mode: json["mode"],
         theme: json["theme"],
         cardAnimatedCover: json["cardAnimatedCover"],
@@ -55,7 +76,7 @@ class UserSettings {
         privacyVisStats: json["privacyVisStats"],
         privacyVisFol: json["privacyVisFol"],
         privateAccount: json["privateAccount"],
-        language: json["language"],
+        language: json["language"]?.toString() ?? 'en',
         audioLoop: json["audioLoop"],
         audioAutoPlay: json["audioAutoPlay"],
         audioOnlyAudio: json["audioOnlyAudio"],
@@ -65,10 +86,11 @@ class UserSettings {
         notiAppUpdate: json["notiAppUpdate"],
         notiAppRecap: json["notiAppRecap"],
         notiAccountBlocked: json["notiAccountBlocked"],
-    );
+      );
 
-    factory UserSettings.empty() {
-      return UserSettings(
+  /// Método que crea un UserSettings vacío
+  factory UserSettings.empty() {
+    return UserSettings(
         mode: 0,
         theme: 0,
         cardAnimatedCover: false,
@@ -87,11 +109,11 @@ class UserSettings {
         notiFriendsApproved: false,
         notiAppUpdate: false,
         notiAppRecap: false,
-        notiAccountBlocked: false
-      );
-    }
+        notiAccountBlocked: false);
+  }
 
-    Map<String, dynamic> toJson() => {
+  /// Método que convierte el UserSettings en JSON
+  Map<String, dynamic> toJson() => {
         "mode": mode,
         "theme": theme,
         "cardAnimatedCover": cardAnimatedCover,
@@ -111,5 +133,5 @@ class UserSettings {
         "notiAppUpdate": notiAppUpdate,
         "notiAppRecap": notiAppRecap,
         "notiAccountBlocked": notiAccountBlocked,
-    };
+      };
 }

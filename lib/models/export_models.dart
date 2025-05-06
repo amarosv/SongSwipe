@@ -4,3 +4,4 @@ export 'contributor.dart';
 export 'genre.dart';
 export 'track.dart';
 export 'user_profile.dart';
+export 'user_settings.dart';

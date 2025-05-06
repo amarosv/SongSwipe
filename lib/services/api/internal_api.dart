@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:songswipe/config/constants/environment.dart';
-import 'package:songswipe/models/user_profile.dart';
+import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/services/api/externals_api.dart';
+
+String apiUser = '${Environment.apiUrl}/user';
 
 /// Función que recibe un nombre, apellidos, nombre de usuario y una imagen (opcional) y registra
 /// al usuario en la base de datos <br>
@@ -38,7 +40,7 @@ Future<bool> registerUserInDatabase(
   }
 
   // 2. Creamos al usuario
-  Uri url = Uri.parse(Environment.apiUrl);
+  Uri url = Uri.parse(apiUser);
 
   // Llamada a la API para guardar el usuario
   final response = await http.post(
@@ -80,7 +82,7 @@ Future<int> addArtistToFavorites({required List<int> artists}) async {
   String uid = user.uid;
 
   // Formamos la url del endpoint
-  Uri url = Uri.parse('${Environment.apiUrl}/$uid/artists');
+  Uri url = Uri.parse('$apiUser/$uid/artists');
 
   // Llamada a la API para guardar los artistas como favoritos
   final response = await http.post(
@@ -112,7 +114,7 @@ Future<int> addGenreToFavorites({required List<int> genres}) async {
   String uid = user.uid;
 
   // Formamos la url del endpoint
-  Uri url = Uri.parse('${Environment.apiUrl}/$uid/genres');
+  Uri url = Uri.parse('$apiUser/$uid/genres');
 
   // Llamada a la API para guardar los géneros como favoritos
   final response = await http.post(
@@ -139,7 +141,7 @@ Future<UserProfile> getUserProfile({required String uid}) async {
   UserProfile userProfile = UserProfile.empty();
 
   // Formamos la url del endpoint
-  Uri url = Uri.parse('${Environment.apiUrl}/$uid/profile');
+  Uri url = Uri.parse('$apiUser/$uid/profile');
 
   // Llamada a la API para obtener los datos del perfil del usuario
   final response = await http.get(url, headers: {
@@ -163,7 +165,7 @@ Future<bool> checkIfUsernameExists(String username) async {
   // Variable que almacena si el nombre de usuario existe
   bool usernameExists = false;
 
-  final url = Uri.parse('${Environment.apiUrl}/check-username/$username');
+  final url = Uri.parse('$apiUser/check-username/$username');
 
   try {
     final response = await http.get(url);
@@ -178,7 +180,6 @@ Future<bool> checkIfUsernameExists(String username) async {
   return usernameExists;
 }
 
-// Comprueba si ya existe ese email
 /// Función que comprueba si un email existe <br>
 /// @param email Email
 /// @returns Existe el email
@@ -186,7 +187,7 @@ Future<bool> checkIfEmailExists(String email) async {
   // Variable que almacena si el email existe
   bool emailExists = false;
 
-  final url = Uri.parse('${Environment.apiUrl}/check-email/$email');
+  final url = Uri.parse('$apiUser/check-email/$email');
 
   try {
     final response = await http.get(url);
@@ -201,4 +202,48 @@ Future<bool> checkIfEmailExists(String email) async {
   return emailExists;
 }
 
-// Future<int> updateUserSettings()
+/// Función que recibe un UID de usuario y obtiene sus ajustes <br>
+/// @param uid UID del usuario <br>
+/// @returns UserSettings
+Future<UserSettings> getUserSettings({required String uid}) async {
+  // Variable donde se almacenará el resultado
+  UserSettings userProfile = UserSettings.empty();
+
+  // Formamos la url del endpoint
+  Uri url = Uri.parse('$apiUser/$uid/settings');
+
+  // Llamada a la API para obtener los datos del perfil del usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    userProfile = UserSettings.fromJson(jsonDecode(response.body));
+  }
+
+  return userProfile;
+}
+
+/// Actualiza los ajustes del usuario <br>
+/// @param settings Nuevos ajustes del usuario
+/// @param uid UID del usuario
+/// @returns Se ha actualizado o no
+Future<bool> updateUserSettings(UserSettings settings, String uid) async {
+  Uri url = Uri.parse('$apiUser/$uid/settings');
+
+  // Llamada a la API para guardar los ajustes
+  final response = await http.put(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: jsonEncode(settings),
+  );
+
+  print(response.statusCode);
+
+  return response.statusCode == 200;
+}

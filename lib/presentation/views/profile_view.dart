@@ -158,17 +158,17 @@ class _ProfileViewState extends State<ProfileView> {
                     children: [
                       const SizedBox(height: 10),
                       CustomRow(
-                        title: 'Full name',
+                        title: capitalizeFirstLetter(text: localization.full_name),
                         value: '${_userProfile.name} ${_userProfile.lastName}',
                       ),
                       const SizedBox(height: 20),
                       CustomRow(
-                        title: 'Email',
+                        title: capitalizeFirstLetter(text: localization.email),
                         value: _userProfile.email,
                       ),
                       const SizedBox(height: 20),
                       CustomRow(
-                          title: 'Fecha de unión',
+                          title: capitalizeFirstLetter(text: localization.date_joining),
                           value: _languageCode != 'en'
                               ? convertDate(_userProfile.dateJoining)
                               : _userProfile.dateJoining),
