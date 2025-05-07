@@ -146,7 +146,7 @@ class _ProfileViewState extends State<ProfileView> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   capitalizeFirstLetter(text: localization.info),
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
 

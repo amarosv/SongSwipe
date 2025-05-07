@@ -44,7 +44,7 @@
     "resent": "te hemos enviado otro email de verificación",
     "verified": "verificado!",
     "verified_email": "has verificado tu email",
-    "attention": "atención!",
+    "attention": "¡atención!",
     "fill_fields": "por favor, rellena todos los campos",
     "error_account_not_exists": "no se ha encontrado un usuario para ese email o la contraseña es incorrecta",
     "error": "ha ocurrido un error",
@@ -79,5 +79,14 @@
     "logout_dialog_content": "¿está seguro de que desea cerrar sesión?",
     "yes": "sí",
     "no": "no",
-    "select_your_username": "selecciona tu username"
+    "select_your_username": "selecciona tu username",
+    "stats": "estadísticas",
+    "followers_following": "seguidores y siguiendo",
+    "visibility": "visibilidad",
+    "make_account_private": "poner cuenta como privada",
+    "account_private_label": "cambiar de privado a público aceptará automáticamente todas las solicitudes de amistad pendientes.",
+    "devices": "dispositivos",
+    "delete_account": "eliminar cuenta",
+    "who_can_see": "¿quién puede verlo?",
+    "currently_private_account": "actualmente tu cuenta es privada, cambiar este ajuste pondrá tu cuenta como pública. ¿estás seguro?"
 }

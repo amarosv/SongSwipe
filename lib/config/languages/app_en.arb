@@ -79,5 +79,14 @@
     "logout_dialog_content": "are you sure you want to log out?",
     "yes": "yes",
     "no": "no",
-    "select_your_username": "select your username"
+    "select_your_username": "select your username",
+    "stats": "stats",
+    "followers_following": "followers and following",
+    "visibility": "visibility",
+    "make_account_private": "make account private",
+    "account_private_label": "switching from private to public will automatically accept all pending friend requests.",
+    "devices": "devices",
+    "delete_account": "delete account",
+    "who_can_see": "who can see it?",
+    "currently_private_account": "your account is currently private, changing this setting will make your account public. are you sure?"
 }

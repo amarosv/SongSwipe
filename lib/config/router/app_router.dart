@@ -92,6 +92,11 @@ class AppRouter {
         builder: (context, state) => LanguageScreen(onChangeLanguage: onChangeLanguage,),
       ),
       GoRoute(
+        path: '/privacy-settings',
+        name: PrivacyScreen.name,
+        builder: (context, state) => PrivacyScreen(),
+      ),
+      GoRoute(
         path: '/home/:page',
         name: HomeScreen.name,
         builder: (context, state) {

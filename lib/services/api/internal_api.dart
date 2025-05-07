@@ -243,7 +243,7 @@ Future<bool> updateUserSettings(UserSettings settings, String uid) async {
     body: jsonEncode(settings),
   );
 
-  print(response.statusCode);
+  // print(response.statusCode);
 
   return response.statusCode == 200;
 }

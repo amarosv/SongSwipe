@@ -79,5 +79,14 @@
     "logout_dialog_content": "sei sicuro di voler effettuare il logout?",
     "yes": "si",
     "no": "no",
-    "select_your_username": "seleziona tuo username"
+    "select_your_username": "seleziona tuo username",
+    "stats": "statistiche",
+    "followers_following": "seguaci e seguente",
+    "visibility": "visibilità",
+    "make_account_private": "rendere l'account privato",
+    "account_private_label": "passando da privato a pubblico verranno automaticamente accettate tutte le richieste di amicizia in sospeso.",
+    "devices": "dispositivi",
+    "delete_account": "eliminare l'account",
+    "who_can_see": "chi può vederlo?",
+    "currently_private_account": "al momento il tuo account è privato, modificando questa impostazione, il tuo account diventerà pubblico. sei sicuro?"
 }

@@ -149,7 +149,10 @@ class _CompleteProfileSimpleViewState extends State<CompleteProfileSimpleView> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child:
-                  Text(capitalizeFirstLetter(text: localization.username_info)),
+                  Text(
+                    capitalizeFirstLetter(text: localization.username_info),
+                    style: TextStyle(color: Colors.grey),
+                  ),
             ),
 
             const SizedBox(height: 20,),

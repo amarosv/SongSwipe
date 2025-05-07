@@ -235,7 +235,10 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child:
-                  Text(capitalizeFirstLetter(text: localization.username_info)),
+                  Text(
+                    capitalizeFirstLetter(text: localization.username_info),
+                    style: TextStyle(color: Colors.grey),
+                  ),
             ),
 
             // CustomTextField para el nombre

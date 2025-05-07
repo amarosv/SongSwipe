@@ -78,6 +78,9 @@ class _SettingsViewState extends State<SettingsView> {
                 icon: SongSwipe.person,
                 iconSize: 32,
                 colorIcon: Theme.of(context).colorScheme.primary,
+                function: () {
+                  context.push('/privacy-settings');
+                },
               ),
               
               const SizedBox(height: 30,),
@@ -141,8 +144,6 @@ class _SettingsViewState extends State<SettingsView> {
               CustomButton(
                 backgroundColor: const Color.fromARGB(255, 177, 12, 1),
                 onPressed: () async {
-                  final localization = AppLocalizations.of(context)!;
-
                   final shouldLogout = await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog.adaptive(

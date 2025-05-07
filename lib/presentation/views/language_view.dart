@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
-import 'package:songswipe/presentation/widgets/custom_language_select.dart';
+import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/internal_api.dart';
 
 /// Vista para la pantalla de elegir idioma <br>
@@ -37,6 +37,8 @@ class _LanguageViewState extends State<LanguageView> {
   bool englishSelected = true;
   bool spanishSelected = false;
   bool italianSelected = false;
+
+  int _selected = 0;
 
   @override
   void initState() {
@@ -114,18 +116,20 @@ class _LanguageViewState extends State<LanguageView> {
             language: capitalizeFirstLetter(text: localization.english),
             selected: englishSelected,
             function: () {
-              // Resetear selección
-              englishSelected = false;
-              spanishSelected = false;
-              italianSelected = false;
+              if (!englishSelected) {
+                // Resetear selección
+                englishSelected = false;
+                spanishSelected = false;
+                italianSelected = false;
 
-              setState(() {
-                englishSelected = true;
-              });
-              
-              _userSettings.language = 'en';
-              updateUserSettings(_userSettings, _uid);
-              widget.onChangeLanguage('en');
+                setState(() {
+                  englishSelected = true;
+                });
+
+                _userSettings.language = 'en';
+                updateUserSettings(_userSettings, _uid);
+                widget.onChangeLanguage('en');
+              }
             },
           ),
           const SizedBox(height: 20),
@@ -134,18 +138,20 @@ class _LanguageViewState extends State<LanguageView> {
             language: capitalizeFirstLetter(text: localization.spanish),
             selected: spanishSelected,
             function: () {
-              // Resetear selección
-              englishSelected = false;
-              spanishSelected = false;
-              italianSelected = false;
+              if (!spanishSelected) {
+                // Resetear selección
+                englishSelected = false;
+                spanishSelected = false;
+                italianSelected = false;
 
-              setState(() {
-                spanishSelected = true;
-              });
+                setState(() {
+                  spanishSelected = true;
+                });
 
-              _userSettings.language = "es";
-              updateUserSettings(_userSettings, _uid);
-              widget.onChangeLanguage('es');
+                _userSettings.language = "es";
+                updateUserSettings(_userSettings, _uid);
+                widget.onChangeLanguage('es');
+              }
             },
           ),
           const SizedBox(height: 20),
@@ -154,19 +160,20 @@ class _LanguageViewState extends State<LanguageView> {
             language: capitalizeFirstLetter(text: localization.italian),
             selected: italianSelected,
             function: () {
-              // Resetear selección
-              englishSelected = false;
-              spanishSelected = false;
-              italianSelected = false;
+              if (!italianSelected) {
+                // Resetear selección
+                englishSelected = false;
+                spanishSelected = false;
+                italianSelected = false;
 
-              setState(() {
-                italianSelected = true;
-              });
+                setState(() {
+                  italianSelected = true;
+                });
 
-
-              _userSettings.language = 'it';
-              updateUserSettings(_userSettings, _uid);
-              widget.onChangeLanguage('it');
+                _userSettings.language = 'it';
+                updateUserSettings(_userSettings, _uid);
+                widget.onChangeLanguage('it');
+              }
             },
           ),
         ],
