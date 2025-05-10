@@ -38,7 +38,7 @@ class _LanguageViewState extends State<LanguageView> {
   bool spanishSelected = false;
   bool italianSelected = false;
 
-  int _selected = 0;
+  final int _selected = 0;
 
   @override
   void initState() {

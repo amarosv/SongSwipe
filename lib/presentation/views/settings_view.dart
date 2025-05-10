@@ -65,6 +65,7 @@ class _SettingsViewState extends State<SettingsView> {
                 icon: SongSwipe.designServices,
                 iconSize: 32,
                 colorIcon: Theme.of(context).colorScheme.primary,
+                function: () => context.push('/appearance-settings'),
               ),
               
               const SizedBox(height: 30,),

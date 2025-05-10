@@ -102,5 +102,18 @@
     "label_weekly_recap": "te enviaremos una notificación todos los domingos a las 8pm.",
     "account_blocked": "cuenta bloqueada",
     "label_account_blocked": "te enviaremos una notificación si bloqueamos tu cuenta",
-    "info_app": "aksajhsdhsadj"
+    "info_app": "aksajhsdhsadj",
+    "mode": "modo",
+    "dark": "oscuro",
+    "light": "claro",
+    "system": "sistema",
+    "theme": "tema",
+    "red": "rojo",
+    "yellow": "amarillo",
+    "pink": "rosa",
+    "cards": "cartas",
+    "animated_cover": "portada animada",
+    "skip_songs": "saltar canciones",
+    "blurred_as_background": "portada difuminada como fondo",
+    "label_blurred_background": "desactive esta opción para que los colores de fondo estén relacionados con la portada."
 }

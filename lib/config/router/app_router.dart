@@ -32,7 +32,7 @@ class AppRouter {
     if (user == null) {
       location = '/login';
     }
-    // location = '/complete-profile-simple';
+    // location = '/change-theme';
 
     // Devolvemos la ruta
     return location;
@@ -90,6 +90,11 @@ class AppRouter {
         path: '/language-settings',
         name: LanguageScreen.name,
         builder: (context, state) => LanguageScreen(onChangeLanguage: onChangeLanguage,),
+      ),
+      GoRoute(
+        path: '/appearance-settings',
+        name: AppearanceScreen.name,
+        builder: (context, state) => AppearanceScreen(),
       ),
       GoRoute(
         path: '/privacy-settings',

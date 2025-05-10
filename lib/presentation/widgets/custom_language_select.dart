@@ -43,7 +43,7 @@ class CustomLanguageSelect extends StatelessWidget {
               selected
                 ? Icon(
                     Icons.check_circle,
-                    color: Colors.green,
+                    color: Colors.lightGreen,
                     size: 32
                   )
                 : Container(),
