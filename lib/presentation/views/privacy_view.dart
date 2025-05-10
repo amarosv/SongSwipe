@@ -16,12 +16,15 @@ class PrivacyView extends StatefulWidget {
   State<PrivacyView> createState() => _PrivacyViewState();
 }
 
-class _PrivacyViewState extends State<PrivacyView> {
+class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
   // Variable que almacena el uid del usuario
   late String _uid;
+
+  // Variable que almacena el user settings para comporar si ha habido cambios
+  UserSettings _userSettingsComparator = UserSettings.empty();
 
   // Variable que almacena el usersettings
   UserSettings _userSettings = UserSettings.empty();
@@ -29,6 +32,7 @@ class _PrivacyViewState extends State<PrivacyView> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // Almacenamos el uid del usuario
     _uid = _user.uid;
     // Obtenemos los datos del usuario
@@ -38,9 +42,29 @@ class _PrivacyViewState extends State<PrivacyView> {
   // Función que obtiene los datos del usuario de la api
   void _getUserSettings() async {
     UserSettings settings = await getUserSettings(uid: _uid);
-    setState(() {
-      _userSettings = settings;
-    });
+    if (mounted) {
+      setState(() {
+        _userSettingsComparator = settings.copy();
+        _userSettings = settings;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_userSettingsComparator != _userSettings) {
+      updateUserSettings(_userSettings, _uid);
+    }
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused && _userSettingsComparator != _userSettings) {
+      updateUserSettings(_userSettings, _uid);
+      _userSettingsComparator = _userSettings.copy();
+    }
   }
 
   @override
@@ -112,8 +136,6 @@ class _PrivacyViewState extends State<PrivacyView> {
                     setState(() {
                       _userSettings.privacyVisSavedSongs = newSelected;
                     });
-
-                    updateUserSettings(_userSettings, _uid);
                   }
                 }
               },
@@ -139,8 +161,6 @@ class _PrivacyViewState extends State<PrivacyView> {
                     setState(() {
                       _userSettings.privacyVisStats = newSelected;
                     });
-
-                    updateUserSettings(_userSettings, _uid);
                   }
                 }
               },
@@ -167,8 +187,6 @@ class _PrivacyViewState extends State<PrivacyView> {
                     setState(() {
                       _userSettings.privacyVisFol = newSelected;
                     });
-
-                    updateUserSettings(_userSettings, _uid);
                   }
                 }
               },
@@ -191,19 +209,17 @@ class _PrivacyViewState extends State<PrivacyView> {
                     ),
                   ),
                   CustomSwitchContainer(
-                    title: capitalizeFirstLetter(
-                        text: localization.make_account_private),
-                    switchValue: _userSettings.privateAccount,
-                    function: (bool newValue) {
-                      setState(() {
-                        _userSettings.privateAccount = newValue;
-                        _userSettings.privacyVisSavedSongs = 2;
-                        _userSettings.privacyVisStats = 2;
-                        _userSettings.privacyVisFol = 2;
-                      });
-                      updateUserSettings(_userSettings, _uid);
-                    }
-                  ),
+                      title: capitalizeFirstLetter(
+                          text: localization.make_account_private),
+                      switchValue: _userSettings.privateAccount,
+                      function: (bool newValue) {
+                        setState(() {
+                          _userSettings.privateAccount = newValue;
+                          _userSettings.privacyVisSavedSongs = 2;
+                          _userSettings.privacyVisStats = 2;
+                          _userSettings.privacyVisFol = 2;
+                        });
+                      }),
                 ],
               ),
             ),

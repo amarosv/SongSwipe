@@ -16,12 +16,15 @@ class AudioView extends StatefulWidget {
   State<AudioView> createState() => _AudioViewState();
 }
 
-class _AudioViewState extends State<AudioView> {
+class _AudioViewState extends State<AudioView> with WidgetsBindingObserver {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
   // Variable que almacena el uid del usuario
   late String _uid;
+
+  // Variable que almacena el user settings para comporar si ha habido cambios
+  UserSettings _userSettingsComparator = UserSettings.empty();
 
   // Variable que almacena el usersettings
   UserSettings _userSettings = UserSettings.empty();
@@ -33,14 +36,36 @@ class _AudioViewState extends State<AudioView> {
     _uid = _user.uid;
     // Obtenemos los datos del usuario
     _getUserSettings();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   // Función que obtiene los datos del usuario de la api
   void _getUserSettings() async {
     UserSettings settings = await getUserSettings(uid: _uid);
-    setState(() {
-      _userSettings = settings;
-    });
+    if (mounted) {
+      setState(() {
+        _userSettingsComparator = settings.copy();
+        _userSettings = settings;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_userSettingsComparator != _userSettings) {
+      updateUserSettings(_userSettings, _uid);
+    }
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused &&
+        _userSettingsComparator != _userSettings) {
+      updateUserSettings(_userSettings, _uid);
+      _userSettingsComparator = _userSettings.copy();
+    }
   }
 
   @override
@@ -63,47 +88,40 @@ class _AudioViewState extends State<AudioView> {
 
             // Play loop
             CustomSwitchContainer(
-              title: localization.play_loop,
-              switchValue: _userSettings.audioLoop,
-              function: (bool newValue) {
-                setState(() {
-                  _userSettings.audioLoop = newValue;
-                });
-
-                updateUserSettings(_userSettings, _uid);
-              }
-            ),
-            const SizedBox(height: 30),
+                title: localization.play_loop,
+                switchValue: _userSettings.audioLoop,
+                function: (bool newValue) {
+                  setState(() {
+                    _userSettings.audioLoop = newValue;
+                  });
+                }),
+            const SizedBox(height: 20),
 
             // Auto play
             CustomSwitchContainer(
-              title: localization.autoplay,
-              switchValue: _userSettings.audioAutoPlay,
-              function: (bool newValue) {
-                setState(() {
-                  _userSettings.audioAutoPlay = newValue;
-                });
-
-                updateUserSettings(_userSettings, _uid);
-              }
-            ),
-            const SizedBox(height: 30),
+                title: localization.autoplay,
+                switchValue: _userSettings.audioAutoPlay,
+                function: (bool newValue) {
+                  setState(() {
+                    _userSettings.audioAutoPlay = newValue;
+                  });
+                }),
+            const SizedBox(height: 20),
 
             // Only audio
             CustomSwitchContainer(
-              title: localization.only_audio,
-              switchValue: _userSettings.audioOnlyAudio,
-              function: (bool newValue) {
-                setState(() {
-                  _userSettings.audioOnlyAudio = newValue;
-                });
+                title: localization.only_audio,
+                switchValue: _userSettings.audioOnlyAudio,
+                function: (bool newValue) {
+                  setState(() {
+                    _userSettings.audioOnlyAudio = newValue;
+                  });
+                }),
 
-                updateUserSettings(_userSettings, _uid);
-              }
+            const SizedBox(
+              height: 10,
             ),
 
-            const SizedBox(height: 10,),
-            
             // Texto informativo para la opción only audio
             Align(
               alignment: Alignment.centerLeft,

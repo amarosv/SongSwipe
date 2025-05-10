@@ -18,12 +18,16 @@ class AppearanceView extends ConsumerStatefulWidget {
   ConsumerState<AppearanceView> createState() => _AppearanceViewState();
 }
 
-class _AppearanceViewState extends ConsumerState<AppearanceView> {
+class _AppearanceViewState extends ConsumerState<AppearanceView>
+    with WidgetsBindingObserver {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
   // Variable que almacena el uid del usuario
   late String _uid;
+
+  // Variable que almacena el user settings para comporar si ha habido cambios
+  UserSettings _userSettingsComparator = UserSettings.empty();
 
   // Variable que almacena el usersettings
   UserSettings _userSettings = UserSettings.empty();
@@ -35,6 +39,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
     _uid = _user.uid;
     // Obtenemos los datos del usuario
     _getUserSettings();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   // Función que obtiene los datos del usuario de la api
@@ -42,8 +47,70 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
     UserSettings settings = await getUserSettings(uid: _uid);
     if (mounted) {
       setState(() {
+        _userSettingsComparator = settings.copy();
         _userSettings = settings;
       });
+
+      // Colocamos que no estamos usando el modo del sistema
+      ref
+          .read(themeNotifierProvider.notifier)
+          .setUseSystem(isUsingSystem: false);
+
+      // Colocamos el modo por si difiere con el local
+      switch (_userSettings.mode) {
+        case 1:
+          // Llamamos al notifier para cambiar de modo
+          ref
+              .read(themeNotifierProvider.notifier)
+              .setDarkMode(isDarkMode: true);
+          break;
+        case 2:
+          // Llamamos al notifier para cambiar de modo
+          ref
+              .read(themeNotifierProvider.notifier)
+              .setDarkMode(isDarkMode: false);
+          break;
+        case 3:
+          // Colocamos que no estamos usando el modo del sistema
+          ref
+              .read(themeNotifierProvider.notifier)
+              .setUseSystem(isUsingSystem: true);
+          break;
+      }
+
+      // Colocamos el tema si difiere con el local
+      switch (_userSettings.theme) {
+        case 0: {
+          ref.read(themeNotifierProvider.notifier).changeColorIndex(0);
+        }
+        case 1: {
+          ref.read(themeNotifierProvider.notifier).changeColorIndex(1);
+        }
+        case 2: {
+          ref.read(themeNotifierProvider.notifier).changeColorIndex(2);
+        }
+        case 3: {
+          ref.read(themeNotifierProvider.notifier).changeColorIndex(3);
+        }
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_userSettingsComparator != _userSettings) {
+      updateUserSettings(_userSettings, _uid);
+    }
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused &&
+        _userSettingsComparator != _userSettings) {
+      updateUserSettings(_userSettings, _uid);
+      _userSettingsComparator = _userSettings.copy();
     }
   }
 
@@ -86,10 +153,12 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                     const SizedBox(height: 10),
                     // Dark
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         setState(() {
                           _userSettings.mode = 1;
                         });
+
+                        await updateUserSettings(_userSettings, _uid);
 
                         // Colocamos que no estamos usando el modo del sistema
                         ref
@@ -100,8 +169,6 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                         ref
                             .read(themeNotifierProvider.notifier)
                             .setDarkMode(isDarkMode: true);
-
-                        updateUserSettings(_userSettings, _uid);
                       },
                       child: Column(
                         children: [
@@ -126,10 +193,12 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                     const SizedBox(height: 10),
                     // Light
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         setState(() {
                           _userSettings.mode = 2;
                         });
+
+                        await updateUserSettings(_userSettings, _uid);
 
                         // Colocamos que no estamos usando el modo del sistema
                         ref
@@ -140,8 +209,6 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                         ref
                             .read(themeNotifierProvider.notifier)
                             .setDarkMode(isDarkMode: false);
-
-                        updateUserSettings(_userSettings, _uid);
                       },
                       child: Column(
                         children: [
@@ -166,16 +233,17 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                     const SizedBox(height: 10),
                     // System
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         setState(() {
                           _userSettings.mode = 3;
                         });
+
+                        await updateUserSettings(_userSettings, _uid);
 
                         // Llamamos al notifier para cambiar de modo
                         ref
                             .read(themeNotifierProvider.notifier)
                             .setUseSystem(isUsingSystem: true);
-                        updateUserSettings(_userSettings, _uid);
                       },
                       child: Column(
                         children: [
@@ -226,8 +294,6 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                   });
 
                   ref.read(themeNotifierProvider.notifier).changeColorIndex(0);
-
-                  updateUserSettings(_userSettings, _uid);
                 },
               ),
 
@@ -246,7 +312,6 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                   });
 
                   ref.read(themeNotifierProvider.notifier).changeColorIndex(1);
-                  updateUserSettings(_userSettings, _uid);
                 },
               ),
 
@@ -265,7 +330,6 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                   });
 
                   ref.read(themeNotifierProvider.notifier).changeColorIndex(2);
-                  updateUserSettings(_userSettings, _uid);
                 },
               ),
 
@@ -284,9 +348,67 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                   });
 
                   ref.read(themeNotifierProvider.notifier).changeColorIndex(3);
-                  updateUserSettings(_userSettings, _uid);
                 },
               ),
+
+              const SizedBox(height: 30,),
+
+              // Cartas
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  capitalizeFirstLetter(text: localization.cards),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ),
+
+              CustomSwitchContainer(
+                title: capitalizeFirstLetter(text: localization.animated_cover),
+                switchValue: _userSettings.cardAnimatedCover,
+                function: (bool newValue) {
+                  setState(() {
+                    _userSettings.cardAnimatedCover = newValue;
+                  });
+                }
+              ),
+
+              const SizedBox(height: 20,),
+
+              CustomSwitchContainer(
+                title: capitalizeFirstLetter(text: localization.skip_songs),
+                switchValue: _userSettings.cardSkipSongs,
+                function: (bool newValue) {
+                  setState(() {
+                    _userSettings.cardSkipSongs = newValue;
+                  });
+                }
+              ),
+
+              const SizedBox(height: 20,),
+
+              CustomSwitchContainer(
+                title: capitalizeFirstLetter(text: localization.blurred_as_background),
+                switchValue: _userSettings.cardBlurredCoverAsBackground,
+                function: (bool newValue) {
+                  setState(() {
+                    _userSettings.cardBlurredCoverAsBackground = newValue;
+                  });
+                }
+              ),
+
+              const SizedBox(height: 10),
+
+              // Texto informativo para la opción account blocked
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  capitalizeFirstLetter(
+                      text: localization.label_blurred_background),
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+
+              const SizedBox(height: 20,)
             ],
           ),
         ),

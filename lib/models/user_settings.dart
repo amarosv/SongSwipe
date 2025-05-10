@@ -1,44 +1,64 @@
+import 'package:equatable/equatable.dart';
+
 /// Clase que representa los ajustes de un usuario y sus propiedades
 /// de perfil <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class UserSettings {
+class UserSettings extends Equatable {
   /// Modo de la aplicación
   int mode;
+
   /// Tema de la aplicación
   int theme;
+
   /// Portada animada para la carta
   bool cardAnimatedCover;
+
   /// Poder saltar canciones
   bool cardSkipSongs;
+
   /// Fondo blur de la portada de la canción
   bool cardBlurredCoverAsBackground;
+
   /// Privacidad de las canciones guardadas
   int privacyVisSavedSongs;
+
   /// Privacidad de las estadísticas
   int privacyVisStats;
+
   /// Privacidad de los seguidores y seguidos
   int privacyVisFol;
+
   /// Cuenta privada
   bool privateAccount;
+
   /// Lenguaje de la aplicación
   String language;
+
   /// Audio de la canción en loop
   bool audioLoop;
+
   /// Auto play en la canción
   bool audioAutoPlay;
+
   /// Mostrar solo audio
   bool audioOnlyAudio;
+
   /// Recibir notificaciones
   bool notifications;
+
   /// Recibir notificaciones de las solicitudes de amistad
   bool notiFriendsRequest;
+
   /// Recibir notificaciones de las solicitudes aprobadas
   bool notiFriendsApproved;
+
   /// Recibir notificaciones de las actualizaciones de la app
   bool notiAppUpdate;
+
   /// Recibir notificaciones de los recap semanales
   bool notiAppRecap;
+
   /// Recibir notificaciones de bloqueo de la cuenta
   bool notiAccountBlocked;
 
@@ -134,4 +154,49 @@ class UserSettings {
         "notiAppRecap": notiAppRecap,
         "notiAccountBlocked": notiAccountBlocked,
       };
+
+  UserSettings copy() => UserSettings(
+        mode: mode,
+        theme: theme,
+        cardAnimatedCover: cardAnimatedCover,
+        cardSkipSongs: cardSkipSongs,
+        cardBlurredCoverAsBackground: cardBlurredCoverAsBackground,
+        privacyVisSavedSongs: privacyVisSavedSongs,
+        privacyVisStats: privacyVisStats,
+        privacyVisFol: privacyVisFol,
+        privateAccount: privateAccount,
+        language: language,
+        audioLoop: audioLoop,
+        audioAutoPlay: audioAutoPlay,
+        audioOnlyAudio: audioOnlyAudio,
+        notifications: notifications,
+        notiFriendsRequest: notiFriendsRequest,
+        notiFriendsApproved: notiFriendsApproved,
+        notiAppUpdate: notiAppUpdate,
+        notiAppRecap: notiAppRecap,
+        notiAccountBlocked: notiAccountBlocked,
+      );
+
+  @override
+  List<Object?> get props => [
+        mode,
+        theme,
+        cardAnimatedCover,
+        cardSkipSongs,
+        cardBlurredCoverAsBackground,
+        privacyVisSavedSongs,
+        privacyVisStats,
+        privacyVisFol,
+        privateAccount,
+        language,
+        audioLoop,
+        audioAutoPlay,
+        audioOnlyAudio,
+        notifications,
+        notiFriendsRequest,
+        notiFriendsApproved,
+        notiAppUpdate,
+        notiAppRecap,
+        notiAccountBlocked,
+      ];
 }

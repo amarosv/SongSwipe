@@ -16,12 +16,15 @@ class NotificationsView extends StatefulWidget {
   State<NotificationsView> createState() => _NotificationsViewState();
 }
 
-class _NotificationsViewState extends State<NotificationsView> {
+class _NotificationsViewState extends State<NotificationsView> with WidgetsBindingObserver {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
   // Variable que almacena el uid del usuario
   late String _uid;
+
+  // Variable que almacena el user settings para comporar si ha habido cambios
+  UserSettings _userSettingsComparator = UserSettings.empty();
 
   // Variable que almacena el usersettings
   UserSettings _userSettings = UserSettings.empty();
@@ -31,6 +34,7 @@ class _NotificationsViewState extends State<NotificationsView> {
     super.initState();
     // Almacenamos el uid del usuario
     _uid = _user.uid;
+    WidgetsBinding.instance.addObserver(this);
     // Obtenemos los datos del usuario
     _getUserSettings();
   }
@@ -38,9 +42,29 @@ class _NotificationsViewState extends State<NotificationsView> {
   // Función que obtiene los datos del usuario de la api
   void _getUserSettings() async {
     UserSettings settings = await getUserSettings(uid: _uid);
-    setState(() {
-      _userSettings = settings;
-    });
+    if (mounted) {
+      setState(() {
+        _userSettingsComparator = settings.copy();
+        _userSettings = settings;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_userSettingsComparator != _userSettings) {
+      updateUserSettings(_userSettings, _uid);
+    }
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused && _userSettingsComparator != _userSettings) {
+      updateUserSettings(_userSettings, _uid);
+      _userSettingsComparator = _userSettings.copy();
+    }
   }
 
   @override
@@ -78,8 +102,6 @@ class _NotificationsViewState extends State<NotificationsView> {
                       _userSettings.notiAppRecap = newValue;
                       _userSettings.notiAccountBlocked = newValue;
                     });
-
-                    updateUserSettings(_userSettings, _uid);
                   }),
 
               const SizedBox(
@@ -109,11 +131,9 @@ class _NotificationsViewState extends State<NotificationsView> {
                             _userSettings.notifications = newValue;
                           }
                         });
-
-                        updateUserSettings(_userSettings, _uid);
                       }),
                   const SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   CustomSwitchContainer(
                       title: capitalizeFirstLetter(
@@ -127,8 +147,6 @@ class _NotificationsViewState extends State<NotificationsView> {
                             _userSettings.notifications = newValue;
                           }
                         });
-
-                        updateUserSettings(_userSettings, _uid);
                       }),
                 ],
               ),
@@ -160,11 +178,9 @@ class _NotificationsViewState extends State<NotificationsView> {
                             _userSettings.notifications = newValue;
                           }
                         });
-
-                        updateUserSettings(_userSettings, _uid);
                       }),
                   const SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   CustomSwitchContainer(
                       title: capitalizeFirstLetter(
@@ -178,8 +194,6 @@ class _NotificationsViewState extends State<NotificationsView> {
                             _userSettings.notifications = newValue;
                           }
                         });
-
-                        updateUserSettings(_userSettings, _uid);
                       }),
                   const SizedBox(
                     height: 10,
@@ -211,8 +225,6 @@ class _NotificationsViewState extends State<NotificationsView> {
                         _userSettings.notifications = newValue;
                       }
                     });
-
-                    updateUserSettings(_userSettings, _uid);
                   }),
 
               const SizedBox(height: 10),

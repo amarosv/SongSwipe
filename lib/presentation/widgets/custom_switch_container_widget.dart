@@ -24,6 +24,7 @@ class CustomSwitchContainer extends StatelessWidget {
           ),
           const Spacer(),
           Switch.adaptive(
+              inactiveTrackColor: Colors.red,
               value: switchValue,
               onChanged: function)
         ],

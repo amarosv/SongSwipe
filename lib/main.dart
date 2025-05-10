@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,9 @@ import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/config/router/app_router.dart';
 import 'package:songswipe/firebase_options.dart';
 import 'package:songswipe/helpers/preferences.dart';
+import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/providers/export_providers.dart';
+import 'package:songswipe/services/api/internal_api.dart';
 
 Future<void> main() async {
   // Esperamos a que se haya inicializado el widget
@@ -48,18 +51,34 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   // Función que obtiene el lenguaje por defecto
   void _getDefaultLanguage() async {
+    String languageCode = 'en';
+
+    // Obtenemos el usuario actual
+    final User? _user = FirebaseAuth.instance.currentUser;
+
+    // Variable que almacena el uid del usuario
+    late String _uid;
+    
     Locale locale;
 
-    // Cargamos el lenguaje guardado en SharedPreferences
-    String languageCode = await loadDataString(tag: 'language');
+    if (_user != null) {
+      _uid = _user.uid;
 
-    // Comprobamos si está vacío
-    if (languageCode.isEmpty) {
-      // En el caso en el cual no hay guardado ningún lenguaje
-      // Obtenemos el lenguaje del dispositivo
-      Locale locale = PlatformDispatcher.instance.locale;
+      UserSettings settings = await getUserSettings(uid: _uid);
 
-      languageCode = locale.languageCode;
+      languageCode = settings.language;
+    } else {
+      // Cargamos el lenguaje guardado en SharedPreferences
+      String languageCode = await loadDataString(tag: 'language');
+
+      // Comprobamos si está vacío
+      if (languageCode.isEmpty) {
+        // En el caso en el cual no hay guardado ningún lenguaje
+        // Obtenemos el lenguaje del dispositivo
+        Locale locale = PlatformDispatcher.instance.locale;
+
+        languageCode = locale.languageCode;
+      }
     }
 
     // Inicalizamos el locale

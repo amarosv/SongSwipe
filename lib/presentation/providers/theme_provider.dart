@@ -40,47 +40,58 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
   /// Función que carga la configuración establecida del tema
   void _loadInitialConfig() async {
     // Obtenemos el usuario actual
-    final User? _user = FirebaseAuth.instance.currentUser;
+    final User? user = FirebaseAuth.instance.currentUser;
 
     // Variable que almacena el uid del usuario
-    late String _uid;
+    late String uid;
+
+    bool system = true;
+    bool darkMode = false;
+    int theme = 0;
 
     // Comprobamos si el usuario se ha identificado
-    if (_user != null) {
-      _uid = _user.uid;
+    if (user != null) {
+      uid = user.uid;
 
-      UserSettings _userSettings = await getUserSettings(uid: _uid);
+      UserSettings userSettings = await getUserSettings(uid: uid);
+
+      // Colocamos el tema
+      theme = userSettings.theme;
 
       // Lo inicializamos a false para no repetir en el caso 1 y 2
-      await saveData(tag: 'systemTheme', value: false);
+      system = false;
+      // await saveData(tag: 'systemTheme', value: false);
       
-      switch (_userSettings.mode) {
+      switch (userSettings.mode) {
         case 1:
-          await saveData(tag: 'isDarkMode', value: true);
+          darkMode = true;
+          // await saveData(tag: 'isDarkMode', value: true);
           break;
         case 2:
-          await saveData(tag: 'isDarkMode', value: false);
+          darkMode = false;
+          // await saveData(tag: 'isDarkMode', value: false);
           break;
         case 3:
-          await saveData(tag: 'systemTheme', value: true);
+          system = true;
+          // await saveData(tag: 'systemTheme', value: true);
           break;
       }
     }
 
     // Cargamos si se usa el tema del dispositivo
-    bool system = await loadDataBool(tag: 'systemTheme');
+    // bool system = await loadDataBool(tag: 'systemTheme');
 
     if (system) {
       // Cargamos el índice del color seleccionado y el valor del modo oscuro
       // y lo asignamos al tema
-      final colorIndex = await loadDataInt(tag: 'selectedColorTheme');
+      // final colorIndex = await loadDataInt(tag: 'selectedColorTheme');
 
       var brightness =
           SchedulerBinding.instance.platformDispatcher.platformBrightness;
-      final darkMode = brightness == Brightness.dark;
+      darkMode = brightness == Brightness.dark;
 
       state = state.copyWith(
-          selectedColor: colorIndex,
+          selectedColor: theme,
           isDarkMode: darkMode,
           isUsingSystem: system);
     } else {
@@ -91,14 +102,14 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
       ];
 
       // Espero a los Future
-      List<dynamic> results = await Future.wait(futureLists);
+      // List<dynamic> results = await Future.wait(futureLists);
 
       // Recojo los resultados
-      final colorIndex = results[0];
-      final darkMode = results[1];
+      // final colorIndex = results[0];
+      // darkMode = results[1];
 
       state = state.copyWith(
-          selectedColor: colorIndex,
+          selectedColor: theme,
           isDarkMode: darkMode,
           isUsingSystem: system);
     }
@@ -129,7 +140,7 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
 
   /// Función que coloca si se usa el tema del dispositivo
   void setUseSystem({required isUsingSystem}) async {
-    await saveData(tag: 'systemTheme', value: isUsingSystem);
+    saveData(tag: 'systemTheme', value: isUsingSystem);
 
     // // Obtenemos el valor del modo oscuro
     // // Esto se hace para que cuando se desactive el uso del tema del dispositivo

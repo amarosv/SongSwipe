@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
@@ -21,12 +19,16 @@ class LanguageView extends StatefulWidget {
   State<LanguageView> createState() => _LanguageViewState();
 }
 
-class _LanguageViewState extends State<LanguageView> {
+class _LanguageViewState extends State<LanguageView>
+    with WidgetsBindingObserver {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
   // Variable que almacena el uid del usuario
   late String _uid;
+
+  // Variable que almacena el user settings para comporar si ha habido cambios
+  UserSettings _userSettingsComparator = UserSettings.empty();
 
   // Variable que almacena el usersettings
   UserSettings _userSettings = UserSettings.empty();
@@ -38,39 +40,35 @@ class _LanguageViewState extends State<LanguageView> {
   bool spanishSelected = false;
   bool italianSelected = false;
 
-  final int _selected = 0;
-
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // Almacenamos el uid del usuario
     _uid = _user.uid;
     // Obtenemos los datos del usuario
     _getUserSettings();
-    // Obtenemos el código del idioma
-    _getLanguageCode();
   }
 
   // Función que obtiene los datos del usuario de la api
   void _getUserSettings() async {
     UserSettings settings = await getUserSettings(uid: _uid);
-    setState(() {
-      _userSettings = settings;
-    });
+    if (mounted) {
+      setState(() {
+        _userSettingsComparator = settings.copy();
+        _userSettings = settings;
+      });
+
+      // Obtenemos el código del idioma
+      _getLanguageCode();
+    }
   }
 
   // Función que obtiene el código del idioma
   void _getLanguageCode() async {
-    String code = await loadDataString(tag: 'language');
+    String code = _userSettings.language;
 
-    // Comprobamos si está vacío
-    if (code.isEmpty) {
-      // En el caso en el cual no hay guardado ningún lenguaje
-      // Obtenemos el lenguaje del dispositivo
-      Locale locale = PlatformDispatcher.instance.locale;
-
-      code = locale.languageCode;
-    }
+    widget.onChangeLanguage(code);
 
     setState(() {
       _languageCode = code;
@@ -93,6 +91,24 @@ class _LanguageViewState extends State<LanguageView> {
           break;
       }
     });
+  }
+
+  @override
+  void dispose() {
+    if (_userSettingsComparator != _userSettings) {
+      updateUserSettings(_userSettings, _uid);
+    }
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused &&
+        _userSettingsComparator != _userSettings) {
+      updateUserSettings(_userSettings, _uid);
+      _userSettingsComparator = _userSettings.copy();
+    }
   }
 
   @override
@@ -127,7 +143,6 @@ class _LanguageViewState extends State<LanguageView> {
                 });
 
                 _userSettings.language = 'en';
-                updateUserSettings(_userSettings, _uid);
                 widget.onChangeLanguage('en');
               }
             },
@@ -149,7 +164,6 @@ class _LanguageViewState extends State<LanguageView> {
                 });
 
                 _userSettings.language = "es";
-                updateUserSettings(_userSettings, _uid);
                 widget.onChangeLanguage('es');
               }
             },
@@ -171,7 +185,6 @@ class _LanguageViewState extends State<LanguageView> {
                 });
 
                 _userSettings.language = 'it';
-                updateUserSettings(_userSettings, _uid);
                 widget.onChangeLanguage('it');
               }
             },
