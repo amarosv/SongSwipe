@@ -107,6 +107,11 @@ class AppRouter {
         builder: (context, state) => NotificationsScreen(),
       ),
       GoRoute(
+        path: '/about-settings',
+        name: AboutScreen.name,
+        builder: (context, state) => AboutScreen(),
+      ),
+      GoRoute(
         path: '/home/:page',
         name: HomeScreen.name,
         builder: (context, state) {

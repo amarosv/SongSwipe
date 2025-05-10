@@ -74,7 +74,7 @@
     "language": "language",
     "audio": "audio",
     "notifications": "notifications",
-    "about_songswipe": "about ",
+    "about_songswipe": "about SongSwipe",
     "logout": "log out",
     "logout_dialog_content": "are you sure you want to log out?",
     "yes": "yes",
@@ -101,6 +101,6 @@
     "weekly_recap": "weekly recap",
     "label_weekly_recap": "we will send you a notification every sunday at 8pm",
     "account_blocked": "account blocked",
-    "label_account_blocked": "we will send you a notification if we block your account"
-
+    "label_account_blocked": "we will send you a notification if we block your account",
+    "info_app": "aksajhsdhsadj"
 }

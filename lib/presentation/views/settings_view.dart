@@ -128,12 +128,13 @@ class _SettingsViewState extends State<SettingsView> {
               // Acerca de SongSwipe
               CustomNavigator(
                 title: Text(
-                  '${capitalizeFirstLetter(text: localization.about_songswipe)}SongSwipe',
+                  capitalizeFirstLetter(text: localization.about_songswipe),
                   style: TextStyle(fontSize: 20),
                 ),
                 icon: SongSwipe.info,
                 iconSize: 32,
                 colorIcon: Theme.of(context).colorScheme.primary,
+                function: () => context.push('/about-settings'),
               ),
 
               const SizedBox(height: 30,),

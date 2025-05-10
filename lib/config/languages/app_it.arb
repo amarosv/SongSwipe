@@ -74,7 +74,7 @@
     "language": "lingua",
     "audio": "audio",
     "notifications": "notifiche",
-    "about_songswipe": "informazioni su ",
+    "about_songswipe": "informazioni su SongSwipe",
     "logout": "logout",
     "logout_dialog_content": "sei sicuro di voler effettuare il logout?",
     "yes": "si",
@@ -101,5 +101,6 @@
     "weekly_recap": "riepilogo settimanale",
     "label_weekly_recap": "ti invieremo una notifica ogni domenica alle 20:00",
     "account_blocked": "conto bloccato",
-    "label_account_blocked": "ti invieremo una notifica se blocchiamo il tuo account"
+    "label_account_blocked": "ti invieremo una notifica se blocchiamo il tuo account",
+    "info_app": "aksajhsdhsadj"
 }
