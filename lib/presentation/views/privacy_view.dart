@@ -48,7 +48,8 @@ class _PrivacyViewState extends State<PrivacyView> {
     // Constante que almacena la localización de la app
     final localization = AppLocalizations.of(context)!;
 
-    Future<bool> _accountIsCurrentlyPrivate() async {
+    // Función que muestra un alert dialog si la cuenta es privada y se intenta cambiar un ajuste
+    Future<bool> accountIsCurrentlyPrivate() async {
       final shouldChangeAccount = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog.adaptive(
@@ -104,7 +105,7 @@ class _PrivacyViewState extends State<PrivacyView> {
                   bool doAction = true;
 
                   if (_userSettings.privateAccount) {
-                    doAction = await _accountIsCurrentlyPrivate();
+                    doAction = await accountIsCurrentlyPrivate();
                   }
 
                   if (doAction) {
@@ -131,7 +132,7 @@ class _PrivacyViewState extends State<PrivacyView> {
                   bool doAction = true;
 
                   if (_userSettings.privateAccount) {
-                    doAction = await _accountIsCurrentlyPrivate();
+                    doAction = await accountIsCurrentlyPrivate();
                   }
 
                   if (doAction) {
@@ -159,7 +160,7 @@ class _PrivacyViewState extends State<PrivacyView> {
                   bool doAction = true;
 
                   if (_userSettings.privateAccount) {
-                    doAction = await _accountIsCurrentlyPrivate();
+                    doAction = await accountIsCurrentlyPrivate();
                   }
 
                   if (doAction) {
@@ -189,31 +190,20 @@ class _PrivacyViewState extends State<PrivacyView> {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                   ),
-                  CustomContainer(
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Text(
-                          capitalizeFirstLetter(
-                              text: localization.make_account_private),
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        const Spacer(),
-                        Switch.adaptive(
-                            value: _userSettings.privateAccount,
-                            onChanged: (bool newValue) {
-                              setState(() {
-                                _userSettings.privateAccount = newValue;
-                                _userSettings.privacyVisSavedSongs = 2;
-                                _userSettings.privacyVisStats = 2;
-                                _userSettings.privacyVisFol = 2;
-                              });
-
-                              updateUserSettings(_userSettings, _uid);
-                            })
-                      ],
-                    ),
-                  )
+                  CustomSwitchContainer(
+                    title: capitalizeFirstLetter(
+                        text: localization.make_account_private),
+                    switchValue: _userSettings.privateAccount,
+                    function: (bool newValue) {
+                      setState(() {
+                        _userSettings.privateAccount = newValue;
+                        _userSettings.privacyVisSavedSongs = 2;
+                        _userSettings.privacyVisStats = 2;
+                        _userSettings.privacyVisFol = 2;
+                      });
+                      updateUserSettings(_userSettings, _uid);
+                    }
+                  ),
                 ],
               ),
             ),

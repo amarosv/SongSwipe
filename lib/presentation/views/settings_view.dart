@@ -78,9 +78,7 @@ class _SettingsViewState extends State<SettingsView> {
                 icon: SongSwipe.person,
                 iconSize: 32,
                 colorIcon: Theme.of(context).colorScheme.primary,
-                function: () {
-                  context.push('/privacy-settings');
-                },
+                function: () => context.push('/privacy-settings'),
               ),
               
               const SizedBox(height: 30,),
@@ -94,9 +92,7 @@ class _SettingsViewState extends State<SettingsView> {
                 icon: SongSwipe.language,
                 iconSize: 32,
                 colorIcon: Theme.of(context).colorScheme.primary,
-                function: () {
-                  context.push('/language-settings');
-                },
+                function: () => context.push('/language-settings'),
               ),
               
               const SizedBox(height: 30,),
@@ -110,6 +106,7 @@ class _SettingsViewState extends State<SettingsView> {
                 icon: SongSwipe.headphones,
                 iconSize: 32,
                 colorIcon: Theme.of(context).colorScheme.primary,
+                function: () => context.push('/audio-settings'),
               ),
               
               const SizedBox(height: 30,),

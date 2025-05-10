@@ -1,3 +1,4 @@
+export 'audio_view.dart';
 export 'change_theme_view.dart';
 export 'complete_profile_simple_view.dart';
 export 'complete_profile_view.dart';

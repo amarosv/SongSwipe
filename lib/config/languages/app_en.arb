@@ -88,5 +88,9 @@
     "devices": "devices",
     "delete_account": "delete account",
     "who_can_see": "who can see it?",
-    "currently_private_account": "your account is currently private, changing this setting will make your account public. are you sure?"
+    "currently_private_account": "your account is currently private, changing this setting will make your account public. are you sure?",
+    "play_loop": "play song in loop",
+    "autoplay": "autoplay",
+    "only_audio": "only audio",
+    "label_only_audio": "show or hide cover art, title and artist"
 }

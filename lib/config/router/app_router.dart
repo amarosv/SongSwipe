@@ -97,6 +97,11 @@ class AppRouter {
         builder: (context, state) => PrivacyScreen(),
       ),
       GoRoute(
+        path: '/audio-settings',
+        name: AudioScreen.name,
+        builder: (context, state) => AudioScreen(),
+      ),
+      GoRoute(
         path: '/home/:page',
         name: HomeScreen.name,
         builder: (context, state) {

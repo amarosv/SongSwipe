@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
+/// Widget que personaliza el select del lenguaje <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class CustomLanguageSelect extends StatelessWidget {
   /// Función
   final Function()? function;

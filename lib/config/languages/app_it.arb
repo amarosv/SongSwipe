@@ -88,5 +88,9 @@
     "devices": "dispositivi",
     "delete_account": "eliminare l'account",
     "who_can_see": "chi può vederlo?",
-    "currently_private_account": "al momento il tuo account è privato, modificando questa impostazione, il tuo account diventerà pubblico. sei sicuro?"
+    "currently_private_account": "al momento il tuo account è privato, modificando questa impostazione, il tuo account diventerà pubblico. sei sicuro?",
+    "play_loop": "riprodurre la canzone in loop",
+    "autoplay": "riproduzione automatica",
+    "only_audio": "solo audio",
+    "label_only_audio": "mostra o nascondi copertina, titolo e artista"
 }

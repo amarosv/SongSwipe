@@ -88,5 +88,9 @@
     "devices": "dispositivos",
     "delete_account": "eliminar cuenta",
     "who_can_see": "¿quién puede verlo?",
-    "currently_private_account": "actualmente tu cuenta es privada, cambiar este ajuste pondrá tu cuenta como pública. ¿estás seguro?"
+    "currently_private_account": "actualmente tu cuenta es privada, cambiar este ajuste pondrá tu cuenta como pública. ¿estás seguro?",
+    "play_loop": "reproducir canción en bucle",
+    "autoplay": "reproducir automáticamente",
+    "only_audio": "solo audio",
+    "label_only_audio": "mostrar u ocultar la portada, el título y el artista"
 }
