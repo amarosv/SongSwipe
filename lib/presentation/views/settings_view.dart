@@ -120,6 +120,7 @@ class _SettingsViewState extends State<SettingsView> {
                 icon: SongSwipe.circleNotifications,
                 iconSize: 32,
                 colorIcon: Theme.of(context).colorScheme.primary,
+                function: () => context.push('/notifications-settings'),
               ),
               
               const SizedBox(height: 30,),

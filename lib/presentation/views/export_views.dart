@@ -4,6 +4,7 @@ export 'complete_profile_simple_view.dart';
 export 'complete_profile_view.dart';
 export 'language_view.dart';
 export 'login_view.dart';
+export 'notifications_view.dart';
 export 'privacy_view.dart';
 export 'profile_view.dart';
 export 'select_artists_view.dart';

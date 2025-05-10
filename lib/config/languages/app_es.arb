@@ -92,5 +92,14 @@
     "play_loop": "reproducir canción en bucle",
     "autoplay": "reproducir automáticamente",
     "only_audio": "solo audio",
-    "label_only_audio": "mostrar u ocultar la portada, el título y el artista"
+    "label_only_audio": "mostrar u ocultar la portada, el título y el artista",
+    "allow_notifications": "permitir notificaciones",
+    "new_friend_request": "nueva solicitud de amistad",
+    "friend_request_approved": "solicitud de amistad aprobada",
+    "app": "app",
+    "new_app_update": "nueva actualización de la app",
+    "weekly_recap": "resumen semanal",
+    "label_weekly_recap": "te enviaremos una notificación todos los domingos a las 8pm.",
+    "account_blocked": "cuenta bloqueada",
+    "label_account_blocked": "te enviaremos una notificación si bloqueamos tu cuenta"
 }

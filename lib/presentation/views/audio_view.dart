@@ -60,6 +60,8 @@ class _AudioViewState extends State<AudioView> {
         child: Column(
           children: [
             const SizedBox(height: 20),
+
+            // Play loop
             CustomSwitchContainer(
               title: localization.play_loop,
               switchValue: _userSettings.audioLoop,
@@ -71,7 +73,9 @@ class _AudioViewState extends State<AudioView> {
                 updateUserSettings(_userSettings, _uid);
               }
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
+
+            // Auto play
             CustomSwitchContainer(
               title: localization.autoplay,
               switchValue: _userSettings.audioAutoPlay,
@@ -83,7 +87,9 @@ class _AudioViewState extends State<AudioView> {
                 updateUserSettings(_userSettings, _uid);
               }
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
+
+            // Only audio
             CustomSwitchContainer(
               title: localization.only_audio,
               switchValue: _userSettings.audioOnlyAudio,
@@ -98,7 +104,7 @@ class _AudioViewState extends State<AudioView> {
 
             const SizedBox(height: 10,),
             
-            // Texto informativo para la cuenta privada
+            // Texto informativo para la opción only audio
             Align(
               alignment: Alignment.centerLeft,
               child: Text(

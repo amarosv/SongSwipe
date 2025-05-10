@@ -92,5 +92,15 @@
     "play_loop": "play song in loop",
     "autoplay": "autoplay",
     "only_audio": "only audio",
-    "label_only_audio": "show or hide cover art, title and artist"
+    "label_only_audio": "show or hide cover art, title and artist",
+    "allow_notifications": "allow notifications",
+    "new_friend_request": "new friend request",
+    "friend_request_approved": "friend request approved",
+    "app": "app",
+    "new_app_update": "new app update",
+    "weekly_recap": "weekly recap",
+    "label_weekly_recap": "we will send you a notification every sunday at 8pm",
+    "account_blocked": "account blocked",
+    "label_account_blocked": "we will send you a notification if we block your account"
+
 }

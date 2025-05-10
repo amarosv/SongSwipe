@@ -102,6 +102,11 @@ class AppRouter {
         builder: (context, state) => AudioScreen(),
       ),
       GoRoute(
+        path: '/notifications-settings',
+        name: NotificationsScreen.name,
+        builder: (context, state) => NotificationsScreen(),
+      ),
+      GoRoute(
         path: '/home/:page',
         name: HomeScreen.name,
         builder: (context, state) {

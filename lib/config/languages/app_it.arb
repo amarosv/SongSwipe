@@ -92,5 +92,14 @@
     "play_loop": "riprodurre la canzone in loop",
     "autoplay": "riproduzione automatica",
     "only_audio": "solo audio",
-    "label_only_audio": "mostra o nascondi copertina, titolo e artista"
+    "label_only_audio": "mostra o nascondi copertina, titolo e artista",
+    "allow_notifications": "consentire le notifiche",
+    "new_friend_request": "nuova richiesta di amicizia",
+    "friend_request_approved": "richiesta di amicizia approvata",
+    "app": "app",
+    "new_app_update": "nuovo aggiornamento dell'app",
+    "weekly_recap": "riepilogo settimanale",
+    "label_weekly_recap": "ti invieremo una notifica ogni domenica alle 20:00",
+    "account_blocked": "conto bloccato",
+    "label_account_blocked": "ti invieremo una notifica se blocchiamo il tuo account"
 }
