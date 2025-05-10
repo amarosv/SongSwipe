@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:songswipe/config/languages/app_localizations.dart';
 
 /// Función que comprueba si un email cumple los requisitos <br>
 /// @param email Cadena a comprobar <br>

@@ -3,12 +3,14 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+
+        <!-- android:name="@string/app_name"20 -->
+
     <application
         android:label="songswipe"
-        android:name="@string/app_name"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name=".MainActivity"
+            android:name="com.amarosv.songswipe.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""

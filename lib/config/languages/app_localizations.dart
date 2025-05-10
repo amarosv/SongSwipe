@@ -1,0 +1,839 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_it.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'languages/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('es'),
+    Locale('it')
+  ];
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'email'**
+  String get email;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'password'**
+  String get password;
+
+  /// No description provided for @confirm_password.
+  ///
+  /// In en, this message translates to:
+  /// **'confirm password'**
+  String get confirm_password;
+
+  /// No description provided for @email_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'enter your email'**
+  String get email_placeholder;
+
+  /// No description provided for @password_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'enter your password'**
+  String get password_placeholder;
+
+  /// No description provided for @confirm_password_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'confirm your password'**
+  String get confirm_password_placeholder;
+
+  /// No description provided for @create_account.
+  ///
+  /// In en, this message translates to:
+  /// **'create account'**
+  String get create_account;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get or;
+
+  /// No description provided for @already_have_an_account.
+  ///
+  /// In en, this message translates to:
+  /// **'already have an account?'**
+  String get already_have_an_account;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'login'**
+  String get login;
+
+  /// No description provided for @spanish.
+  ///
+  /// In en, this message translates to:
+  /// **'spanish'**
+  String get spanish;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'english'**
+  String get english;
+
+  /// No description provided for @italian.
+  ///
+  /// In en, this message translates to:
+  /// **'italian'**
+  String get italian;
+
+  /// No description provided for @forgot_password.
+  ///
+  /// In en, this message translates to:
+  /// **'forgot password?'**
+  String get forgot_password;
+
+  /// No description provided for @not_registered.
+  ///
+  /// In en, this message translates to:
+  /// **'not registered?'**
+  String get not_registered;
+
+  /// No description provided for @error_password_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'password can\'t be empty'**
+  String get error_password_empty;
+
+  /// No description provided for @error_password_length.
+  ///
+  /// In en, this message translates to:
+  /// **'password must be 8 characters long'**
+  String get error_password_length;
+
+  /// No description provided for @error_password_capital.
+  ///
+  /// In en, this message translates to:
+  /// **'password must contain at least 1 capital letter'**
+  String get error_password_capital;
+
+  /// No description provided for @error_password_lowercase.
+  ///
+  /// In en, this message translates to:
+  /// **'password must contain at least 1 lowercase letter'**
+  String get error_password_lowercase;
+
+  /// No description provided for @error_password_number.
+  ///
+  /// In en, this message translates to:
+  /// **'password must contain at least 1 number'**
+  String get error_password_number;
+
+  /// No description provided for @error_password_special.
+  ///
+  /// In en, this message translates to:
+  /// **'password must contain at least 1 special character'**
+  String get error_password_special;
+
+  /// No description provided for @error_password_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'password must be 8 characters long, must contain 1 capital letter, 1 lowercase letter, 1 number and 1 special character'**
+  String get error_password_invalid;
+
+  /// No description provided for @error_passwords_match.
+  ///
+  /// In en, this message translates to:
+  /// **'passwords don\'t match'**
+  String get error_passwords_match;
+
+  /// No description provided for @error_password_weak.
+  ///
+  /// In en, this message translates to:
+  /// **'the password provided is too weak.'**
+  String get error_password_weak;
+
+  /// No description provided for @error_email_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'email can\'t be empty'**
+  String get error_email_empty;
+
+  /// No description provided for @error_email_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'email isn\'t valid'**
+  String get error_email_invalid;
+
+  /// No description provided for @error_account.
+  ///
+  /// In en, this message translates to:
+  /// **'the account already exists for that email.'**
+  String get error_account;
+
+  /// No description provided for @complete_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'complete your profile'**
+  String get complete_profile;
+
+  /// No description provided for @username.
+  ///
+  /// In en, this message translates to:
+  /// **'username'**
+  String get username;
+
+  /// No description provided for @username_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'enter your username'**
+  String get username_placeholder;
+
+  /// No description provided for @username_info.
+  ///
+  /// In en, this message translates to:
+  /// **'you can change your username later on the profile page.'**
+  String get username_info;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'name'**
+  String get name;
+
+  /// No description provided for @name_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'enter your name'**
+  String get name_placeholder;
+
+  /// No description provided for @lastname.
+  ///
+  /// In en, this message translates to:
+  /// **'last name'**
+  String get lastname;
+
+  /// No description provided for @lastname_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'enter your last name'**
+  String get lastname_placeholder;
+
+  /// No description provided for @upload_your_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'upload your photo'**
+  String get upload_your_photo;
+
+  /// No description provided for @continue_s.
+  ///
+  /// In en, this message translates to:
+  /// **'continue'**
+  String get continue_s;
+
+  /// No description provided for @sent_email.
+  ///
+  /// In en, this message translates to:
+  /// **'we\'ve sent an email to '**
+  String get sent_email;
+
+  /// No description provided for @verify.
+  ///
+  /// In en, this message translates to:
+  /// **'please verify the email to continue.'**
+  String get verify;
+
+  /// No description provided for @resend.
+  ///
+  /// In en, this message translates to:
+  /// **'resend email'**
+  String get resend;
+
+  /// No description provided for @change_email.
+  ///
+  /// In en, this message translates to:
+  /// **'change email'**
+  String get change_email;
+
+  /// No description provided for @sent.
+  ///
+  /// In en, this message translates to:
+  /// **'sent!'**
+  String get sent;
+
+  /// No description provided for @resent.
+  ///
+  /// In en, this message translates to:
+  /// **'we\'ve sent you another email'**
+  String get resent;
+
+  /// No description provided for @verified.
+  ///
+  /// In en, this message translates to:
+  /// **'verified!'**
+  String get verified;
+
+  /// No description provided for @verified_email.
+  ///
+  /// In en, this message translates to:
+  /// **'you have verified your email'**
+  String get verified_email;
+
+  /// No description provided for @attention.
+  ///
+  /// In en, this message translates to:
+  /// **'attention!'**
+  String get attention;
+
+  /// No description provided for @fill_fields.
+  ///
+  /// In en, this message translates to:
+  /// **'please fill in all fields'**
+  String get fill_fields;
+
+  /// No description provided for @error_account_not_exists.
+  ///
+  /// In en, this message translates to:
+  /// **'no user found for that email or password is wrong'**
+  String get error_account_not_exists;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'an error has occurred'**
+  String get error;
+
+  /// No description provided for @select_artists.
+  ///
+  /// In en, this message translates to:
+  /// **'select at least 5 artists'**
+  String get select_artists;
+
+  /// No description provided for @search_artist.
+  ///
+  /// In en, this message translates to:
+  /// **'search an artist...'**
+  String get search_artist;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'done'**
+  String get done;
+
+  /// No description provided for @select_genres.
+  ///
+  /// In en, this message translates to:
+  /// **'select at least 3 genres'**
+  String get select_genres;
+
+  /// No description provided for @search_genre.
+  ///
+  /// In en, this message translates to:
+  /// **'search an genre...'**
+  String get search_genre;
+
+  /// No description provided for @info.
+  ///
+  /// In en, this message translates to:
+  /// **'information'**
+  String get info;
+
+  /// No description provided for @full_name.
+  ///
+  /// In en, this message translates to:
+  /// **'full name'**
+  String get full_name;
+
+  /// No description provided for @date_joining.
+  ///
+  /// In en, this message translates to:
+  /// **'joined'**
+  String get date_joining;
+
+  /// No description provided for @saved_songs.
+  ///
+  /// In en, this message translates to:
+  /// **'saved songs'**
+  String get saved_songs;
+
+  /// No description provided for @followers.
+  ///
+  /// In en, this message translates to:
+  /// **'followers'**
+  String get followers;
+
+  /// No description provided for @following.
+  ///
+  /// In en, this message translates to:
+  /// **'following'**
+  String get following;
+
+  /// No description provided for @see_fav_artists.
+  ///
+  /// In en, this message translates to:
+  /// **'see my favorite artists'**
+  String get see_fav_artists;
+
+  /// No description provided for @see_fav_genres.
+  ///
+  /// In en, this message translates to:
+  /// **'see my favorite genres'**
+  String get see_fav_genres;
+
+  /// No description provided for @see_stats.
+  ///
+  /// In en, this message translates to:
+  /// **'see my stats'**
+  String get see_stats;
+
+  /// No description provided for @edit_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'edit profile'**
+  String get edit_profile;
+
+  /// No description provided for @swipes.
+  ///
+  /// In en, this message translates to:
+  /// **'swipes'**
+  String get swipes;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'profile'**
+  String get profile;
+
+  /// No description provided for @library.
+  ///
+  /// In en, this message translates to:
+  /// **'library'**
+  String get library;
+
+  /// No description provided for @discover.
+  ///
+  /// In en, this message translates to:
+  /// **'discover'**
+  String get discover;
+
+  /// No description provided for @friends.
+  ///
+  /// In en, this message translates to:
+  /// **'friends'**
+  String get friends;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'settings'**
+  String get settings;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'appearance'**
+  String get appearance;
+
+  /// No description provided for @profile_privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'profile and privacy'**
+  String get profile_privacy;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'language'**
+  String get language;
+
+  /// No description provided for @audio.
+  ///
+  /// In en, this message translates to:
+  /// **'audio'**
+  String get audio;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'notifications'**
+  String get notifications;
+
+  /// No description provided for @about_songswipe.
+  ///
+  /// In en, this message translates to:
+  /// **'about SongSwipe'**
+  String get about_songswipe;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'log out'**
+  String get logout;
+
+  /// No description provided for @logout_dialog_content.
+  ///
+  /// In en, this message translates to:
+  /// **'are you sure you want to log out?'**
+  String get logout_dialog_content;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'no'**
+  String get no;
+
+  /// No description provided for @select_your_username.
+  ///
+  /// In en, this message translates to:
+  /// **'select your username'**
+  String get select_your_username;
+
+  /// No description provided for @stats.
+  ///
+  /// In en, this message translates to:
+  /// **'stats'**
+  String get stats;
+
+  /// No description provided for @followers_following.
+  ///
+  /// In en, this message translates to:
+  /// **'followers and following'**
+  String get followers_following;
+
+  /// No description provided for @visibility.
+  ///
+  /// In en, this message translates to:
+  /// **'visibility'**
+  String get visibility;
+
+  /// No description provided for @make_account_private.
+  ///
+  /// In en, this message translates to:
+  /// **'make account private'**
+  String get make_account_private;
+
+  /// No description provided for @account_private_label.
+  ///
+  /// In en, this message translates to:
+  /// **'switching from private to public will automatically accept all pending friend requests.'**
+  String get account_private_label;
+
+  /// No description provided for @devices.
+  ///
+  /// In en, this message translates to:
+  /// **'devices'**
+  String get devices;
+
+  /// No description provided for @delete_account.
+  ///
+  /// In en, this message translates to:
+  /// **'delete account'**
+  String get delete_account;
+
+  /// No description provided for @who_can_see.
+  ///
+  /// In en, this message translates to:
+  /// **'who can see it?'**
+  String get who_can_see;
+
+  /// No description provided for @currently_private_account.
+  ///
+  /// In en, this message translates to:
+  /// **'your account is currently private, changing this setting will make your account public. are you sure?'**
+  String get currently_private_account;
+
+  /// No description provided for @play_loop.
+  ///
+  /// In en, this message translates to:
+  /// **'play song in loop'**
+  String get play_loop;
+
+  /// No description provided for @autoplay.
+  ///
+  /// In en, this message translates to:
+  /// **'autoplay'**
+  String get autoplay;
+
+  /// No description provided for @only_audio.
+  ///
+  /// In en, this message translates to:
+  /// **'only audio'**
+  String get only_audio;
+
+  /// No description provided for @label_only_audio.
+  ///
+  /// In en, this message translates to:
+  /// **'show or hide cover art, title and artist'**
+  String get label_only_audio;
+
+  /// No description provided for @allow_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'allow notifications'**
+  String get allow_notifications;
+
+  /// No description provided for @new_friend_request.
+  ///
+  /// In en, this message translates to:
+  /// **'new friend request'**
+  String get new_friend_request;
+
+  /// No description provided for @friend_request_approved.
+  ///
+  /// In en, this message translates to:
+  /// **'friend request approved'**
+  String get friend_request_approved;
+
+  /// No description provided for @app.
+  ///
+  /// In en, this message translates to:
+  /// **'app'**
+  String get app;
+
+  /// No description provided for @new_app_update.
+  ///
+  /// In en, this message translates to:
+  /// **'new app update'**
+  String get new_app_update;
+
+  /// No description provided for @weekly_recap.
+  ///
+  /// In en, this message translates to:
+  /// **'weekly recap'**
+  String get weekly_recap;
+
+  /// No description provided for @label_weekly_recap.
+  ///
+  /// In en, this message translates to:
+  /// **'we will send you a notification every sunday at 8pm'**
+  String get label_weekly_recap;
+
+  /// No description provided for @account_blocked.
+  ///
+  /// In en, this message translates to:
+  /// **'account blocked'**
+  String get account_blocked;
+
+  /// No description provided for @label_account_blocked.
+  ///
+  /// In en, this message translates to:
+  /// **'we will send you a notification if we block your account'**
+  String get label_account_blocked;
+
+  /// No description provided for @info_app.
+  ///
+  /// In en, this message translates to:
+  /// **'aksajhsdhsadj'**
+  String get info_app;
+
+  /// No description provided for @mode.
+  ///
+  /// In en, this message translates to:
+  /// **'mode'**
+  String get mode;
+
+  /// No description provided for @dark.
+  ///
+  /// In en, this message translates to:
+  /// **'dark'**
+  String get dark;
+
+  /// No description provided for @light.
+  ///
+  /// In en, this message translates to:
+  /// **'light'**
+  String get light;
+
+  /// No description provided for @system.
+  ///
+  /// In en, this message translates to:
+  /// **'system'**
+  String get system;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'theme'**
+  String get theme;
+
+  /// No description provided for @red.
+  ///
+  /// In en, this message translates to:
+  /// **'red'**
+  String get red;
+
+  /// No description provided for @yellow.
+  ///
+  /// In en, this message translates to:
+  /// **'yellow'**
+  String get yellow;
+
+  /// No description provided for @pink.
+  ///
+  /// In en, this message translates to:
+  /// **'pink'**
+  String get pink;
+
+  /// No description provided for @cards.
+  ///
+  /// In en, this message translates to:
+  /// **'cards'**
+  String get cards;
+
+  /// No description provided for @animated_cover.
+  ///
+  /// In en, this message translates to:
+  /// **'animated cover'**
+  String get animated_cover;
+
+  /// No description provided for @skip_songs.
+  ///
+  /// In en, this message translates to:
+  /// **'skip songs'**
+  String get skip_songs;
+
+  /// No description provided for @blurred_as_background.
+  ///
+  /// In en, this message translates to:
+  /// **'blurred cover as background'**
+  String get blurred_as_background;
+
+  /// No description provided for @label_blurred_background.
+  ///
+  /// In en, this message translates to:
+  /// **'disable this option to make the background colors related to the cover'**
+  String get label_blurred_background;
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['en', 'es', 'it'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'it':
+      return AppLocalizationsIt();
+  }
+
+  throw FlutterError(
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
+}

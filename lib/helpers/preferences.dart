@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Función que almacena un valor en SharedPreferences <br>
 /// @parama tag Titulo de la etiqueta donde se almacenará el valor <br>
 /// @param value Valor a almacenar
-void saveData({required String tag, required dynamic value}) async {
+Future<void> saveData({required String tag, required dynamic value}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   // Comprobamos de que tipo es el valor

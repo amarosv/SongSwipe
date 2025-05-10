@@ -33,7 +33,7 @@ class ChangeThemeScreen extends ConsumerWidget {
           IconButton(
             onPressed: () {
               // Llamamos al notifier para cambiar de modo
-              ref.read(themeNotifierProvider.notifier).toggleUseSystem();
+              ref.read(themeNotifierProvider.notifier).setUseSystem(isUsingSystem: true);
             },
             icon: Icon(isUsingSystem ? Icons.mobile_friendly_sharp : Icons.mobile_off)
           ),

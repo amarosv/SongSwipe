@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/strings_methods.dart';
 import 'package:songswipe/models/user_settings.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
@@ -104,6 +104,10 @@ class _NotificationsViewState extends State<NotificationsView> {
                       function: (bool newValue) {
                         setState(() {
                           _userSettings.notiFriendsRequest = newValue;
+
+                          if (newValue) {
+                            _userSettings.notifications = newValue;
+                          }
                         });
 
                         updateUserSettings(_userSettings, _uid);
@@ -118,6 +122,10 @@ class _NotificationsViewState extends State<NotificationsView> {
                       function: (bool newValue) {
                         setState(() {
                           _userSettings.notiFriendsApproved = newValue;
+
+                          if (newValue) {
+                            _userSettings.notifications = newValue;
+                          }
                         });
 
                         updateUserSettings(_userSettings, _uid);
@@ -147,6 +155,10 @@ class _NotificationsViewState extends State<NotificationsView> {
                       function: (bool newValue) {
                         setState(() {
                           _userSettings.notiAppUpdate = newValue;
+
+                          if (newValue) {
+                            _userSettings.notifications = newValue;
+                          }
                         });
 
                         updateUserSettings(_userSettings, _uid);
@@ -161,6 +173,10 @@ class _NotificationsViewState extends State<NotificationsView> {
                       function: (bool newValue) {
                         setState(() {
                           _userSettings.notiAppRecap = newValue;
+
+                          if (newValue) {
+                            _userSettings.notifications = newValue;
+                          }
                         });
 
                         updateUserSettings(_userSettings, _uid);
@@ -190,18 +206,23 @@ class _NotificationsViewState extends State<NotificationsView> {
                   function: (bool newValue) {
                     setState(() {
                       _userSettings.notiAccountBlocked = newValue;
+
+                      if (newValue) {
+                        _userSettings.notifications = newValue;
+                      }
                     });
 
                     updateUserSettings(_userSettings, _uid);
                   }),
 
               const SizedBox(height: 10),
-              
+
               // Texto informativo para la opción account blocked
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  capitalizeFirstLetter(text: localization.label_account_blocked),
+                  capitalizeFirstLetter(
+                      text: localization.label_account_blocked),
                   style: TextStyle(color: Colors.grey),
                 ),
               ),

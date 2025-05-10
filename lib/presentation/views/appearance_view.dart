@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/strings_methods.dart';
 import 'package:songswipe/models/user_settings.dart';
 import 'package:songswipe/presentation/providers/export_providers.dart';
@@ -40,9 +40,11 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
   // Función que obtiene los datos del usuario de la api
   void _getUserSettings() async {
     UserSettings settings = await getUserSettings(uid: _uid);
-    setState(() {
-      _userSettings = settings;
-    });
+    if (mounted) {
+      setState(() {
+        _userSettings = settings;
+      });
+    }
   }
 
   @override
@@ -89,10 +91,15 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                           _userSettings.mode = 1;
                         });
 
+                        // Colocamos que no estamos usando el modo del sistema
+                        ref
+                            .read(themeNotifierProvider.notifier)
+                            .setUseSystem(isUsingSystem: false);
+
                         // Llamamos al notifier para cambiar de modo
                         ref
                             .read(themeNotifierProvider.notifier)
-                            .toggleDarkMode();
+                            .setDarkMode(isDarkMode: true);
 
                         updateUserSettings(_userSettings, _uid);
                       },
@@ -124,10 +131,15 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                           _userSettings.mode = 2;
                         });
 
+                        // Colocamos que no estamos usando el modo del sistema
+                        ref
+                            .read(themeNotifierProvider.notifier)
+                            .setUseSystem(isUsingSystem: false);
+
                         // Llamamos al notifier para cambiar de modo
                         ref
                             .read(themeNotifierProvider.notifier)
-                            .toggleDarkMode();
+                            .setDarkMode(isDarkMode: false);
 
                         updateUserSettings(_userSettings, _uid);
                       },
@@ -162,7 +174,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView> {
                         // Llamamos al notifier para cambiar de modo
                         ref
                             .read(themeNotifierProvider.notifier)
-                            .toggleUseSystem();
+                            .setUseSystem(isUsingSystem: true);
                         updateUserSettings(_userSettings, _uid);
                       },
                       child: Column(
