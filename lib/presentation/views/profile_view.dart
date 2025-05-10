@@ -73,10 +73,10 @@ class _ProfileViewState extends State<ProfileView> {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(2), // grosor del borde
+                    padding: const EdgeInsets.all(4), // grosor del borde
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black, width: 2),
+                      border: Border.all(color: Theme.of(context).colorScheme.primary, width: 2),
                     ),
                     child: CircleAvatar(
                       radius: 42,
@@ -229,6 +229,8 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                       foregroundColor: Colors.white,
               ),
+
+              const SizedBox(height: 20)
             ],
           ),
         ),

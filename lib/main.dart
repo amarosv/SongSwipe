@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -44,7 +43,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Brightness _previousBrightness = Brightness.dark;
 
   // Variable que almacena el país
-  Locale _locale = PlatformDispatcher.instance.locale;
+  Locale _locale = WidgetsBinding.instance.platformDispatcher.locale;
 
   // Inicializa el router
   late final AppRouter _router;
@@ -69,13 +68,13 @@ class _MyAppState extends ConsumerState<MyApp> {
       languageCode = settings.language;
     } else {
       // Cargamos el lenguaje guardado en SharedPreferences
-      String languageCode = await loadDataString(tag: 'language');
+      languageCode = await loadDataString(tag: 'language');
 
       // Comprobamos si está vacío
       if (languageCode.isEmpty) {
         // En el caso en el cual no hay guardado ningún lenguaje
         // Obtenemos el lenguaje del dispositivo
-        Locale locale = PlatformDispatcher.instance.locale;
+        locale = WidgetsBinding.instance.platformDispatcher.locale;
 
         languageCode = locale.languageCode;
       }
