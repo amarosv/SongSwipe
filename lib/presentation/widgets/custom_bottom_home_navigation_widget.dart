@@ -10,9 +10,13 @@ class CustomBottomHomeNavigation extends StatelessWidget {
   /// Índice actual de la vista
   final int currentIndex;
 
+  /// Función
+  final Function(int) function;
+
   const CustomBottomHomeNavigation({
     super.key,
-    required this.currentIndex
+    required this.currentIndex,
+    required this.function
   });
 
   // Función que cambia la vista
@@ -27,9 +31,7 @@ class CustomBottomHomeNavigation extends StatelessWidget {
 
     return BottomNavigationBar(
       currentIndex: currentIndex,
-      onTap: (index) {
-        onItemTapped(context, index);
-      },
+      onTap: function,
       elevation: 0,
       type: BottomNavigationBarType.fixed,
       items: [

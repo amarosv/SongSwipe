@@ -147,7 +147,9 @@ class Track {
                     Contributor.fromJson(item as Map<String, dynamic>))
                 .toList() ??
             [],
-        md5Image: json["md5_image"] ?? '',
+        md5Image: json["md5_image"] != null
+          ? 'https://e-cdn-images.dzcdn.net/images/cover/${json['md5_image']}/500x500.jpg'
+          : '',
         trackToken: json["track_token"] ?? '',
         artist: json['artist'] != null
             ? Artist.fromJson(json['artist'], 0)
