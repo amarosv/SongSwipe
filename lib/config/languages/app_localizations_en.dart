@@ -369,4 +369,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get label_blurred_background =>
       'disable this option to make the background colors related to the cover';
+
+  @override
+  String get january => 'january';
+
+  @override
+  String get february => 'february';
+
+  @override
+  String get march => 'march';
+
+  @override
+  String get april => 'april';
+
+  @override
+  String get may => 'may';
+
+  @override
+  String get june => 'june';
+
+  @override
+  String get july => 'july';
+
+  @override
+  String get august => 'august';
+
+  @override
+  String get september => 'september';
+
+  @override
+  String get october => 'october';
+
+  @override
+  String get november => 'november';
+
+  @override
+  String get december => 'december';
 }

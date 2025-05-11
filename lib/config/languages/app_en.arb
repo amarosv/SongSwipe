@@ -115,5 +115,17 @@
     "animated_cover": "animated cover",
     "skip_songs": "skip songs",
     "blurred_as_background": "blurred cover as background",
-    "label_blurred_background": "disable this option to make the background colors related to the cover"
+    "label_blurred_background": "disable this option to make the background colors related to the cover",
+    "january": "january",
+    "february": "february",
+    "march": "march",
+    "april": "april",
+    "may": "may",
+    "june": "june",
+    "july": "july",
+    "august": "august",
+    "september": "september",
+    "october": "october",
+    "november": "november",
+    "december": "december"
 }

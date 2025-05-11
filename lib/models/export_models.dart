@@ -1,6 +1,7 @@
 export 'album.dart';
 export 'artist.dart';
 export 'contributor.dart';
+export 'dominant_colors.dart';
 export 'genre.dart';
 export 'track.dart';
 export 'user_profile.dart';

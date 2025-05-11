@@ -115,5 +115,17 @@
     "animated_cover": "portada animada",
     "skip_songs": "saltar canciones",
     "blurred_as_background": "portada difuminada como fondo",
-    "label_blurred_background": "desactive esta opción para que los colores de fondo estén relacionados con la portada."
+    "label_blurred_background": "desactive esta opción para que los colores de fondo estén relacionados con la portada.",
+    "january": "enero",
+    "february": "febrero",
+    "march": "marzo",
+    "april": "abril",
+    "may": "mayo",
+    "june": "junio",
+    "july": "julio",
+    "august": "agosto",
+    "september": "septiembre",
+    "october": "octubre",
+    "november": "noviembre",
+    "december": "diciembre"
 }

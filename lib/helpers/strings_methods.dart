@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:songswipe/config/languages/app_localizations.dart';
+
 /// Función que recibe un texto y pone la primera letra y sus iniciales tras los espacios en mayúscula <br>
 /// @param text Texto a convertir <br>
 /// @returns Texto con las iniciales tras los espacios en mayúscula
@@ -12,10 +15,12 @@ String upperCaseAfterSpace({required String text}) {
   for (int i = 0; i < words.length; i++) {
     // Obtenemos la palabra
     String word = words[i];
-    
+
     // Añadimos al nuevo texto la palabra con la inicial en mayúscula
     // y si no es la última palabra, añadimos el espacio
-    textUpper += word[0].toUpperCase() + word.substring(1) + (i == words.length - 1 ? '' : ' ');
+    textUpper += word[0].toUpperCase() +
+        word.substring(1) +
+        (i == words.length - 1 ? '' : ' ');
   }
 
   // Devolvemos el texto convertido
@@ -44,12 +49,14 @@ String upperCaseAfterDot({required String text}) {
 
     int j = 0;
     // Saltamos los caracteres iniciales que no deben capitalizarse
-    while (j < part.length && (part[j] == ' ' || part[j] == '¿' || part[j] == '¡')) {
+    while (j < part.length &&
+        (part[j] == ' ' || part[j] == '¿' || part[j] == '¡')) {
       j++;
     }
 
     if (j < part.length) {
-      String initial = part.substring(0, j); // caracteres iniciales como espacios o signos
+      String initial =
+          part.substring(0, j); // caracteres iniciales como espacios o signos
       String capitalized = part[j].toUpperCase() + part.substring(j + 1);
       textUpper += initial + capitalized;
     } else {
@@ -78,4 +85,64 @@ String capitalizeFirstLetter({required String text}) {
   }
 
   return finalText;
+}
+
+/// Función que formatea una fecha <br>
+/// @param date Fecha a formatear <br>
+/// @param context Contexto <br>
+/// @returns Fecha formateada
+String formatDate({required String date, required BuildContext context}) {
+  // Constante que almacena la localización de la app
+  final localization = AppLocalizations.of(context)!;
+
+  String day = '';
+  String month = '';
+  String monthName = '';
+  String year = '';
+  List<String> dateSplitted = date.split('-');
+
+  day = dateSplitted.last;
+  month = dateSplitted[1];
+  year = dateSplitted.first;
+
+  switch (month) {
+    case '01':
+      monthName = localization.january;
+      break;
+    case '02':
+      monthName = localization.february;
+      break;
+    case '03':
+      monthName = localization.march;
+      break;
+    case '04':
+      monthName = localization.april;
+      break;
+    case '05':
+      monthName = localization.may;
+      break;
+    case '06':
+      monthName = localization.june;
+      break;
+    case '07':
+      monthName = localization.july;
+      break;
+    case '08':
+      monthName = localization.august;
+      break;
+    case '09':
+      monthName = localization.september;
+      break;
+    case '10':
+      monthName = localization.october;
+      break;
+    case '11':
+      monthName = localization.november;
+      break;
+    case '12':
+      monthName = localization.december;
+      break;
+  }
+
+  return '${capitalizeFirstLetter(text: monthName.substring(0, 3))} ${day[0] == '0' ? day.substring(1) : day}, $year';
 }

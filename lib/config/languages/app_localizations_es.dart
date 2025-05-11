@@ -375,4 +375,40 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get label_blurred_background =>
       'desactive esta opción para que los colores de fondo estén relacionados con la portada.';
+
+  @override
+  String get january => 'enero';
+
+  @override
+  String get february => 'febrero';
+
+  @override
+  String get march => 'marzo';
+
+  @override
+  String get april => 'abril';
+
+  @override
+  String get may => 'mayo';
+
+  @override
+  String get june => 'junio';
+
+  @override
+  String get july => 'julio';
+
+  @override
+  String get august => 'agosto';
+
+  @override
+  String get september => 'septiembre';
+
+  @override
+  String get october => 'octubre';
+
+  @override
+  String get november => 'noviembre';
+
+  @override
+  String get december => 'diciembre';
 }

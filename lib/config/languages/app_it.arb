@@ -115,5 +115,17 @@
     "animated_cover": "copertina animata",
     "skip_songs": "saltare le canzoni",
     "blurred_as_background": "copertina sfocata come sfondo",
-    "label_blurred_background": "disabilitare questa opzione per rendere i colori di sfondo correlati alla copertina"
+    "label_blurred_background": "disabilitare questa opzione per rendere i colori di sfondo correlati alla copertina",
+    "january": "gennaio",
+    "february": "febbraio",
+    "march": "marzo",
+    "april": "aprile",
+    "may": "maggio",
+    "june": "giugno",
+    "july": "luglio",
+    "august": "agosto",
+    "september": "settembre",
+    "october": "ottobre",
+    "november": "novembre",
+    "december": "dicembre"
 }
