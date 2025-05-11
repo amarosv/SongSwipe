@@ -118,6 +118,8 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                     ),
                   ),
                   const SizedBox(height: 10),
+      
+                  // Título de la canción
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
@@ -132,6 +134,8 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                     ),
                   ),
                   const SizedBox(height: 10),
+      
+                  // Artistas de la canción
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
@@ -145,9 +149,9 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                             maxLines: 1,
                             textDirection: TextDirection.ltr,
                           )..layout(maxWidth: double.infinity);
-
+      
                           final textWidth = textPainter.size.width;
-
+      
                           if (textWidth > constraints.maxWidth) {
                             return SizedBox(
                               height: 30,
@@ -185,7 +189,8 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                   ),
                 ],
               ),
-
+      
+              // Fecha de lanzamiento e icono si la canción es explícita
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Row(
