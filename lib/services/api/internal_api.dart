@@ -7,6 +7,7 @@ import 'package:songswipe/config/constants/environment.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/services/api/externals_api.dart';
 
+User? user = FirebaseAuth.instance.currentUser;
 String apiUser = '${Environment.apiUrl}/user';
 
 /// Función que recibe un nombre, apellidos, nombre de usuario y una imagen (opcional) y registra
@@ -28,12 +29,11 @@ Future<bool> registerUserInDatabase(
   bool registered = false;
 
   // Variables que contienen datos del usuario
-  User user = FirebaseAuth.instance.currentUser!;
-  String uid = user.uid;
-  String email = user.email!;
+  String uid = user!.uid;
+  String email = user!.email!;
 
   // 1. Guardamos la imagen del usuario en Imgbb
-  String urlImage = user.photoURL ?? 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
+  String urlImage = user!.photoURL ?? 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
 
   if (image != null) {
     urlImage = await saveImageInImagekit(uid, image);
@@ -228,9 +228,10 @@ Future<UserSettings> getUserSettings({required String uid}) async {
 
 /// Actualiza los ajustes del usuario <br>
 /// @param settings Nuevos ajustes del usuario
-/// @param uid UID del usuario
 /// @returns Se ha actualizado o no
-Future<bool> updateUserSettings(UserSettings settings, String uid) async {
+Future<bool> updateUserSettings(UserSettings settings) async {
+  String uid = user!.uid;
+
   Uri url = Uri.parse('$apiUser/$uid/settings');
 
   // Llamada a la API para guardar los ajustes
@@ -244,4 +245,75 @@ Future<bool> updateUserSettings(UserSettings settings, String uid) async {
   );
 
   return response.statusCode == 200;
+}
+
+/// Obtiene los ids de los artistas que sigue el usuario <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de ids de artistas
+Future<List<int>> getFavoriteArtists({required String uid}) async {
+  // Variable donde se almacenarán los ids de los artistas
+  List<int> artistsIds = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/artists_ids');
+
+  // Llamada a la API para obtener los ids de los artistas que sigue el usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    artistsIds = List<int>.from(jsonDecode(response.body));
+  }
+
+  return artistsIds;
+}
+
+/// Obtiene los ids de los géneros que sigue el usuario <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de ids de géneros
+Future<List<int>> getFavoriteGenres({required String uid}) async {
+  // Variable donde se almacenarán los ids de los géneros
+  List<int> genresIds = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/genres_ids');
+
+  // Llamada a la API para obtener los ids de los artistas que sigue el usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    genresIds = List<int>.from(jsonDecode(response.body));
+  }
+
+  return genresIds;
+}
+
+/// Obtiene si el usuario ha guardado la canción <br>
+/// @param trackId ID de la canción <br>
+/// @returns Booleano que indica si la canción está guardad
+Future<bool> isTrackInDatabase({required int trackId}) async {
+  String uid = user!.uid;
+
+  // Variable que almacenará si la canción está guardada por el usuario
+  bool isInDatabase = false;
+
+  Uri url = Uri.parse('$apiUser/$uid/track_saved/$trackId');
+
+  // Llamada a la API para obtener si la canción está guardada
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    isInDatabase = jsonDecode(response.body);
+  }
+
+  return isInDatabase;
 }

@@ -873,6 +873,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'december'**
   String get december;
+
+  /// No description provided for @in_ranking.
+  ///
+  /// In en, this message translates to:
+  /// **'in the ranking'**
+  String get in_ranking;
 }
 
 class _AppLocalizationsDelegate

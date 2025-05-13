@@ -1,8 +1,8 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
-import 'package:songswipe/helpers/get_dominant_colors.dart';
-import 'package:songswipe/helpers/strings_methods.dart';
+import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 
 /// Widget personalizado para mostrar la carta con la información de la canción <br>
@@ -12,8 +12,9 @@ class CardTrackWidget extends StatefulWidget {
   /// Canción
   final Track track;
   final bool animatedCover;
+  final Color cardBackground;
   const CardTrackWidget(
-      {super.key, required this.track, required this.animatedCover});
+      {super.key, required this.track, required this.animatedCover, required this.cardBackground});
 
   @override
   State<CardTrackWidget> createState() => _CardTrackWidgetState();
@@ -26,9 +27,6 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
 
   // Escala de la animación
   late Animation<double> _scaleAnimation;
-
-  // Color de la carta
-  Color _cardBackground = Color.fromARGB(172, 74, 78, 148);
 
   @override
   void initState() {
@@ -44,17 +42,6 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
-
-    _getDominantColor();
-  }
-
-  // Obtenemos el color dominante de la imagen
-  void _getDominantColor() async {
-    _cardBackground =
-        await extractDominantColor(imagePath: widget.track.md5Image);
-
-    // Actualizamos la UI
-    setState(() {});
   }
 
   // Construye la cadena de artistas y contributors
@@ -75,6 +62,9 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
 
   @override
   Widget build(BuildContext context) {
+    // Constante que almacena la localización de la app
+    final localization = AppLocalizations.of(context)!;
+
     final size = MediaQuery.of(context).size;
     final height = size.height;
 
@@ -87,7 +77,7 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
           padding: EdgeInsets.zero,
           blur: 10,
           elevation: 0,
-          color: _cardBackground,
+          color: widget.cardBackground,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -95,7 +85,7 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                 children: [
                   // Usamos AnimatedBuilder para aplicar el zoom in y out constante
                   SizedBox(
-                    height: height * 0.5,
+                    height: height * 0.45,
                     width: double.infinity,
                     child: ClipRRect(
                       child: widget.animatedCover
@@ -124,12 +114,57 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        widget.track.title,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final text = widget.track.title;
+                          final textPainter = TextPainter(
+                            text: TextSpan(
+                              text: text,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                              ),
+                            ),
+                            maxLines: 1,
+                            textDirection: TextDirection.ltr,
+                          )..layout(maxWidth: double.infinity);
+
+                          final textWidth = textPainter.size.width;
+
+                          if (textWidth > constraints.maxWidth) {
+                            return SizedBox(
+                              height: 30,
+                              child: Marquee(
+                                text: text,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                ),
+                                scrollAxis: Axis.horizontal,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                blankSpace: 20.0,
+                                velocity: 40.0,
+                                pauseAfterRound: Duration(seconds: 4),
+                                startPadding: 10.0,
+                                accelerationDuration: Duration(seconds: 2),
+                                accelerationCurve: Curves.linear,
+                                decelerationDuration: Duration(milliseconds: 500),
+                                decelerationCurve: Curves.easeOut,
+                              ),
+                            );
+                          } else {
+                            return Text(
+                              text,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
@@ -190,27 +225,34 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                 ],
               ),
       
-              // Fecha de lanzamiento e icono si la canción es explícita
+              // Ranking e icono si la canción es explícita
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      formatDate(date: widget.track.releaseDate, context: context),
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    Expanded(
+                      child: Text(
+                        '#${formatWithThousandsSeparator(widget.track.rank)} ${localization.in_ranking}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    widget.track.explicitLyrics
-                        ? Icon(
-                            Icons.explicit,
-                            color: Colors.white,
-                            size: 36,
-                          )
-                        : Container()
+                    if (widget.track.explicitLyrics)
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Icon(
+                          Icons.explicit,
+                          color: Colors.white,
+                          size: 36,
+                        ),
+                      ),
                   ],
                 ),
               ),
-              const SizedBox(height: 5,)
+              // const SizedBox(height: 1,)
             ],
           ),
         ),

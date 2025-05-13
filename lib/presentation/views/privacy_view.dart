@@ -53,7 +53,7 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
   @override
   void dispose() {
     if (_userSettingsComparator != _userSettings) {
-      updateUserSettings(_userSettings, _uid);
+      updateUserSettings(_userSettings);
     }
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -62,7 +62,7 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused && _userSettingsComparator != _userSettings) {
-      updateUserSettings(_userSettings, _uid);
+      updateUserSettings(_userSettings);
       _userSettingsComparator = _userSettings.copy();
     }
   }

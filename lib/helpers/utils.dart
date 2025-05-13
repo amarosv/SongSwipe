@@ -78,3 +78,11 @@ Future<File> compressImage(File file, String uid) async {
 
   return File(compressedFile!.path);
 }
+
+/// Función que formatea un número con puntos como separadores de miles (ej: 1023456 -> 1.023.456) <br>
+/// @param number Número a formatear
+/// @returns String con el número formateado
+String formatWithThousandsSeparator(int number) {
+  final formatter = NumberFormat.decimalPattern('es_ES');
+  return formatter.format(number);
+}

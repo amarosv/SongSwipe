@@ -405,4 +405,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get december => 'december';
+
+  @override
+  String get in_ranking => 'in the ranking';
 }

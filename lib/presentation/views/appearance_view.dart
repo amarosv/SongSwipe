@@ -99,7 +99,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
   @override
   void dispose() {
     if (_userSettingsComparator != _userSettings) {
-      updateUserSettings(_userSettings, _uid);
+      updateUserSettings(_userSettings);
     }
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -109,7 +109,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused &&
         _userSettingsComparator != _userSettings) {
-      updateUserSettings(_userSettings, _uid);
+      updateUserSettings(_userSettings);
       _userSettingsComparator = _userSettings.copy();
     }
   }
@@ -158,7 +158,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                           _userSettings.mode = 1;
                         });
 
-                        await updateUserSettings(_userSettings, _uid);
+                        await updateUserSettings(_userSettings);
 
                         // Colocamos que no estamos usando el modo del sistema
                         ref
@@ -198,7 +198,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                           _userSettings.mode = 2;
                         });
 
-                        await updateUserSettings(_userSettings, _uid);
+                        await updateUserSettings(_userSettings);
 
                         // Colocamos que no estamos usando el modo del sistema
                         ref
@@ -238,7 +238,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                           _userSettings.mode = 3;
                         });
 
-                        await updateUserSettings(_userSettings, _uid);
+                        await updateUserSettings(_userSettings);
 
                         // Llamamos al notifier para cambiar de modo
                         ref

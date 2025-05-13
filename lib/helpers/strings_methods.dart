@@ -101,6 +101,8 @@ String formatDate({required String date, required BuildContext context}) {
   String year = '';
   List<String> dateSplitted = date.split('-');
 
+  print(dateSplitted);
+
   day = dateSplitted.last;
   month = dateSplitted[1];
   year = dateSplitted.first;
