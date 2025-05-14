@@ -62,6 +62,9 @@ class UserSettings extends Equatable {
   /// Recibir notificaciones de bloqueo de la cuenta
   bool notiAccountBlocked;
 
+  /// Mostrar tutorial de Swipe
+  bool showTutorial;
+
   /// Constructor de los ajustes del usuario
   UserSettings({
     required this.mode,
@@ -83,6 +86,7 @@ class UserSettings extends Equatable {
     required this.notiAppUpdate,
     required this.notiAppRecap,
     required this.notiAccountBlocked,
+    required this.showTutorial,
   });
 
   /// Método que parsea un JSON a UserSettings
@@ -106,6 +110,7 @@ class UserSettings extends Equatable {
         notiAppUpdate: json["notiAppUpdate"],
         notiAppRecap: json["notiAppRecap"],
         notiAccountBlocked: json["notiAccountBlocked"],
+        showTutorial: json["showTutorial"],
       );
 
   /// Método que crea un UserSettings vacío
@@ -129,7 +134,8 @@ class UserSettings extends Equatable {
         notiFriendsApproved: false,
         notiAppUpdate: false,
         notiAppRecap: false,
-        notiAccountBlocked: false);
+        notiAccountBlocked: false,
+        showTutorial: false);
   }
 
   /// Método que convierte el UserSettings en JSON
@@ -153,6 +159,7 @@ class UserSettings extends Equatable {
         "notiAppUpdate": notiAppUpdate,
         "notiAppRecap": notiAppRecap,
         "notiAccountBlocked": notiAccountBlocked,
+        "showTutorial": showTutorial,
       };
 
   UserSettings copy() => UserSettings(
@@ -175,6 +182,7 @@ class UserSettings extends Equatable {
         notiAppUpdate: notiAppUpdate,
         notiAppRecap: notiAppRecap,
         notiAccountBlocked: notiAccountBlocked,
+        showTutorial: showTutorial
       );
 
   @override
@@ -198,5 +206,6 @@ class UserSettings extends Equatable {
         notiAppUpdate,
         notiAppRecap,
         notiAccountBlocked,
+        showTutorial
       ];
 }

@@ -361,7 +361,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get animated_cover => 'animated cover';
 
   @override
-  String get skip_songs => 'skip songs';
+  String get skip_songs => 'skip and back songs';
 
   @override
   String get blurred_as_background => 'blurred cover as background';
@@ -408,4 +408,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get in_ranking => 'in the ranking';
+
+  @override
+  String get save => 'save';
+
+  @override
+  String get discard => 'discard';
+
+  @override
+  String get skip => 'skip';
+
+  @override
+  String get back => 'back';
+
+  @override
+  String get ok => 'ok';
 }

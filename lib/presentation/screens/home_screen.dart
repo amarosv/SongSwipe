@@ -56,11 +56,30 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Widget currentView;
+
+    switch (_currentIndex) {
+    case 0:
+      currentView = const SettingsView();
+      break;
+    case 1:
+      currentView = const Scaffold(); // o lo que corresponda
+      break;
+    case 2:
+      currentView = DiscoverView(key: _discoverViewKey);
+      break;
+    case 3:
+      currentView = const Scaffold(); // o lo que corresponda
+      break;
+    case 4:
+      currentView = const ProfileView();
+      break;
+    default:
+      currentView = const SettingsView();
+  }
+
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _viewRoutes,
-      ),
+      body: currentView,
       bottomNavigationBar: CustomBottomHomeNavigation(
         currentIndex: _currentIndex,
         function: _onTabTapped,

@@ -113,7 +113,7 @@
     "pink": "pink",
     "cards": "cards",
     "animated_cover": "animated cover",
-    "skip_songs": "skip songs",
+    "skip_songs": "skip and back songs",
     "blurred_as_background": "blurred cover as background",
     "label_blurred_background": "disable this option to make the background colors related to the cover",
     "january": "january",
@@ -128,5 +128,10 @@
     "october": "october",
     "november": "november",
     "december": "december",
-    "in_ranking": "in the ranking"
+    "in_ranking": "in the ranking",
+    "save": "save",
+    "discard": "discard",
+    "skip": "skip",
+    "back": "back",
+    "ok": "ok"
 }

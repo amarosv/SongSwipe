@@ -113,7 +113,7 @@
     "pink": "rosa",
     "cards": "cartas",
     "animated_cover": "portada animada",
-    "skip_songs": "saltar canciones",
+    "skip_songs": "saltar y retroceder canciones",
     "blurred_as_background": "portada difuminada como fondo",
     "label_blurred_background": "desactive esta opción para que los colores de fondo estén relacionados con la portada.",
     "january": "enero",
@@ -128,5 +128,10 @@
     "october": "octubre",
     "november": "noviembre",
     "december": "diciembre",
-    "in_ranking": "en el ranking"
+    "in_ranking": "en el ranking",
+    "save": "guardar",
+    "discard": "descartar",
+    "skip": "saltar",
+    "back": "retroceder",
+    "ok": "ok"
 }

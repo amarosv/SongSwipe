@@ -365,7 +365,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get animated_cover => 'copertina animata';
 
   @override
-  String get skip_songs => 'saltare le canzoni';
+  String get skip_songs => 'saltare e ritorno le canzoni';
 
   @override
   String get blurred_as_background => 'copertina sfocata come sfondo';
@@ -412,4 +412,19 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get in_ranking => 'nella classifica';
+
+  @override
+  String get save => 'salva';
+
+  @override
+  String get discard => 'escludere';
+
+  @override
+  String get skip => 'saltare';
+
+  @override
+  String get back => 'ritorno';
+
+  @override
+  String get ok => 'ok';
 }

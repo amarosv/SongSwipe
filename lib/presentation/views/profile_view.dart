@@ -41,6 +41,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   // Función que obtiene los datos del usuario de la api
   void _getUserProfile() async {
+    if (!mounted) return;
     UserProfile user = await getUserProfile(uid: _uid);
     setState(() {
       _userProfile = user;
@@ -49,6 +50,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   // Función que obtiene el código del idioma
   void _getLanguageCode() async {
+    if (!mounted) return;
     String code = await loadDataString(tag: 'language');
     setState(() {
       _languageCode = code;

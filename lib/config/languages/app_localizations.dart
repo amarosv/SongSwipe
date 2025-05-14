@@ -787,7 +787,7 @@ abstract class AppLocalizations {
   /// No description provided for @skip_songs.
   ///
   /// In en, this message translates to:
-  /// **'skip songs'**
+  /// **'skip and back songs'**
   String get skip_songs;
 
   /// No description provided for @blurred_as_background.
@@ -879,6 +879,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'in the ranking'**
   String get in_ranking;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'save'**
+  String get save;
+
+  /// No description provided for @discard.
+  ///
+  /// In en, this message translates to:
+  /// **'discard'**
+  String get discard;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'skip'**
+  String get skip;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'back'**
+  String get back;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'ok'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate
