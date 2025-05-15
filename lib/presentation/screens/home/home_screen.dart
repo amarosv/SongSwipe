@@ -6,7 +6,7 @@ import 'package:songswipe/services/api/internal_api.dart';
 
 /// Pantalla principal que muestra todas las vistas <br>
 /// @author Amaro Suárez <br>
-/// @version 1.1 (con recarga manual de DiscoverView)
+/// @version 1.1
 class HomeScreen extends StatefulWidget {
   /// Nombre de la ruta
   static const name = 'home-screen';
@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
         currentView = const SettingsView();
         break;
       case 1:
-        currentView = const Scaffold(); // o lo que corresponda
+        currentView = const FriendsView();
         break;
       case 2:
         currentView = DiscoverView(key: _discoverViewKey);

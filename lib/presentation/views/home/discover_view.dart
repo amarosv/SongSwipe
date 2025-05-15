@@ -297,37 +297,13 @@ class _DiscoverViewState extends State<DiscoverView>
         {
           // Dislike
           print(_cards[_currentIndex].track.title);
-          swipe = Swipe(
-              id: _cards[_currentIndex].track.id,
-              idAlbum: _cards[_currentIndex].track.album.id,
-              like: 0);
-          int existingIndex = swipes.indexWhere((s) => s.id == swipe.id);
-          if (existingIndex != -1) {
-            if (swipes[existingIndex].like != swipe.like) {
-              swipes[existingIndex] = swipe;
-            }
-          } else {
-            swipes.add(swipe);
-          }
+          _dislikeTrack();
           break;
         }
       case CardSwiperDirection.right:
         {
           // Like
-          print(_cards[_currentIndex].track.title);
-          swipe = Swipe(
-              id: _cards[_currentIndex].track.id,
-              idAlbum: _cards[_currentIndex].track.album.id,
-              like: 1);
-          int existingIndex = swipes.indexWhere((s) => s.id == swipe.id);
-          if (existingIndex != -1) {
-            if (swipes[existingIndex].like != swipe.like) {
-              swipes[existingIndex] = swipe;
-            }
-          } else {
-            swipes.add(swipe);
-          }
-          _loadRecommendedTracks(_cards[_currentIndex].track.artist.id);
+          _likeTrack();
           break;
         }
       case CardSwiperDirection.none:
@@ -363,6 +339,37 @@ class _DiscoverViewState extends State<DiscoverView>
     return true;
   }
 
+  void _dislikeTrack() {
+    Swipe swipe = Swipe(
+        id: _cards[_currentIndex].track.id,
+        idAlbum: _cards[_currentIndex].track.album.id,
+        like: 0);
+    int existingIndex = swipes.indexWhere((s) => s.id == swipe.id);
+    if (existingIndex != -1) {
+      if (swipes[existingIndex].like != swipe.like) {
+        swipes[existingIndex] = swipe;
+      }
+    } else {
+      swipes.add(swipe);
+    }
+  }
+
+  void _likeTrack() {
+    Swipe swipe = Swipe(
+        id: _cards[_currentIndex].track.id,
+        idAlbum: _cards[_currentIndex].track.album.id,
+        like: 1);
+    int existingIndex = swipes.indexWhere((s) => s.id == swipe.id);
+    if (existingIndex != -1) {
+      if (swipes[existingIndex].like != swipe.like) {
+        swipes[existingIndex] = swipe;
+      }
+    } else {
+      swipes.add(swipe);
+    }
+    _loadRecommendedTracks(_cards[_currentIndex].track.artist.id);
+  }
+
   // Cargar recomendaciones basadas en una canción (trackId)
   Future<void> _loadRecommendedTracks(int artistID) async {
     var recommendedTracks =
@@ -384,8 +391,6 @@ class _DiscoverViewState extends State<DiscoverView>
         onlyAudio: _userSettings.audioOnlyAudio,
       );
     }));
-
-    print('${newCards.length} canciones recomendadas cargadas');
 
     // Actualizar el estado con las recomendaciones
     if (mounted && newCards.isNotEmpty) {
@@ -570,6 +575,8 @@ class _DiscoverViewState extends State<DiscoverView>
                                           color: Colors.white),
                                       onPressed: () {
                                         // Acción para descartar canción
+                                        _dislikeTrack();
+                                        _swiperController.swipe(CardSwiperDirection.left);
                                       },
                                     ),
                                   ),
@@ -649,6 +656,8 @@ class _DiscoverViewState extends State<DiscoverView>
                                       ),
                                       onPressed: () {
                                         // Acción para guardar canción
+                                        _likeTrack();
+                                        _swiperController.swipe(CardSwiperDirection.right);
                                       },
                                     ),
                                   ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:songswipe/helpers/export_helpers.dart';
 
 /// Widget que personaliza el ElevatedButton <br>
 /// @author Amaro Suárez <br>
@@ -86,7 +85,7 @@ class CustomButton extends StatelessWidget {
                   ],
                   Expanded(
                     child: Text(
-                      upperCaseAfterSpace(text: text),
+                      text,
                       style: TextStyle(
                           color: textColor ?? Colors.white, fontSize: textSize ?? 18),
                       textAlign: TextAlign.center,

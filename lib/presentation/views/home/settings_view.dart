@@ -170,7 +170,7 @@ class _SettingsViewState extends State<SettingsView> {
                     context.go('/login');
                   }
                 },
-                text: localization.logout,
+                text: upperCaseAfterSpace(text: localization.logout),
                 textSize: 24,
                 icon: Icons.logout,
                 iconColor: Colors.white,

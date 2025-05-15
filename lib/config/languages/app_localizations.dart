@@ -913,8 +913,38 @@ abstract class AppLocalizations {
   /// No description provided for @show_tutorial.
   ///
   /// In en, this message translates to:
-  /// **'show tutorial'**
+  /// **'show tutorialsearch'**
   String get show_tutorial;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'search'**
+  String get search;
+
+  /// No description provided for @requests.
+  ///
+  /// In en, this message translates to:
+  /// **'requests'**
+  String get requests;
+
+  /// No description provided for @search_friend.
+  ///
+  /// In en, this message translates to:
+  /// **'search a friend...'**
+  String get search_friend;
+
+  /// No description provided for @send_request.
+  ///
+  /// In en, this message translates to:
+  /// **'send request'**
+  String get send_request;
+
+  /// No description provided for @request_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'friend request sent'**
+  String get request_sent;
 }
 
 class _AppLocalizationsDelegate

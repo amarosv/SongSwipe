@@ -262,7 +262,7 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
                 onPressed: () async {
                   // TODO
                 },
-                text: localization.delete_account,
+                text: upperCaseAfterSpace(text: localization.delete_account),
                 textSize: 24,
                 icon: Icons.delete_forever,
                 iconColor: Colors.white,

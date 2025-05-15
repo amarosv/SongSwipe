@@ -134,5 +134,10 @@
     "skip": "saltar",
     "back": "retroceder",
     "ok": "ok",
-    "show_tutorial": "mostrar tutorial"
+    "show_tutorial": "mostrar tutorial",
+    "search": "buscar",
+    "requests": "solicitudes",
+    "search_friend": "busca a un amigo...",
+    "send_request": "enviar solicitud",
+    "request_sent": "solicitud de amistad enviada"
 }

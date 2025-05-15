@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  animate_do: ^4.2.0
   audioplayers: ^6.4.0
   blurrycontainer: ^2.1.0
   color_palette_plus: ^2.0.0

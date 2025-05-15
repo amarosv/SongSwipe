@@ -425,5 +425,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ok => 'ok';
 
   @override
-  String get show_tutorial => 'show tutorial';
+  String get show_tutorial => 'show tutorialsearch';
+
+  @override
+  String get search => 'search';
+
+  @override
+  String get requests => 'requests';
+
+  @override
+  String get search_friend => 'search a friend...';
+
+  @override
+  String get send_request => 'send request';
+
+  @override
+  String get request_sent => 'friend request sent';
 }

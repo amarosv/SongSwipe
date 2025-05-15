@@ -134,5 +134,11 @@
     "skip": "skip",
     "back": "back",
     "ok": "ok",
-    "show_tutorial": "show tutorial"
+    "show_tutorial": "show tutorial",
+    "show_tutorial": "show tutorialsearch",
+    "search": "search",
+    "requests": "requests",
+    "search_friend": "search a friend...",
+    "send_request": "send request",
+    "request_sent": "friend request sent"
 }

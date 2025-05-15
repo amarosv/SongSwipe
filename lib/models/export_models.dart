@@ -5,5 +5,6 @@ export 'dominant_colors.dart';
 export 'genre.dart';
 export 'swipe.dart';
 export 'track.dart';
+export 'user_app.dart';
 export 'user_profile.dart';
 export 'user_settings.dart';

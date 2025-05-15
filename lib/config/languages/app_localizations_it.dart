@@ -430,4 +430,19 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get show_tutorial => 'mostra il tutorial';
+
+  @override
+  String get search => 'cercare';
+
+  @override
+  String get requests => 'richieste';
+
+  @override
+  String get search_friend => 'cercare un amico...';
+
+  @override
+  String get send_request => 'inviare richiesta';
+
+  @override
+  String get request_sent => 'richiesta di amicizia inviata';
 }

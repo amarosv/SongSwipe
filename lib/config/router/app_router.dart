@@ -117,6 +117,14 @@ class AppRouter {
         builder: (context, state) => AboutScreen(),
       ),
       GoRoute(
+        path: '/user',
+        name: UserScreen.name,
+        builder: (context, state) {
+          final uid = state.uri.queryParameters['uid'];
+          return UserScreen(uidUser: uid!,);
+        },
+      ),
+      GoRoute(
         path: '/home/:page',
         name: HomeScreen.name,
         builder: (context, state) {
