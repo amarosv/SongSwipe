@@ -103,7 +103,7 @@ Future<List<Genre>> searchGenre(String query) async {
   return listaGeneros;
 }
 
-Future<List<Track>> getDiscoverTracks() async {
+Future<List<Track>> getDiscoverTracks({required List<int> swipesNotUpload}) async {
   List<Track> tracks = [];
   Random random = Random();
 
@@ -168,7 +168,7 @@ Future<List<Track>> getDiscoverTracks() async {
     List<dynamic> idsNotSaved = await areTrackInDatabase(tracksIds: tracksIds);
 
     // Eliminamos las canciones a las que el usuario ya ha reaccionado
-    tracks.removeWhere((track) => !idsNotSaved.contains(track.id));
+    tracks.removeWhere((track) => !idsNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));
 
     // Mezclar la lista de pistas
     tracks.shuffle();
@@ -274,7 +274,7 @@ Future<List<Track>> getTracks(
 }
 
 Future<List<Track>> getRecommendedTracks(
-    {required int artistID, required int limit}) async {
+    {required int artistID, required int limit, required List<int> swipesNotUpload}) async {
   List<Track> tracks = [];
   List<int> tracksIds = [];
   List<dynamic> tracksNotSaved = [];
@@ -300,7 +300,7 @@ Future<List<Track>> getRecommendedTracks(
       tracksNotSaved = await areTrackInDatabase(tracksIds: tracksIds);
 
       // Eliminamos las canciones a las que el usuario ya ha reaccionado
-      filteredTracks.removeWhere((track) => !tracksNotSaved.contains(track.id));
+      filteredTracks.removeWhere((track) => !tracksNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));
 
       filteredTracks.shuffle();
       return filteredTracks;

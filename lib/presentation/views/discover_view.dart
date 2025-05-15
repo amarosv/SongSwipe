@@ -186,7 +186,13 @@ class _DiscoverViewState extends State<DiscoverView>
     });
 
     try {
-      List<Track> tracks = await getDiscoverTracks();
+      List<Track> tracks = await getDiscoverTracks(swipesNotUpload: swipes.map((s) => s.id).toList());
+
+      // Filtrar duplicados antes de crear newCards
+      final swipedIds = swipes.map((s) => s.id).toSet();
+      final existingIds = _cards.map((c) => c.track.id).toSet();
+      tracks.removeWhere((track) =>
+          swipedIds.contains(track.id) || existingIds.contains(track.id));
 
       List<CardTrackWidget> newCards =
           await Future.wait(tracks.map((track) async {
@@ -361,7 +367,13 @@ class _DiscoverViewState extends State<DiscoverView>
   // Cargar recomendaciones basadas en una canción (trackId)
   Future<void> _loadRecommendedTracks(int artistID) async {
     var recommendedTracks =
-        await getRecommendedTracks(artistID: artistID, limit: 5);
+        await getRecommendedTracks(artistID: artistID, limit: 5, swipesNotUpload: swipes.map((s) => s.id).toList());
+
+    // Filtrar recommendedTracks para evitar duplicados antes de crear newCards
+    final swipedIds = swipes.map((s) => s.id).toSet();
+    final existingIds = _cards.map((c) => c.track.id).toSet();
+    recommendedTracks.removeWhere((track) =>
+        swipedIds.contains(track.id) || existingIds.contains(track.id));
 
     List<CardTrackWidget> newCards =
         await Future.wait(recommendedTracks.map((track) async {
