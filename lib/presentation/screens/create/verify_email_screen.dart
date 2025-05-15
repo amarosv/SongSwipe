@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:songswipe/presentation/views/verify_email_view.dart';
+import 'package:songswipe/presentation/views/create/verify_email_view.dart';
 
 /// Pantalla para verificar el email <br>
 /// @author Amaro Suárez <br>

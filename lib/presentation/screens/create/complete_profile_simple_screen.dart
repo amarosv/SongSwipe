@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:songswipe/presentation/views/complete_profile_simple_view.dart';
+import 'package:songswipe/presentation/views/create/complete_profile_simple_view.dart';
 
 /// Pantalla para completar el perfil simple <br>
 /// @author Amaro Suárez <br>

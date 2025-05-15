@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:songswipe/presentation/views/appearance_view.dart';
+import 'package:songswipe/presentation/views/settings/appearance_view.dart';
 
 /// Pantalla para los ajustes de apariencia <br>
 /// @author Amaro Suárez <br>

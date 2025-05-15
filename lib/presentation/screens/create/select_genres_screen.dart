@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:songswipe/presentation/views/select_genres_view.dart';
+import 'package:songswipe/presentation/views/create/select_genres_view.dart';
 
 /// Pantalla para seleccionar los géneros <br>
 /// @author Amaro Suárez <br>
