@@ -249,7 +249,7 @@ class _SignUpViewState extends State<SignUpView> {
                       });
                     }
                   },
-                  text: localization.create_account),
+                  text: upperCaseAfterSpace(text: localization.create_account)),
 
               const SizedBox(height: 20),
 

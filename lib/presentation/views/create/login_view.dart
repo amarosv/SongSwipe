@@ -225,7 +225,7 @@ class _LoginViewState extends State<LoginView> {
                       print(resultsCheck.entries.first.value);
                     }
                   },
-                  text: capitalizeFirstLetter(text: localization.login)),
+                  text: upperCaseAfterSpace(text: localization.login)),
 
               const SizedBox(height: 30),
 
@@ -286,7 +286,7 @@ class _LoginViewState extends State<LoginView> {
                   onPressed: () {
                     context.go('/signup');
                   },
-                  text: localization.create_account),
+                  text: upperCaseAfterSpace(text: localization.create_account)),
             ],
           ),
         ),
