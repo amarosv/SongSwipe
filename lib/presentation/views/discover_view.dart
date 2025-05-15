@@ -495,10 +495,17 @@ class _DiscoverViewState extends State<DiscoverView>
                           : null,
                     ),
                   SafeArea(
-                    child: _cards.isEmpty
-                        ? const Center(child: CircularProgressIndicator())
-                        : Column(
-                            children: [
+                    child: _cards.isEmpty && !_isLoading
+                        ? Center(
+                            child: Text(
+                              '¡No hay más canciones por descubrir!',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          )
+                        : _cards.isEmpty
+                            ? const Center(child: CircularProgressIndicator())
+                            : Column(
+                                children: [
                               // Carta
                               Expanded(
                                 child: Padding(
