@@ -83,8 +83,7 @@ class _DiscoverViewState extends State<DiscoverView>
     super.initState();
     // Almacenamos el uid del usuario
     _uid = _user.uid;
-    print(_uid);
-
+    
     // Obtenemos los datos del usuario
     _getUserSettings();
 
