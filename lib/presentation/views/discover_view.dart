@@ -22,16 +22,10 @@ class DiscoverView extends StatefulWidget {
 }
 
 class _DiscoverViewState extends State<DiscoverView>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  // Controlador del CardSwiper
   final CardSwiperController _swiperController = CardSwiperController();
-  bool _isFirstLoading = true;
-  bool _isLoading = false;
-  int _currentIndex = 0;
-  String? _currentTrackUrl;
-  bool autoAudio = false;
-  bool _isPlaying = false;
-  // Duración actual del preview
-  Duration _currentPosition = Duration.zero;
+
   // Duración máxima del preview (Deezer usa 30s)
   final Duration _previewDuration = const Duration(seconds: 30);
 
@@ -40,9 +34,6 @@ class _DiscoverViewState extends State<DiscoverView>
 
   // Variable que almacena el uid del usuario
   late String _uid;
-
-  // Variable que almacena el usersettings
-  UserSettings _userSettings = UserSettings.empty();
 
   // AudioPlayer para reproducir los previews de las canciones
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -54,9 +45,38 @@ class _DiscoverViewState extends State<DiscoverView>
   final ValueNotifier<String?> _backgroundImageNotifier =
       ValueNotifier<String?>(null);
 
+  // Controlador de la animación
   late final AnimationController _animationController;
+
+  // Offset de la animación de fondo
   late final Animation<Offset> _backgroundOffset;
+
+  // Escala de la animación de fondo
   late final Animation<double> _backgroundScale;
+
+  // Booleano que indica si se están cargando las canciones
+  bool _isLoading = false;
+
+  // Variable que indica el índice actual
+  int _currentIndex = 0;
+
+  // Variable que almacena la url del previe de la canción actual
+  String? _currentTrackUrl;
+
+  // Booleano que indica si es auto play el audio
+  bool autoAudio = false;
+
+  // Booleano que indica si se está reproduciendo la canción
+  bool _isPlaying = false;
+
+  // Duración actual del preview
+  Duration _currentPosition = Duration.zero;
+
+  // Variable que almacena el usersettings
+  UserSettings _userSettings = UserSettings.empty();
+
+  // Lista donde se almacenarán los swipes
+  List<Swipe> swipes = [];
 
   @override
   void initState() {
@@ -133,6 +153,8 @@ class _DiscoverViewState extends State<DiscoverView>
         });
       }
     });
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   // Este método será llamado desde HomeScreen para comprobar si hay cambios en los ajustes del usuario
@@ -181,7 +203,6 @@ class _DiscoverViewState extends State<DiscoverView>
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             setState(() {
-              _isFirstLoading = false;
               _isLoading = false;
               _cards.addAll(newCards);
 
@@ -234,51 +255,167 @@ class _DiscoverViewState extends State<DiscoverView>
     int? currentIndex,
     CardSwiperDirection direction,
   ) {
+    // Variable donde se almacenará el swipe
+    Swipe swipe;
+
     print(_cards[currentIndex!].track.id);
-    if (currentIndex != null) {
-      if (currentIndex >= _cards.length) {
-        currentIndex = _cards.length - 1;
-      }
-
-      _currentIndex = currentIndex;
-      print('$currentIndex de ${_cards.length}');
-
-      // if (direction == CardSwiperDirection.right ||
-      //     direction == CardSwiperDirection.bottom) {
-      //   _loadRecommendedTracks(_cards[previousIndex].artista.id);
-      // } else {
-      //   discards++;
-      // }
-
-      // trackAction(
-      //     trackID: _cards[previousIndex].id,
-      //     direction: direction,
-      //     artistID: _cards[previousIndex].artista.id);
-
-      // _currentIndex = currentIndex;
-      _playPreview(_cards[currentIndex].track.preview,
-          _cards[currentIndex].track.md5Image);
-
-      // if ((currentIndex == _cards.length - 1 || discards == 5) && !_isLoading) {
-      //   discards = 0;
-      //   // _cards.clear();
-      //   _loadTracks();
-      // }
+    if (currentIndex >= _cards.length) {
+      currentIndex = _cards.length - 1;
     }
+
+    print('$currentIndex de ${_cards.length}');
+
+    // Comprobamos en que dirección se ha deslizado la canción
+    switch (direction) {
+      case CardSwiperDirection.top:
+        {
+          // Skip, no se almacena en la lista de Swipes
+          break;
+        }
+      case CardSwiperDirection.bottom:
+        {
+          // Volver a la canción anterior, no se almacena en la lista de Swipes
+          if (currentIndex > 1) {
+            _currentIndex -= 2;
+            currentIndex -= 2;
+            _swiperController.undo();
+            _swiperController.undo();
+          } else if (currentIndex > 0) {
+            _swiperController.swipe(CardSwiperDirection.bottom);
+            _currentIndex--;
+            currentIndex--;
+            _swiperController.undo();
+          }
+          break;
+        }
+      case CardSwiperDirection.left:
+        {
+          // Dislike
+          print(_cards[_currentIndex].track.title);
+          swipe = Swipe(
+              id: _cards[_currentIndex].track.id,
+              idAlbum: _cards[_currentIndex].track.album.id,
+              like: 0);
+          int existingIndex = swipes.indexWhere((s) => s.id == swipe.id);
+          if (existingIndex != -1) {
+            if (swipes[existingIndex].like != swipe.like) {
+              swipes[existingIndex] = swipe;
+            }
+          } else {
+            swipes.add(swipe);
+          }
+          break;
+        }
+      case CardSwiperDirection.right:
+        {
+          // Like
+          print(_cards[_currentIndex].track.title);
+          swipe = Swipe(
+              id: _cards[_currentIndex].track.id,
+              idAlbum: _cards[_currentIndex].track.album.id,
+              like: 1);
+          int existingIndex = swipes.indexWhere((s) => s.id == swipe.id);
+          if (existingIndex != -1) {
+            if (swipes[existingIndex].like != swipe.like) {
+              swipes[existingIndex] = swipe;
+            }
+          } else {
+            swipes.add(swipe);
+          }
+          _loadRecommendedTracks(_cards[_currentIndex].track.artist.id);
+          break;
+        }
+      case CardSwiperDirection.none:
+        {
+          // Nada
+          break;
+        }
+    }
+
+    // if (direction == CardSwiperDirection.right ||
+    //     direction == CardSwiperDirection.bottom) {
+    //   _loadRecommendedTracks(_cards[previousIndex].artista.id);
+    // } else {
+    //   discards++;
+    // }
+
+    // trackAction(
+    //     trackID: _cards[previousIndex].id,
+    //     direction: direction,
+    //     artistID: _cards[previousIndex].artista.id);
+
+    // _currentIndex = currentIndex;
+    _playPreview(_cards[currentIndex].track.preview,
+        _cards[currentIndex].track.md5Image);
+
+    _currentIndex = currentIndex;
+
+    // if ((currentIndex == _cards.length - 1 || discards == 5) && !_isLoading) {
+    //   discards = 0;
+    //   // _cards.clear();
+    //   _loadTracks();
+    // }
     return true;
+  }
+
+  // Cargar recomendaciones basadas en una canción (trackId)
+  Future<void> _loadRecommendedTracks(int artistID) async {
+    var recommendedTracks =
+        await getRecommendedTracks(artistID: artistID, limit: 5);
+
+    List<CardTrackWidget> newCards =
+        await Future.wait(recommendedTracks.map((track) async {
+      final color = await extractDominantColor(imagePath: track.md5Image);
+      return CardTrackWidget(
+        track: track,
+        animatedCover: _userSettings.cardAnimatedCover,
+        cardBackground: color,
+        onlyAudio: _userSettings.audioOnlyAudio,
+      );
+    }));
+
+    print('${newCards.length} canciones recomendadas cargadas');
+
+    // Actualizar el estado con las recomendaciones
+    if (mounted && newCards.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _cards.addAll(newCards);
+          });
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
     _audioPlayer.dispose();
     _animationController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    if (swipes.isNotEmpty) {
+      Future(() async {
+        await saveSwipes(swipes: swipes);
+      });
+    }
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused && swipes.isNotEmpty) {
+      Future(() async {
+        await saveSwipes(swipes: swipes);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _userSettings.showTutorial ? _buildTutorialWithArrows() : _content());
+        body: _userSettings.showTutorial
+            ? _buildTutorialWithArrows()
+            : _content());
   }
 
   Widget _content() {
@@ -515,7 +652,9 @@ class _DiscoverViewState extends State<DiscoverView>
                                             onPressed: _currentIndex == 0
                                                 ? null
                                                 : () {
-                                                    _currentIndex--;
+                                                    setState(() {
+                                                      _currentIndex--;
+                                                    });
                                                     _swiperController.undo();
                                                     // _swiperController.swipe(CardSwiperDirection.bottom);
                                                     _playPreview(

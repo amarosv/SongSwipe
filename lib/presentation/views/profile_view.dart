@@ -110,7 +110,7 @@ class _ProfileViewState extends State<ProfileView> {
                         child: CustomColumn(
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
-                          value: humanReadbleNumber(_userProfile.savedSongs),
+                          value: humanReadbleNumber(_userProfile.swipes),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
                           textStyle: TextStyle(fontSize: 28),
                         ),

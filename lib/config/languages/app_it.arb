@@ -133,5 +133,6 @@
     "discard": "escludere",
     "skip": "saltare",
     "back": "ritorno",
-    "ok": "ok"
+    "ok": "ok",
+    "show_tutorial": "mostra il tutorial"
 }

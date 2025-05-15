@@ -17,8 +17,8 @@ class UserProfile {
     final String dateJoining;
     /// Email del usuario
     final String email;
-    /// Número de canciones guardadas del usuario
-    final int savedSongs;
+    /// Número de swipes del usuario
+    final int swipes;
     /// Número de seguidores del usuario
     final int followers;
     /// Número de seguidos del usuario
@@ -33,7 +33,7 @@ class UserProfile {
         required this.photoUrl,
         required this.dateJoining,
         required this.email,
-        required this.savedSongs,
+        required this.swipes,
         required this.followers,
         required this.following,
     });
@@ -47,7 +47,7 @@ class UserProfile {
         photoUrl: json["photoUrl"],
         dateJoining: json["dateJoining"],
         email: json["email"],
-        savedSongs: json["savedSongs"],
+        swipes: json["swipes"],
         followers: json["followers"],
         following: json["following"],
     );
@@ -61,7 +61,7 @@ class UserProfile {
         "photoUrl": photoUrl,
         "dateJoining": dateJoining,
         "email": email,
-        "savedSongs": savedSongs,
+        "swipes": swipes,
         "followers": followers,
         "following": following,
     };
@@ -76,7 +76,7 @@ class UserProfile {
         photoUrl: '',
         dateJoining: '',
         email: '',
-        savedSongs: 0,
+        swipes: 0,
         followers: 0,
         following: 0
       );

@@ -423,4 +423,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'ok';
+
+  @override
+  String get show_tutorial => 'show tutorial';
 }

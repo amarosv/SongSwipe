@@ -133,5 +133,6 @@
     "discard": "discard",
     "skip": "skip",
     "back": "back",
-    "ok": "ok"
+    "ok": "ok",
+    "show_tutorial": "show tutorial"
 }

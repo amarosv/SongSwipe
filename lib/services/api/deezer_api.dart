@@ -158,6 +158,18 @@ Future<List<Track>> getDiscoverTracks() async {
       tracks.addAll(trackList);
     }
 
+    List<int> tracksIds = [];
+
+    for (Track track in tracks) {
+      tracksIds.add(track.id);
+    }
+
+    // Comprobamos cuales de esas canciones el usuario ya ha reaccionado
+    List<dynamic> idsNotSaved = await areTrackInDatabase(tracksIds: tracksIds);
+
+    // Eliminamos las canciones a las que el usuario ya ha reaccionado
+    tracks.removeWhere((track) => !idsNotSaved.contains(track.id));
+
     // Mezclar la lista de pistas
     tracks.shuffle();
     print('Número total de pistas obtenidas: ${tracks.length}');
@@ -230,6 +242,7 @@ Future<Artist> getArtistDetails(
 Future<List<Track>> getTracks(
     {required int method, required int limit, required int index}) async {
   List<Track> tracks = [];
+
   final url =
       'https://api.deezer.com/chart/$method/tracks?limit=$limit&index=$index';
 
@@ -244,18 +257,52 @@ Future<List<Track>> getTracks(
       List<Track> filteredTracks = [];
       for (var item in trackList) {
         Track track = Track.fromJson(item);
-
-        // Verificar si la canción está en la base de datos
-
-        // TODO: Debe comprobarlas todas a la vez, no de 1 en 1 ya que tira azure
-        // bool isInDatabase = await isTrackInDatabase(trackId: track.id);
-        bool isInDatabase = false;
-
-        if (!isInDatabase) {
-          filteredTracks.add(track);
-        }
+        filteredTracks.add(track);
       }
 
+      filteredTracks.shuffle();
+
+      return filteredTracks;
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+
+  return tracks;
+}
+
+Future<List<Track>> getRecommendedTracks(
+    {required int artistID, required int limit}) async {
+  List<Track> tracks = [];
+  List<int> tracksIds = [];
+  List<dynamic> tracksNotSaved = [];
+
+  final url = 'https://api.deezer.com/artist/$artistID/radio&limit=$limit';
+
+  try {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final trackList = data['data'] as List<dynamic>;
+
+      // Crear una lista de pistas que no están guardadas en la base de datos
+      List<Track> filteredTracks = [];
+      for (var item in trackList) {
+        Track track = Track.fromJson(item);
+        filteredTracks.add(track);
+        tracksIds.add(track.id);
+      }
+
+      // Comprobamos cuales de esas canciones el usuario ya ha reaccionado
+      tracksNotSaved = await areTrackInDatabase(tracksIds: tracksIds);
+
+      // Eliminamos las canciones a las que el usuario ya ha reaccionado
+      filteredTracks.removeWhere((track) => !tracksNotSaved.contains(track.id));
+
+      filteredTracks.shuffle();
       return filteredTracks;
     } else {
       print('Error: ${response.statusCode}');

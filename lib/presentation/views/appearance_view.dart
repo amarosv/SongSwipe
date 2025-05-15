@@ -374,6 +374,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
 
               const SizedBox(height: 20,),
 
+              // Saltar canciones
               CustomSwitchContainer(
                 title: capitalizeFirstLetter(text: localization.skip_songs),
                 switchValue: _userSettings.cardSkipSongs,
@@ -386,6 +387,20 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
 
               const SizedBox(height: 20,),
 
+              // Mostrar tutorial
+              CustomSwitchContainer(
+                title: capitalizeFirstLetter(text: localization.show_tutorial),
+                switchValue: _userSettings.showTutorial,
+                function: (bool newValue) {
+                  setState(() {
+                    _userSettings.showTutorial = newValue;
+                  });
+                }
+              ),
+
+              const SizedBox(height: 20),
+
+              // Fondo con portada difuminada
               CustomSwitchContainer(
                 title: capitalizeFirstLetter(text: localization.blurred_as_background),
                 switchValue: _userSettings.cardBlurredCoverAsBackground,
@@ -398,7 +413,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
 
               const SizedBox(height: 10),
 
-              // Texto informativo para la opción account blocked
+              // Texto informativo para la opción blurred background
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -408,7 +423,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                 ),
               ),
 
-              const SizedBox(height: 20,)
+              const SizedBox(height: 20,),
             ],
           ),
         ),

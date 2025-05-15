@@ -909,6 +909,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ok'**
   String get ok;
+
+  /// No description provided for @show_tutorial.
+  ///
+  /// In en, this message translates to:
+  /// **'show tutorial'**
+  String get show_tutorial;
 }
 
 class _AppLocalizationsDelegate

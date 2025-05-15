@@ -53,17 +53,17 @@ class _MyAppState extends ConsumerState<MyApp> {
     String languageCode = 'en';
 
     // Obtenemos el usuario actual
-    final User? _user = FirebaseAuth.instance.currentUser;
+    final User? user = FirebaseAuth.instance.currentUser;
 
     // Variable que almacena el uid del usuario
-    late String _uid;
+    late String uid;
     
     Locale locale;
 
-    if (_user != null) {
-      _uid = _user.uid;
+    if (user != null) {
+      uid = user.uid;
 
-      UserSettings settings = await getUserSettings(uid: _uid);
+      UserSettings settings = await getUserSettings(uid: uid);
 
       languageCode = settings.language;
     } else {

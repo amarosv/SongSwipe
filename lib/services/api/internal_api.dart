@@ -294,26 +294,59 @@ Future<List<int>> getFavoriteGenres({required String uid}) async {
 }
 
 /// Obtiene si el usuario ha guardado la canción <br>
-/// @param trackId ID de la canción <br>
-/// @returns Booleano que indica si la canción está guardad
-Future<bool> isTrackInDatabase({required int trackId}) async {
+/// @param tracksIds Lista de IDs de cnanciones <br>
+/// @returns Lista con los ids de las canciones que no estan guardadas
+Future<List<dynamic>> areTrackInDatabase({required List<int> tracksIds}) async {
   String uid = user!.uid;
 
-  // Variable que almacenará si la canción está guardada por el usuario
-  bool isInDatabase = false;
+  // Variable que almacenará los ids de las canciones
+  List<dynamic> tracksNotSaved = [];
 
-  Uri url = Uri.parse('$apiUser/$uid/track_saved/$trackId');
+  Uri url = Uri.parse('$apiUser/$uid/tracks_not_saved');
 
   // Llamada a la API para obtener si la canción está guardada
-  final response = await http.get(url, headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  });
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: jsonEncode(tracksIds)
+  );
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
-    isInDatabase = jsonDecode(response.body);
+    tracksNotSaved = jsonDecode(response.body);
   }
 
-  return isInDatabase;
+  return tracksNotSaved;
+}
+
+/// Guarda los swipes en la base de datos <br>
+/// @param swipes Lista de swipes <br>
+/// @returns Número de filas afectadas
+Future<int> saveSwipes({required List<Swipe> swipes}) async {
+  String uid = user!.uid;
+
+  // Variable que almacenará el número de filas afectadas
+  int numFilasAfectadas = 0;
+
+  Uri url = Uri.parse('$apiUser/$uid/save_swipes');
+
+  // Llamada a la API para obtener si la canción está guardada
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: jsonEncode(swipes)
+  );
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    numFilasAfectadas = jsonDecode(response.body);
+  }
+
+  return numFilasAfectadas;
 }
