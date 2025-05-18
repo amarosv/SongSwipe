@@ -22,7 +22,7 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<SearchView> {
-  User _user = FirebaseAuth.instance.currentUser!;
+  final User _user = FirebaseAuth.instance.currentUser!;
 
   late String _uid;
 

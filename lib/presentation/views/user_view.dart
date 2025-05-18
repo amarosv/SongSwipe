@@ -33,6 +33,7 @@ class _UserViewState extends State<UserView> {
   // Variable que almacena si es amigo
   bool _isFriend = false;
 
+  // Variable que almacena si se le ha enviado una solicitud de amistad
   bool _friendRequestSent = false;
 
   @override
@@ -44,6 +45,8 @@ class _UserViewState extends State<UserView> {
     _getUserProfile();
     // Comprobamos si son amigos
     _isMyFriend();
+    // Comprobamos si se le ha enviado una solicitud de amistad
+    _sentFriendRequest();
   }
 
   // Función que obtiene los datos del usuario de la api
@@ -60,6 +63,15 @@ class _UserViewState extends State<UserView> {
     if (!mounted) return;
     _isFriend = await checkIfIsMyFriend(_uid, widget.uidUser);
 
+    // Actualizamos la UI
+    setState(() {});
+  }
+
+  // Función que comprueba si se le ha enviado una solicitud de amistad
+  void _sentFriendRequest() async {
+    if (!mounted) return;
+    _friendRequestSent = await isFriendSentRequest(uid: _uid, uidFriend: widget.uidUser);
+    
     // Actualizamos la UI
     setState(() {});
   }
@@ -101,6 +113,7 @@ class _UserViewState extends State<UserView> {
                         ),
                       ),
 
+                      // Nombre
                       Expanded(
                         child: Text(
                           _userProfile.name,

@@ -8,7 +8,11 @@ import 'package:songswipe/presentation/widgets/export_widgets.dart';
 class CustomUserWidget extends StatelessWidget {
   /// Usuario
   final UserApp user;
-  const CustomUserWidget({super.key, required this.user});
+
+  /// Icono
+  final Icon? icon;
+
+  const CustomUserWidget({super.key, required this.user, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +56,7 @@ class CustomUserWidget extends StatelessWidget {
             ],
           ),
 
-          const Spacer()
+          icon ?? const Spacer()
         ],
       ),
     ));

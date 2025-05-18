@@ -450,3 +450,114 @@ Future<int> deleteRequest({required String uid, required String uidFriend}) asyn
 
   return numFilasAfectadas;
 }
+
+/// Esta función recibe dos UIDs y rechaza la solicitud de amistad <br>
+/// @param uid UID del usuario receptor <br>
+/// @param uidFriend UID del usuario emisor <br>
+/// @returns Número de filas afectadas
+Future<int> declineRequest({required String uid, required String uidFriend}) async {
+  // Variable que almacenará el número de filas afectadas
+  int numFilasAfectadas = 0;
+
+  Uri url = Uri.parse('$apiUser/$uid/decline_request');
+
+  // Llamada a la API para obtener si la canción está guardada
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: jsonEncode(uidFriend)
+  );
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    numFilasAfectadas = jsonDecode(response.body);
+  }
+
+  return numFilasAfectadas;
+}
+
+/// Esta función recibe dos UIDs y comprueba si se ha enviado la solicitud de amistad <br>
+/// @param uid UID del usuario emisor <br>
+/// @param uidFriend UID del usuario receptor <br>
+/// @returns Se ha enviado o no la solicitud de amistad
+Future<bool> isFriendSentRequest({required String uid, required String uidFriend}) async {
+  // Variable que almacenará si se ha enviado la solicitud de amistad
+  bool sent = false;
+
+  Uri url = Uri.parse('$apiUser/$uid/request_sent/$uidFriend');
+
+  // Llamada a la API para obtener si la canción está guardada
+  final response = await http.get(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+  );
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    sent = jsonDecode(response.body);
+  }
+
+  return sent;
+}
+
+/// Esta función recibe un UID de usuario y devuelve una lista de usuarios a los que le ha enviado una solicitud
+/// de amistad <br>
+/// @param uid UID del usuario
+/// @returns Lista de usuarios a los que le ha enviado una solicitud de amistad
+Future<List<UserApp>> getSentRequests({required String uid}) async {
+  // Variable que almacenará la lista de usuarios a los que les ha enviado una solicitud de amistad
+  List<UserApp> users = List.empty();
+
+  Uri url = Uri.parse('$apiUser/$uid/list_sent_requests');
+
+  // Llamada a la API para obtener si la canción está guardada
+  final response = await http.get(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+  );
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      users = (data as List).map((user) => UserApp.fromJson(user)).toList();
+  }
+
+  return users;
+}
+
+/// Esta función recibe un UID de usuario y devuelve una lista de usuarios que les han enviado una solicitud
+/// de amistad <br>
+/// @param uid UID del usuario
+/// @returns Lista de usuarios que le han enviado una solicitud de amistad
+Future<List<UserApp>> getReceiveRequests({required String uid}) async {
+  // Variable que almacenará la lista de usuarios que les han enviado una solicitud de amistad
+  List<UserApp> users = List.empty();
+
+  Uri url = Uri.parse('$apiUser/$uid/list_receive_requests');
+
+  // Llamada a la API para obtener si la canción está guardada
+  final response = await http.get(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+  );
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      users = (data as List).map((user) => UserApp.fromJson(user)).toList();
+  }
+
+  return users;
+}

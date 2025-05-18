@@ -113,7 +113,7 @@
     "pink": "rosa",
     "cards": "cartas",
     "animated_cover": "portada animada",
-    "skip_songs": "saltar y retroceder canciones",
+    "skip_songs": "botones saltar y retroceder",
     "blurred_as_background": "portada difuminada como fondo",
     "label_blurred_background": "desactive esta opción para que los colores de fondo estén relacionados con la portada.",
     "january": "enero",
@@ -137,7 +137,11 @@
     "show_tutorial": "mostrar tutorial",
     "search": "buscar",
     "requests": "solicitudes",
+    "sent_requests": "enviadas",
+    "receive_requests": "recibidas",
     "search_friend": "busca a un amigo...",
     "send_request": "enviar solicitud",
-    "request_sent": "solicitud de amistad enviada"
+    "request_sent": "solicitud de amistad enviada",
+    "request_sent_not_found": "no se encontraron solicitudes enviadas",
+    "request_receive_not_found": "no se encontraron solicitudes recibidas"
 }

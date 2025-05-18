@@ -787,7 +787,7 @@ abstract class AppLocalizations {
   /// No description provided for @skip_songs.
   ///
   /// In en, this message translates to:
-  /// **'skip and back songs'**
+  /// **'buttons skip and back'**
   String get skip_songs;
 
   /// No description provided for @blurred_as_background.
@@ -928,6 +928,18 @@ abstract class AppLocalizations {
   /// **'requests'**
   String get requests;
 
+  /// No description provided for @sent_requests.
+  ///
+  /// In en, this message translates to:
+  /// **'sent'**
+  String get sent_requests;
+
+  /// No description provided for @receive_requests.
+  ///
+  /// In en, this message translates to:
+  /// **'receive'**
+  String get receive_requests;
+
   /// No description provided for @search_friend.
   ///
   /// In en, this message translates to:
@@ -945,6 +957,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'friend request sent'**
   String get request_sent;
+
+  /// No description provided for @request_sent_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'no submitted requests found'**
+  String get request_sent_not_found;
+
+  /// No description provided for @request_receive_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'no received requests found'**
+  String get request_receive_not_found;
 }
 
 class _AppLocalizationsDelegate

@@ -361,7 +361,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get animated_cover => 'animated cover';
 
   @override
-  String get skip_songs => 'skip and back songs';
+  String get skip_songs => 'buttons skip and back';
 
   @override
   String get blurred_as_background => 'blurred cover as background';
@@ -434,6 +434,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get requests => 'requests';
 
   @override
+  String get sent_requests => 'sent';
+
+  @override
+  String get receive_requests => 'receive';
+
+  @override
   String get search_friend => 'search a friend...';
 
   @override
@@ -441,4 +447,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get request_sent => 'friend request sent';
+
+  @override
+  String get request_sent_not_found => 'no submitted requests found';
+
+  @override
+  String get request_receive_not_found => 'no received requests found';
 }

@@ -113,7 +113,7 @@
     "pink": "pink",
     "cards": "cards",
     "animated_cover": "animated cover",
-    "skip_songs": "skip and back songs",
+    "skip_songs": "buttons skip and back",
     "blurred_as_background": "blurred cover as background",
     "label_blurred_background": "disable this option to make the background colors related to the cover",
     "january": "january",
@@ -138,7 +138,11 @@
     "show_tutorial": "show tutorialsearch",
     "search": "search",
     "requests": "requests",
+    "sent_requests": "sent",
+    "receive_requests": "receive",
     "search_friend": "search a friend...",
     "send_request": "send request",
-    "request_sent": "friend request sent"
+    "request_sent": "friend request sent",
+    "request_sent_not_found": "no submitted requests found",
+    "request_receive_not_found": "no received requests found"
 }

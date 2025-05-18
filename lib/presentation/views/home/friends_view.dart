@@ -14,7 +14,7 @@ class FriendsView extends StatelessWidget {
     final localization = AppLocalizations.of(context)!;
 
     return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.primary,
@@ -28,14 +28,16 @@ class FriendsView extends StatelessWidget {
               labelColor: Colors.white,
               tabs: [
                 Tab(text: localization.search.toUpperCase()),
-                Tab(text: localization.requests.toUpperCase()),
+                Tab(text: localization.receive_requests.toUpperCase()),
+                Tab(text: localization.sent_requests.toUpperCase()),
               ],
             ),
           ),
           body: const TabBarView(
             children: [
               SearchView(),
-              RequestsView(),
+              RequestsReceiveView(),
+              RequestsSentView(),
             ],
           ),
         ));
