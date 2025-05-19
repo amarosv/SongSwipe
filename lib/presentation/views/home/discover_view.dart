@@ -343,6 +343,7 @@ class _DiscoverViewState extends State<DiscoverView>
     Swipe swipe = Swipe(
         id: _cards[_currentIndex].track.id,
         idAlbum: _cards[_currentIndex].track.album.id,
+        idArtist: _cards[_currentIndex].track.artist.id,
         like: 0);
     int existingIndex = swipes.indexWhere((s) => s.id == swipe.id);
     if (existingIndex != -1) {
@@ -358,6 +359,7 @@ class _DiscoverViewState extends State<DiscoverView>
     Swipe swipe = Swipe(
         id: _cards[_currentIndex].track.id,
         idAlbum: _cards[_currentIndex].track.album.id,
+        idArtist: _cards[_currentIndex].track.artist.id,
         like: 1);
     int existingIndex = swipes.indexWhere((s) => s.id == swipe.id);
     if (existingIndex != -1) {

@@ -8,6 +8,9 @@ class Swipe {
   /// ID del album
   final int idAlbum;
 
+  /// ID del artista
+  final int idArtist;
+
   /// Like 1 o dislike 0
   final int like;
 
@@ -15,6 +18,7 @@ class Swipe {
   Swipe({
     required this.id,
     required this.idAlbum,
+    required this.idArtist,
     required this.like
   });
 
@@ -23,6 +27,7 @@ class Swipe {
     return Swipe(
       id: json['id'] ?? 0,
       idAlbum: json['idAlbum'] ?? 0,
+      idArtist: json['idArtist'] ?? 0,
       like: json['like'] ?? 0
     );
   }
@@ -32,6 +37,7 @@ class Swipe {
     return Swipe(
       id: 0,
       idAlbum: 0,
+      idArtist: 0,
       like: 0
     );
   }
@@ -40,6 +46,7 @@ class Swipe {
   Map<String, dynamic> toJson() => {
     "like": like,
     "id": id,
-    "idAlbum": idAlbum
+    "idAlbum": idAlbum,
+    "idArtist": idArtist
   };
 }
