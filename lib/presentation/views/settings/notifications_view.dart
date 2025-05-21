@@ -210,7 +210,7 @@ class _NotificationsViewState extends State<NotificationsView> with WidgetsBindi
               ),
 
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
 
               CustomSwitchContainer(

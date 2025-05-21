@@ -383,7 +383,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
                         }
                       }
                     : () {},
-                text: localization.continue_s)
+                text: capitalizeFirstLetter(text: localization.continue_s))
           ],
         ),
       )),
