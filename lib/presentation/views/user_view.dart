@@ -31,7 +31,7 @@ class _UserViewState extends State<UserView> {
 
   // Variable que almacena si lo isgue
   bool _followed = false;
-  
+
   // Variable que almacena si es amigo
   bool _isFriend = false;
 
@@ -69,10 +69,10 @@ class _UserViewState extends State<UserView> {
 
   // Función que obtiene los ajustes del usuario
   void _getUserSettings() async {
-    UserSettings settings = await getUserSettings(uid: _uid);
+    UserSettings settings = await getUserSettings(uid: widget.uidUser);
     if (mounted) {
       setState(() {
-        _isPublic = settings.privateAccount;
+        _isPublic = !settings.privateAccount;
       });
     }
   }
@@ -168,7 +168,9 @@ class _UserViewState extends State<UserView> {
                   ],
                 ),
 
-                const SizedBox(height: 30,),
+                const SizedBox(
+                  height: 30,
+                ),
 
                 // Información de canciones y seguidores
                 CustomContainer(
@@ -251,9 +253,52 @@ class _UserViewState extends State<UserView> {
                   ),
                 ],
               ),
+              const SizedBox(
+                height: 30,
+              ),
+
+              // Información de canciones y seguidores
+              CustomContainer(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: CustomColumn(
+                          title:
+                              capitalizeFirstLetter(text: localization.swipes),
+                          value: humanReadbleNumber(_userProfile.swipes),
+                          titleStyle: TextStyle(fontWeight: FontWeight.bold),
+                          textStyle: TextStyle(fontSize: 28),
+                        ),
+                      ),
+                      Flexible(
+                        child: CustomColumn(
+                          title:
+                              upperCaseAfterSpace(text: localization.followers),
+                          value: humanReadbleNumber(_userProfile.followers),
+                          titleStyle: TextStyle(fontWeight: FontWeight.bold),
+                          textStyle: TextStyle(fontSize: 28),
+                        ),
+                      ),
+                      Flexible(
+                        child: CustomColumn(
+                          title:
+                              upperCaseAfterSpace(text: localization.following),
+                          value: humanReadbleNumber(_userProfile.following),
+                          hasDivider: false,
+                          titleStyle: TextStyle(fontWeight: FontWeight.bold),
+                          textStyle: TextStyle(fontSize: 28),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               CustomButton(
                 backgroundColor: Theme.of(context).colorScheme.primary,
+                applyPadding: false,
                 onPressed: () async {
                   if (_friendRequestSent) {
                     await deleteRequest(uid: _uid, uidFriend: widget.uidUser);
