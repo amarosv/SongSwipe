@@ -460,4 +460,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get request_receive_not_found =>
       'no se encontraron solicitudes recibidas';
+
+  @override
+  String get your_friend => 'tu amigo';
 }

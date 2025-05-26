@@ -405,7 +405,7 @@ Future<int> sendRequest({required String uid, required String uidFriend}) async 
 
   Uri url = Uri.parse('$apiUser/$uid/send_request');
 
-  // Llamada a la API para obtener si la canción está guardada
+  // Llamada a la API para enviar una solicitud
   final response = await http.post(
     url,
     headers: {
@@ -433,7 +433,7 @@ Future<int> deleteRequest({required String uid, required String uidFriend}) asyn
 
   Uri url = Uri.parse('$apiUser/$uid/delete_request');
 
-  // Llamada a la API para obtener si la canción está guardada
+  // Llamada a la API para eliminar una solicitud enviada
   final response = await http.post(
     url,
     headers: {
@@ -451,6 +451,38 @@ Future<int> deleteRequest({required String uid, required String uidFriend}) asyn
   return numFilasAfectadas;
 }
 
+/// Esta función recibe dos UIDs y aceptamos la solicitud de amistad <br>
+/// @param uid UID del usuario receptor <br>
+/// @param uidFriend UID del usuario emisor <br>
+/// @returns Número de filas afectadas
+Future<int> acceptRequest({required String uid, required String uidFriend}) async {
+  // Variable que almacenará el número de filas afectadas
+  int numFilasAfectadas = 0;
+
+  Uri url = Uri.parse('$apiUser/$uidFriend/accept_request');
+
+  // Llamada a la API para aceptar la solicitud
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: jsonEncode(uid)
+  );
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    numFilasAfectadas = jsonDecode(response.body);
+  }
+
+  print('$uid - $uidFriend');
+
+  print(numFilasAfectadas);
+
+  return numFilasAfectadas;
+}
+
 /// Esta función recibe dos UIDs y rechaza la solicitud de amistad <br>
 /// @param uid UID del usuario receptor <br>
 /// @param uidFriend UID del usuario emisor <br>
@@ -461,7 +493,7 @@ Future<int> declineRequest({required String uid, required String uidFriend}) asy
 
   Uri url = Uri.parse('$apiUser/$uid/decline_request');
 
-  // Llamada a la API para obtener si la canción está guardada
+  // Llamada a la API para rechazar la solicitud
   final response = await http.post(
     url,
     headers: {
@@ -489,7 +521,7 @@ Future<bool> isFriendSentRequest({required String uid, required String uidFriend
 
   Uri url = Uri.parse('$apiUser/$uid/request_sent/$uidFriend');
 
-  // Llamada a la API para obtener si la canción está guardada
+  // Llamada a la API para obtener si se ha enviado una solicitud
   final response = await http.get(
     url,
     headers: {
@@ -516,7 +548,7 @@ Future<List<UserApp>> getSentRequests({required String uid}) async {
 
   Uri url = Uri.parse('$apiUser/$uid/list_sent_requests');
 
-  // Llamada a la API para obtener si la canción está guardada
+  // Llamada a la API para obtener las solicitudes enviadas
   final response = await http.get(
     url,
     headers: {
@@ -544,7 +576,7 @@ Future<List<UserApp>> getReceiveRequests({required String uid}) async {
 
   Uri url = Uri.parse('$apiUser/$uid/list_receive_requests');
 
-  // Llamada a la API para obtener si la canción está guardada
+  // Llamada a la API para obtener las solicitudes recibidas
   final response = await http.get(
     url,
     headers: {
@@ -560,4 +592,32 @@ Future<List<UserApp>> getReceiveRequests({required String uid}) async {
   }
 
   return users;
+}
+
+/// Esta función recibe dos UIDs y elimina al amigo <br>
+/// @param uid UID del emisor <br>
+/// @param uidFriend UID del amigo <br>
+/// @returns Amigo eliminado o no
+Future<bool> deleteFriend({required String uid, required String uidFriend}) async {
+  // Variable que almacenará el número de filas afectadas
+  int numFilasAfectadas = 0;
+
+  Uri url = Uri.parse('$apiUser/$uid/delete_friend');
+
+  // Llamada a la API para eliminar a un amigo
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: jsonEncode(uidFriend)
+  );
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    numFilasAfectadas = jsonDecode(response.body);
+  }
+
+  return numFilasAfectadas > 0;
 }

@@ -144,5 +144,6 @@
     "send_request": "send request",
     "request_sent": "friend request sent",
     "request_sent_not_found": "no submitted requests found",
-    "request_receive_not_found": "no received requests found"
+    "request_receive_not_found": "no received requests found",
+    "your_friend": "your friend"
 }

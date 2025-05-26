@@ -969,6 +969,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'no received requests found'**
   String get request_receive_not_found;
+
+  /// No description provided for @your_friend.
+  ///
+  /// In en, this message translates to:
+  /// **'your friend'**
+  String get your_friend;
 }
 
 class _AppLocalizationsDelegate

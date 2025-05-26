@@ -82,7 +82,9 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     child: CircleAvatar(
                       radius: 42,
-                      backgroundImage: NetworkImage(_userProfile.photoUrl),
+                      backgroundImage: _userProfile.photoUrl.isNotEmpty
+                        ? NetworkImage(_userProfile.photoUrl)
+                        : const AssetImage('assets/images/useful/profile.webp') as ImageProvider,
                     ),
                   ),
 

@@ -74,16 +74,27 @@ class _RequestsReceiveViewState extends State<RequestsReceiveView> {
                         },
                         child: Dismissible(
                           key: Key(userApp.uid),
-                          direction: DismissDirection.endToStart,
+                          direction: DismissDirection.horizontal,
                           onDismissed: (direction) async {
                             setState(() {
                               users.removeAt(index);
                             });
-                            
-                            // Rechazamos la solicitud
-                            await declineRequest(uid: _uid, uidFriend: userApp.uid);
+
+                            if (direction == DismissDirection.endToStart) {
+                              // Rechazamos la solicitud
+                              await declineRequest(uid: _uid, uidFriend: userApp.uid);
+                            } else if (direction == DismissDirection.startToEnd) {
+                              // Aceptamos la solicitud
+                              await acceptRequest(uid: _uid, uidFriend: userApp.uid);
+                            }
                           },
                           background: Container(
+                            color: Colors.green,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 20),
+                            child: const Icon(Icons.check, color: Colors.white),
+                          ),
+                          secondaryBackground: Container(
                             color: Colors.red,
                             alignment: Alignment.centerRight,
                             padding: const EdgeInsets.only(right: 20),

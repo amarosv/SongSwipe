@@ -13,6 +13,7 @@ export 'custom_social_button_widget.dart';
 export 'custom_switch_container_widget.dart';
 export 'custom_textfield_widget.dart';
 export 'custom_theme_select.dart';
+export 'custom_user_profile.dart';
 export 'custom_user_widget.dart';
 export 'select_widget.dart';
 export 'separate_sections_widget.dart';

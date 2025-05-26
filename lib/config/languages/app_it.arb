@@ -143,5 +143,6 @@
     "send_request": "inviare richiesta",
     "request_sent": "richiesta di amicizia inviata",
     "request_sent_not_found": "non sono state trovate richieste inviate",
-    "request_receive_not_found": "Nessuna richiesta ricevuta trovata"
+    "request_receive_not_found": "Nessuna richiesta ricevuta trovata",
+    "your_friend": "tuo amico"
 }

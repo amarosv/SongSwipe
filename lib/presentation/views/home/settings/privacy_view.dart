@@ -50,6 +50,15 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
     }
   }
 
+  // Función que comprueba que todo esté en privado y si es así pone la cuenta en privada
+  void _checkIfAllArePrivated() {
+    if (_userSettings.privacyVisSavedSongs == 2 && _userSettings.privacyVisFol == 2 && _userSettings.privacyVisStats == 2) {
+      setState(() {
+        _userSettings.privateAccount = true;
+      });
+    }
+  }
+
   @override
   void dispose() {
     if (_userSettingsComparator != _userSettings) {
@@ -128,7 +137,7 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
                 if (newSelected != _userSettings.privacyVisSavedSongs) {
                   bool doAction = true;
 
-                  if (_userSettings.privateAccount) {
+                  if (_userSettings.privateAccount && newSelected == 0) {
                     doAction = await accountIsCurrentlyPrivate();
                   }
 
@@ -137,6 +146,8 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
                       _userSettings.privacyVisSavedSongs = newSelected;
                     });
                   }
+
+                  _checkIfAllArePrivated();
                 }
               },
             ),
@@ -153,7 +164,7 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
                 if (newSelected != _userSettings.privacyVisStats) {
                   bool doAction = true;
 
-                  if (_userSettings.privateAccount) {
+                  if (_userSettings.privateAccount && newSelected == 0) {
                     doAction = await accountIsCurrentlyPrivate();
                   }
 
@@ -162,6 +173,8 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
                       _userSettings.privacyVisStats = newSelected;
                     });
                   }
+
+                  _checkIfAllArePrivated();
                 }
               },
             ),
@@ -179,7 +192,7 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
                 if (newSelected != _userSettings.privacyVisFol) {
                   bool doAction = true;
 
-                  if (_userSettings.privateAccount) {
+                  if (_userSettings.privateAccount && newSelected == 0) {
                     doAction = await accountIsCurrentlyPrivate();
                   }
 
@@ -188,6 +201,8 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
                       _userSettings.privacyVisFol = newSelected;
                     });
                   }
+
+                  _checkIfAllArePrivated();
                 }
               },
             ),
