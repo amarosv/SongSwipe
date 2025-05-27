@@ -376,9 +376,11 @@ Future<List<UserApp>> getUsersByUsername({required String username}) async {
 /// @param uid UID del usuario actual <br>
 /// @param uidFriend UID del usuario amigo <br>
 /// @returns Son o no amigos
-Future<bool> checkIfIsMyFriend(String uid, String uidFriend) async {
+Future<bool> checkIfIsMyFriend({required String uid, required String uidFriend}) async {
   // Variable que almacena si son amigos
   bool isFriend = false;
+
+  print('$uid - $uidFriend');
 
   final url = Uri.parse('$apiUser/$uid/is_my_friend/$uidFriend');
 
@@ -393,6 +395,31 @@ Future<bool> checkIfIsMyFriend(String uid, String uidFriend) async {
   }
 
   return isFriend;
+}
+
+/// Función que recibe dos UIDs y devuelve si lo sigue <br>
+/// @param uid UID del usuario actual <br>
+/// @param uidFriend UID del usuario seguido <br>
+/// @returns Lo sigue o no
+Future<bool> checkIfIsFollowed({required String uid, required String uidFriend}) async {
+  // Variable que almacena si lo sigue
+  bool followed = false;
+
+  print('$uid - $uidFriend');
+
+  final url = Uri.parse('$apiUser/$uid/following/$uidFriend');
+
+  try {
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      followed = data;
+    }
+  } catch (e) {
+    print("Error de conexión: $e");
+  }
+
+  return followed;
 }
 
 /// Esta función recibe dos UIDs y envía una solicitud de amistad <br>

@@ -6,6 +6,7 @@ export 'custom_dropdownbutton_widget.dart';
 export 'custom_language_select.dart';
 export 'custom_navigator_widget.dart';
 export 'custom_privacy_widget.dart';
+export 'custom_public_user.dart';
 export 'custom_request.dart';
 export 'custom_row_widget.dart';
 export 'custom_search_widget.dart';

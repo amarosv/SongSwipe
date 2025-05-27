@@ -46,51 +46,52 @@ class _UserViewState extends State<UserView> {
   @override
   void initState() {
     super.initState();
-    // Almacenamos el uid del usuario actual
     _uid = _user.uid;
-    // Obtenemos los datos del usuario
-    _getUserProfile();
-    // Obtenemos los ajustes del usuario
-    _getUserSettings();
-    // Comprobamos si son amigos
-    _isMyFriend();
-    // Comprobamos si se le ha enviado una solicitud de amistad
-    _sentFriendRequest();
+    _loadUserData();
   }
 
-  // Función que obtiene los datos del usuario de la api
-  void _getUserProfile() async {
-    if (!mounted) return;
-    UserProfile user = await getUserProfile(uid: widget.uidUser);
-    setState(() {
-      _userProfile = user;
-    });
-  }
+  // Función que carga los datos del usuario
+  void _loadUserData() async {
+    try {
+      final results = await Future.wait([
+        getUserProfile(uid: widget.uidUser),
+        getUserSettings(uid: widget.uidUser),
+        checkIfIsMyFriend(uid: _uid, uidFriend: widget.uidUser),
+        isFriendSentRequest(uid: _uid, uidFriend: widget.uidUser),
+        checkIfIsFollowed(uid: _uid, uidFriend: widget.uidUser),
+      ]);
 
-  // Función que obtiene los ajustes del usuario
-  void _getUserSettings() async {
-    UserSettings settings = await getUserSettings(uid: widget.uidUser);
-    if (mounted) {
+      if (!mounted) return;
+
       setState(() {
+        _userProfile = results[0] as UserProfile;
+        final settings = results[1] as UserSettings;
+        _isFriend = results[2] as bool;
+        _friendRequestSent = results[3] as bool;
+        _followed = results[4] as bool;
         _isPublic = !settings.privateAccount;
+        _loadingFriendStatus = false;
       });
+    } catch (e) {
+      print('Error loading user data: $e');
     }
   }
 
   // Función que comprueba si son amigos
   void _isMyFriend() async {
     if (!mounted) return;
-    _isFriend = await checkIfIsMyFriend(_uid, widget.uidUser);
+    _isFriend = await checkIfIsMyFriend(uid: _uid, uidFriend: widget.uidUser);
+    print(_isFriend);
     setState(() {
       _loadingFriendStatus = false;
     });
   }
-
-  // Función que comprueba si se le ha enviado una solicitud de amistad
-  void _sentFriendRequest() async {
+  
+  // Función que comprueba si se le sigue
+  void _isFollowed() async {
     if (!mounted) return;
-    _friendRequestSent =
-        await isFriendSentRequest(uid: _uid, uidFriend: widget.uidUser);
+    _followed =
+        await checkIfIsFollowed(uid: _uid, uidFriend: widget.uidUser);
 
     // Actualizamos la UI
     setState(() {});
@@ -108,113 +109,10 @@ class _UserViewState extends State<UserView> {
           child: CircularProgressIndicator(),
         ),
       );
-    } else if (_isFriend) {
-      content = CustomUserProfile(userProfile: _userProfile);
+    } else if (_isFriend || _followed) {
+      content = CustomUserProfile(uidUser: widget.uidUser);
     } else if (_isPublic) {
-      content = Scaffold(
-        appBar: AppBar(
-          title: Text(
-            '@${_userProfile.username}',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-          ),
-          centerTitle: true,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: GestureDetector(
-                onTap: () async {
-                  int numFilasAfectadas =
-                      await sendRequest(uid: _uid, uidFriend: widget.uidUser);
-
-                  _followed = numFilasAfectadas > 0;
-
-                  _getUserProfile();
-                },
-                child: Icon(_followed
-                    ? Icons.person_remove_alt_1
-                    : Icons.person_add_alt_1),
-              ),
-            )
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 2),
-                      ),
-                      child: CircleAvatar(
-                        radius: 36,
-                        backgroundImage: NetworkImage(_userProfile.photoUrl),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        _userProfile.name,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 24, overflow: TextOverflow.ellipsis),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(
-                  height: 30,
-                ),
-
-                // Información de canciones y seguidores
-                CustomContainer(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: CustomColumn(
-                            title: capitalizeFirstLetter(
-                                text: localization.swipes),
-                            value: humanReadbleNumber(_userProfile.swipes),
-                            titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                            textStyle: TextStyle(fontSize: 28),
-                          ),
-                        ),
-                        Flexible(
-                          child: CustomColumn(
-                            title: upperCaseAfterSpace(
-                                text: localization.followers),
-                            value: humanReadbleNumber(_userProfile.followers),
-                            titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                            textStyle: TextStyle(fontSize: 28),
-                          ),
-                        ),
-                        Flexible(
-                          child: CustomColumn(
-                            title: upperCaseAfterSpace(
-                                text: localization.following),
-                            value: humanReadbleNumber(_userProfile.following),
-                            hasDivider: false,
-                            titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                            textStyle: TextStyle(fontSize: 28),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
+      content = CustomPublicUser(uidUser: widget.uidUser);
     } else {
       content = Scaffold(
         appBar: AppBar(
@@ -300,7 +198,14 @@ class _UserViewState extends State<UserView> {
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 applyPadding: false,
                 onPressed: () async {
-                  if (_friendRequestSent) {
+                  // Comprobamos si ya se ha aceptado la solicitud
+                  _isMyFriend();
+                  _isFollowed();
+
+                  if (_isFriend || _followed) {
+                    // Actualizamos la vista
+                    setState(() {});
+                  } else if (_friendRequestSent) {
                     await deleteRequest(uid: _uid, uidFriend: widget.uidUser);
                   } else {
                     await sendRequest(uid: _uid, uidFriend: widget.uidUser);

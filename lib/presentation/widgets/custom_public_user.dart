@@ -1,25 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/internal_api.dart';
 
-/// Widget que personaliza la vista del perfil de un usuario <br>
+/// Widget que personaliza la vista del perfil de un usuario público <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class CustomUserProfile extends StatefulWidget {
+class CustomPublicUser extends StatefulWidget {
   /// UID del usuario
   final String uidUser;
-  const CustomUserProfile({super.key, required this.uidUser});
+  const CustomPublicUser({super.key, required this.uidUser});
 
   @override
-  State<CustomUserProfile> createState() => _CustomUserProfileState();
+  State<CustomPublicUser> createState() => _CustomPublicUserState();
 }
 
-class _CustomUserProfileState extends State<CustomUserProfile> {
+class _CustomPublicUserState extends State<CustomPublicUser> {
   // Obtenemos el usuario actual
   final User user = FirebaseAuth.instance.currentUser!;
 
@@ -29,68 +28,32 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
   // Variable que almacena al userprofile con sus datos
   UserProfile userProfile = UserProfile.empty();
 
-  // Boolean que almacena si lo sigue o se ha eliminado
-  bool followed = true;
+  // Variable que almacena si lo isgue
+  bool followed = false;
 
-  // Boolean que indica si es su amigo
+  // Variable que almacena si es amigo
   bool isFriend = false;
-
-  bool _loadingFriendStatus = true;
 
   @override
   void initState() {
     super.initState();
     uid = user.uid;
-    loadData();
+    // Obtenemos el perfil del usuario
+    _getUserProfile();
   }
 
-  void loadData() async {
-    try {
-      final results = await Future.wait([
-        getUserProfile(uid: widget.uidUser),
-        checkIfIsMyFriend(uid: uid, uidFriend: widget.uidUser),
-        checkIfIsFollowed(uid: uid, uidFriend: widget.uidUser)
-      ]);
-
-      if (!mounted) return;
-
-      setState(() {
-        userProfile = results[0] as UserProfile;
-        isFriend = results[1] as bool;
-        followed = results[2] as bool;
-        _loadingFriendStatus = false;
-      });
-
-      // Redirigir si no es amigo ni lo sigue
-      if (!isFriend && !followed) {
-        if (!mounted) return;
-        context.pushReplacement('/user?uid=${widget.uidUser}');
-        return;
-      }
-    } catch (e) {
-      print('Error loading user data: $e');
-    }
-  }
-
-  // Función que comprueba si son amigos
-  void isMyFriend() async {
-    final friend = await checkIfIsMyFriend(uid: uid, uidFriend: widget.uidUser);
-
+  // Función que obtiene los datos del usuario de la api
+  void _getUserProfile() async {
+    if (!mounted) return;
+    UserProfile user = await getUserProfile(uid: widget.uidUser);
     setState(() {
-      isFriend = friend;
-      _loadingFriendStatus = false;
+      userProfile = user;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-
-    if (_loadingFriendStatus) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -115,9 +78,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                   followed = numFilasAfectadas > 0;
                 }
 
-                loadData();
-                print(followed);
-                print(isFriend);
+                _getUserProfile();
               },
               child: Icon(followed
                   ? Icons.person_remove_alt_1
@@ -142,40 +103,23 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                     ),
                     child: CircleAvatar(
                       radius: 36,
-                      backgroundImage: userProfile.photoUrl.isNotEmpty
-                          ? NetworkImage(userProfile.photoUrl)
-                          : const AssetImage(
-                                  'assets/images/useful/profile.webp')
-                              as ImageProvider,
+                      backgroundImage: NetworkImage(userProfile.photoUrl),
                     ),
                   ),
                   Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          userProfile.name,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 24, overflow: TextOverflow.ellipsis),
-                        ),
-                        isFriend
-                            ? Text(
-                                capitalizeFirstLetter(
-                                    text: localization.your_friend),
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    fontStyle: FontStyle.italic,
-                                    overflow: TextOverflow.ellipsis),
-                              )
-                            : Container()
-                      ],
+                    child: Text(
+                      userProfile.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 24, overflow: TextOverflow.ellipsis),
                     ),
                   ),
                 ],
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(
+                height: 30,
+              ),
 
               // Información de canciones y seguidores
               CustomContainer(
