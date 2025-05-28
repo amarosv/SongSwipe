@@ -29,6 +29,9 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
   // Variable que almacena al userprofile con sus datos
   UserProfile userProfile = UserProfile.empty();
 
+  // Variable que almacena los ajustes del usuario
+  UserSettings userSettings = UserSettings.empty();
+
   // Boolean que almacena si lo sigue o se ha eliminado
   bool followed = true;
 
@@ -49,7 +52,8 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
       final results = await Future.wait([
         getUserProfile(uid: widget.uidUser),
         checkIfIsMyFriend(uid: uid, uidFriend: widget.uidUser),
-        checkIfIsFollowed(uid: uid, uidFriend: widget.uidUser)
+        checkIfIsFollowed(uid: uid, uidFriend: widget.uidUser),
+        getUserSettings(uid: widget.uidUser)
       ]);
 
       if (!mounted) return;
@@ -58,11 +62,12 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
         userProfile = results[0] as UserProfile;
         isFriend = results[1] as bool;
         followed = results[2] as bool;
+        userSettings = results[3] as UserSettings;
         _loadingFriendStatus = false;
       });
 
       // Redirigir si no es amigo ni lo sigue
-      if (!isFriend && !followed) {
+      if (!isFriend && !followed && userSettings.privateAccount) {
         if (!mounted) return;
         context.pushReplacement('/user?uid=${widget.uidUser}');
         return;
@@ -108,6 +113,10 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                 if (isFriend || followed) {
                   followed =
                       !await deleteFriend(uid: uid, uidFriend: widget.uidUser);
+
+                  if (isFriend) {
+                    context.pushReplacement('/user?uid=${widget.uidUser}');
+                  }
                 } else {
                   int numFilasAfectadas =
                       await sendRequest(uid: uid, uidFriend: userProfile.uid);
@@ -116,8 +125,6 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                 }
 
                 loadData();
-                print(followed);
-                print(isFriend);
               },
               child: Icon(followed
                   ? Icons.person_remove_alt_1
@@ -187,34 +194,221 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                         child: CustomColumn(
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
-                          value: humanReadbleNumber(userProfile.swipes),
+                          value: GestureDetector(
+                            onTap: () =>
+                                context.push('/swipes?uid=${widget.uidUser}'),
+                            child: Text(
+                              humanReadbleNumber(userProfile.swipes),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                          textStyle: TextStyle(fontSize: 28),
                         ),
                       ),
                       Flexible(
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.followers),
-                          value: humanReadbleNumber(userProfile.followers),
+                          value: GestureDetector(
+                            onTap: () => context
+                                .push('/followers?uid=${widget.uidUser}'),
+                            child: Text(
+                              humanReadbleNumber(userProfile.followers),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                          textStyle: TextStyle(fontSize: 28),
                         ),
                       ),
                       Flexible(
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.following),
-                          value: humanReadbleNumber(userProfile.following),
+                          value: GestureDetector(
+                            onTap: () => context
+                                .push('/following?uid=${widget.uidUser}'),
+                            child: Text(
+                              humanReadbleNumber(userProfile.following),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ),
                           hasDivider: false,
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                          textStyle: TextStyle(fontSize: 28),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
+
+              isFriend || userSettings.privacyVisSavedSongs == 0
+                  ? Column(
+                      children: [
+                        const SizedBox(height: 30),
+
+                        // Ver canciones favoritas
+                        CustomNavigator(
+                          title: Text(
+                            capitalizeFirstLetter(
+                                text: localization.see_fav_tracks),
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
+
+              isFriend || userSettings.privacyVisStats == 0
+                  ? Column(
+                      children: [
+                        const SizedBox(height: 30),
+
+                        // Ver sus estadisticas
+                        CustomNavigator(
+                          title: Text(
+                            capitalizeFirstLetter(
+                                text: localization.see_their_stats),
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
+
+              isFriend || userSettings.privacyVisSavedSongs == 0
+                  ? Column(
+                      children: [
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        CustomContainer(
+                          child: FutureBuilder(
+                              future: getLast5Swipes(uid: widget.uidUser),
+                              builder: (context, snapshot) {
+                                Widget result;
+
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  result = Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  result = Center(
+                                      child: Text('Error: ${snapshot.error}'));
+                                } else if (!snapshot.hasData) {
+                                  result = Center(
+                                      child: Text(capitalizeFirstLetter(
+                                          text: localization.no_last_swipes)));
+                                } else {
+                                  List<Track> tracks =
+                                      snapshot.data as List<Track>;
+
+                                  result = ListView.builder(
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.zero,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: tracks.length,
+                                    itemBuilder: (context, index) {
+                                      Track track = tracks[index];
+
+                                      // Construye la cadena de artistas y contributors
+                                      String buildArtistsText() {
+                                        final names = <String>{};
+                                        names.add(track.artist.name);
+                                        for (final contributor
+                                            in track.contributors) {
+                                          names.add(contributor.name);
+                                        }
+                                        return names.join(', ');
+                                      }
+
+                                      return GestureDetector(
+                                        onTap: () => context.push('/track?id=${track.id}'),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: Column(
+                                            children: [
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              // Información de la canción
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(6),
+                                                    child: Image(
+                                                      image: NetworkImage(
+                                                          track.md5Image),
+                                                      width: 64,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10,),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          track.title,
+                                                          style: TextStyle(
+                                                              fontSize: 18,
+                                                              overflow: TextOverflow.ellipsis),
+                                                        ),
+                                                        Text(
+                                                          buildArtistsText(),
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              overflow: TextOverflow.ellipsis),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  track.like
+                                                      ? Icon(
+                                                          Icons.thumb_up,
+                                                          color: Colors.green,
+                                                          size: 28,
+                                                        )
+                                                      : Icon(
+                                                          Icons.thumb_down,
+                                                          color: Colors.red,
+                                                          size: 28,
+                                                        )
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              index < tracks.length - 1
+                                                  ? Divider(color: Colors.white)
+                                                  : Container()
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+
+                                return result;
+                              }),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        )
+                      ],
+                    )
+                  : Container()
             ],
           ),
         ),

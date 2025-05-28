@@ -461,4 +461,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get your_friend => 'tuo amico';
+
+  @override
+  String get see_fav_tracks => 'vedere i loro canzoni preferiti';
+
+  @override
+  String get see_their_stats => 'vedere le loro statistiche';
+
+  @override
+  String get no_last_swipes => 'nessun swipe trovato';
 }

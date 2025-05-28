@@ -975,6 +975,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'your friend'**
   String get your_friend;
+
+  /// No description provided for @see_fav_tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'see their favorite tracks'**
+  String get see_fav_tracks;
+
+  /// No description provided for @see_their_stats.
+  ///
+  /// In en, this message translates to:
+  /// **'see their stats'**
+  String get see_their_stats;
+
+  /// No description provided for @no_last_swipes.
+  ///
+  /// In en, this message translates to:
+  /// **'no swipes found'**
+  String get no_last_swipes;
 }
 
 class _AppLocalizationsDelegate

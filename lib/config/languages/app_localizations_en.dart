@@ -456,4 +456,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get your_friend => 'your friend';
+
+  @override
+  String get see_fav_tracks => 'see their favorite tracks';
+
+  @override
+  String get see_their_stats => 'see their stats';
+
+  @override
+  String get no_last_swipes => 'no swipes found';
 }

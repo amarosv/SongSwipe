@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
@@ -86,12 +87,11 @@ class _UserViewState extends State<UserView> {
       _loadingFriendStatus = false;
     });
   }
-  
+
   // Función que comprueba si se le sigue
   void _isFollowed() async {
     if (!mounted) return;
-    _followed =
-        await checkIfIsFollowed(uid: _uid, uidFriend: widget.uidUser);
+    _followed = await checkIfIsFollowed(uid: _uid, uidFriend: widget.uidUser);
 
     // Actualizamos la UI
     setState(() {});
@@ -165,28 +165,49 @@ class _UserViewState extends State<UserView> {
                         child: CustomColumn(
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
-                          value: humanReadbleNumber(_userProfile.swipes),
+                          value: GestureDetector(
+                            onTap: () => context.push('/swipes?uid=$_uid'),
+                            child: Text(
+                              humanReadbleNumber(_userProfile.swipes),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                          textStyle: TextStyle(fontSize: 28),
                         ),
                       ),
                       Flexible(
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.followers),
-                          value: humanReadbleNumber(_userProfile.followers),
+                          value: GestureDetector(
+                            onTap: () => context.push('/followers?uid=$_uid'),
+                            child: Text(
+                              humanReadbleNumber(_userProfile.followers),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                          textStyle: TextStyle(fontSize: 28),
                         ),
                       ),
                       Flexible(
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.following),
-                          value: humanReadbleNumber(_userProfile.following),
+                          value: GestureDetector(
+                            onTap: () => context.push('/following?uid=$_uid'),
+                            child: Text(
+                              humanReadbleNumber(_userProfile.following),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ),
                           hasDivider: false,
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                          textStyle: TextStyle(fontSize: 28),
                         ),
                       ),
                     ],

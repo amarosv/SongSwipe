@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/user_profile.dart';
@@ -78,13 +79,17 @@ class _ProfileViewState extends State<ProfileView> {
                     padding: const EdgeInsets.all(4), // grosor del borde
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Theme.of(context).colorScheme.primary, width: 2),
+                      border: Border.all(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 2),
                     ),
                     child: CircleAvatar(
                       radius: 42,
                       backgroundImage: _userProfile.photoUrl.isNotEmpty
-                        ? NetworkImage(_userProfile.photoUrl)
-                        : const AssetImage('assets/images/useful/profile.webp') as ImageProvider,
+                          ? NetworkImage(_userProfile.photoUrl)
+                          : const AssetImage(
+                                  'assets/images/useful/profile.webp')
+                              as ImageProvider,
                     ),
                   ),
 
@@ -112,28 +117,49 @@ class _ProfileViewState extends State<ProfileView> {
                         child: CustomColumn(
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
-                          value: humanReadbleNumber(_userProfile.swipes),
+                          value: GestureDetector(
+                            onTap: () => context.push('/swipes?uid=$_uid'),
+                            child: Text(
+                              humanReadbleNumber(_userProfile.swipes),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                          textStyle: TextStyle(fontSize: 28),
                         ),
                       ),
                       Flexible(
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.followers),
-                          value: humanReadbleNumber(_userProfile.followers),
+                          value: GestureDetector(
+                            onTap: () => context.push('/followers?uid=$_uid'),
+                            child: Text(
+                              humanReadbleNumber(_userProfile.followers),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                          textStyle: TextStyle(fontSize: 28),
                         ),
                       ),
                       Flexible(
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.following),
-                          value: humanReadbleNumber(_userProfile.following),
+                          value: GestureDetector(
+                            onTap: () => context.push('/following?uid=$_uid'),
+                            child: Text(
+                              humanReadbleNumber(_userProfile.following),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ),
                           hasDivider: false,
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                          textStyle: TextStyle(fontSize: 28),
                         ),
                       ),
                     ],
@@ -162,7 +188,8 @@ class _ProfileViewState extends State<ProfileView> {
                     children: [
                       const SizedBox(height: 10),
                       CustomRow(
-                        title: capitalizeFirstLetter(text: localization.full_name),
+                        title:
+                            capitalizeFirstLetter(text: localization.full_name),
                         value: '${_userProfile.name} ${_userProfile.lastName}',
                       ),
                       const SizedBox(height: 20),
@@ -172,7 +199,8 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                       const SizedBox(height: 20),
                       CustomRow(
-                          title: capitalizeFirstLetter(text: localization.date_joining),
+                          title: capitalizeFirstLetter(
+                              text: localization.date_joining),
                           value: _languageCode != 'en'
                               ? convertDate(_userProfile.dateJoining)
                               : _userProfile.dateJoining),
@@ -201,10 +229,9 @@ class _ProfileViewState extends State<ProfileView> {
               // Ver géneros favoritas
               CustomNavigator(
                 title: Text(
-                          capitalizeFirstLetter(
-                              text: localization.see_fav_genres),
-                          style: TextStyle(fontSize: 18),
-                        ),
+                  capitalizeFirstLetter(text: localization.see_fav_genres),
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
 
               const SizedBox(
@@ -214,9 +241,9 @@ class _ProfileViewState extends State<ProfileView> {
               // Ver estadísticas
               CustomNavigator(
                 title: Text(
-                          capitalizeFirstLetter(text: localization.see_stats),
-                          style: TextStyle(fontSize: 18),
-                        ),
+                  capitalizeFirstLetter(text: localization.see_stats),
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
 
               const SizedBox(
@@ -227,11 +254,10 @@ class _ProfileViewState extends State<ProfileView> {
               CustomNavigator(
                 color: Theme.of(context).colorScheme.primary,
                 title: Text(
-                          capitalizeFirstLetter(
-                              text: localization.edit_profile),
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      foregroundColor: Colors.white,
+                  capitalizeFirstLetter(text: localization.edit_profile),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+                foregroundColor: Colors.white,
               ),
 
               const SizedBox(height: 20)

@@ -52,7 +52,9 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
 
   // Función que comprueba que todo esté en privado y si es así pone la cuenta en privada
   void _checkIfAllArePrivated() {
-    if (_userSettings.privacyVisSavedSongs == 2 && _userSettings.privacyVisFol == 2 && _userSettings.privacyVisStats == 2) {
+    if (_userSettings.privacyVisSavedSongs == 2 &&
+        _userSettings.privacyVisFol == 2 &&
+        _userSettings.privacyVisStats == 2) {
       setState(() {
         _userSettings.privateAccount = true;
       });
@@ -70,7 +72,8 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused && _userSettingsComparator != _userSettings) {
+    if (state == AppLifecycleState.paused &&
+        _userSettingsComparator != _userSettings) {
       updateUserSettings(_userSettings);
       _userSettingsComparator = _userSettings.copy();
     }
@@ -230,9 +233,12 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
                       function: (bool newValue) {
                         setState(() {
                           _userSettings.privateAccount = newValue;
-                          _userSettings.privacyVisSavedSongs = 2;
-                          _userSettings.privacyVisStats = 2;
-                          _userSettings.privacyVisFol = 2;
+
+                          if (newValue) {
+                            _userSettings.privacyVisSavedSongs = 2;
+                            _userSettings.privacyVisStats = 2;
+                            _userSettings.privacyVisFol = 2;
+                          }
                         });
                       }),
                 ],

@@ -648,3 +648,29 @@ Future<bool> deleteFriend({required String uid, required String uidFriend}) asyn
 
   return numFilasAfectadas > 0;
 }
+
+/// Esta función recibe un UID de usuario y devuelve sus últimos 5 swipes <br>
+/// @param uid UID del usuario <br>
+/// @returns Últimos 5 swipes
+Future<List<Track>> getLast5Swipes({required String uid}) async {
+  List<Track> tracks = List.empty();
+
+  Uri url = Uri.parse('$apiUser/$uid/last_swipes');
+
+  // Llamada a la API para obtener las solicitudes recibidas
+  final response = await http.get(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+  );
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      tracks = (data as List).map((track) => Track.fromJson(track)).toList();
+  }
+
+  return tracks;
+}

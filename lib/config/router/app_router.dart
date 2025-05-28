@@ -124,6 +124,10 @@ class AppRouter {
           return UserScreen(uidUser: uid!,);
         },
       ),
+      // TODO: /track
+      // TODO: /swipes
+      // TODO: /followers
+      // TODO: /following
       GoRoute(
         path: '/home/:page',
         name: HomeScreen.name,

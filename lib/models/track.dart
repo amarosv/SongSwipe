@@ -82,6 +82,8 @@ class Track {
   /// Tipo de la canción
   final String type;
 
+  final bool like;
+
   /// Constructor de la canción
   Track({
     required this.id,
@@ -110,6 +112,7 @@ class Track {
     required this.artist,
     required this.album,
     required this.type,
+    this.like = false
   });
 
   /// Método que parsea un JSON en Canción
@@ -147,8 +150,8 @@ class Track {
                     Contributor.fromJson(item as Map<String, dynamic>))
                 .toList() ??
             [],
-        md5Image: json["md5_image"] != null
-          ? 'https://e-cdn-images.dzcdn.net/images/cover/${json['md5_image']}/500x500.jpg'
+        md5Image: json["mD5_Image"] != null
+          ? 'https://e-cdn-images.dzcdn.net/images/cover/${json['mD5_Image']}/500x500.jpg'
           : '',
         trackToken: json["track_token"] ?? '',
         artist: json['artist'] != null
@@ -158,6 +161,7 @@ class Track {
             ? Album.fromJson(json['album'])
             : Album.empty(),
         type: json["type"] ?? '',
+        like: json["like"] ?? false,
       );
 
   /// Método que crea una canción vacía
@@ -188,6 +192,8 @@ class Track {
         trackToken: '',
         artist: Artist.empty(),
         album: Album.empty(),
-        type: '');
+        type: '',
+        like: false,
+    );
   }
 }

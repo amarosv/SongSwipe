@@ -8,7 +8,7 @@ class CustomColumn extends StatelessWidget {
   final String title;
 
   /// Valor de la columna
-  final String value;
+  final Widget value;
 
   /// Valor que determina si tiene un divisor
   final bool hasDivider;
@@ -16,16 +16,12 @@ class CustomColumn extends StatelessWidget {
   /// Estilo del título
   final TextStyle? titleStyle;
 
-  /// Estilo del valor
-  final TextStyle? textStyle;
-
   const CustomColumn(
       {super.key,
       required this.title,
       required this.value,
       this.hasDivider = true,
-      this.titleStyle,
-      this.textStyle});
+      this.titleStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +37,7 @@ class CustomColumn extends StatelessWidget {
                 textAlign: TextAlign.right,
                 style: titleStyle,
               ),
-              Text(
-                value,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.right,
-                style: textStyle,
-              ),
+              value,
             ],
           ),
         ),
