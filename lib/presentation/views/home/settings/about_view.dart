@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
-import 'package:songswipe/helpers/strings_methods.dart';
+import 'package:songswipe/helpers/utils.dart';
 
 /// Vista para la información de la app <br>
 /// @author Amaro Suárez <br>

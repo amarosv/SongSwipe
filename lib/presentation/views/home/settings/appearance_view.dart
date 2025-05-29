@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
-import 'package:songswipe/helpers/strings_methods.dart';
+import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/user_settings.dart';
 import 'package:songswipe/presentation/providers/export_providers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';

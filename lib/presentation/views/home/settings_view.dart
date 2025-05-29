@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:songswipe/config/icons/song_swipe_icons.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
-import 'package:songswipe/helpers/strings_methods.dart';
+import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
 

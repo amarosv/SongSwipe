@@ -68,7 +68,7 @@
     "library": "biblioteca",
     "discover": "scoprire",
     "friends": "amici",
-    "settings": "impostazioni",
+    "settings": "opzioni",
     "appearance": "aspetto",
     "profile_privacy": "profilo e privacy",
     "language": "lingua",
@@ -147,5 +147,10 @@
     "your_friend": "tuo amico",
     "see_fav_tracks": "vedere i loro canzoni preferiti",
     "see_their_stats": "vedere le loro statistiche",
-    "no_last_swipes": "nessun swipe trovato"
+    "no_last_swipes": "nessun swipe trovato",
+    "liked": "salvata",
+    "disliked": "scartata",
+    "no_tracks": "nessuna canzone trovata",
+    "showing": "mostrando",
+    "tracks": "canzone/i"
 }

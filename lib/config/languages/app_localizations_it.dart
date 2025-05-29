@@ -224,7 +224,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get friends => 'amici';
 
   @override
-  String get settings => 'impostazioni';
+  String get settings => 'opzioni';
 
   @override
   String get appearance => 'aspetto';
@@ -470,4 +470,19 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get no_last_swipes => 'nessun swipe trovato';
+
+  @override
+  String get liked => 'salvata';
+
+  @override
+  String get disliked => 'scartata';
+
+  @override
+  String get no_tracks => 'nessuna canzone trovata';
+
+  @override
+  String get showing => 'mostrando';
+
+  @override
+  String get tracks => 'canzone/i';
 }

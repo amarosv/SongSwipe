@@ -129,10 +129,10 @@ class Track {
         trackPosition: json["track_position"] ?? 0,
         diskNumber: json["disk_number"] ?? 0,
         rank: json["rank"] ?? 0,
-        releaseDate: json["release_date"] ?? '',
-        explicitLyrics: json["explicit_lyrics"] ?? false,
-        explicitContentLyrics: json["explicit_content_lyrics"] ?? -1,
-        explicitContentCover: json["explicit_content_cover"] ?? -1,
+        releaseDate: json["release_Date"] ?? '',
+        explicitLyrics: json["explicit_Lyrics"] ?? false,
+        explicitContentLyrics: json["explicit_Content_Lyrics"] ?? -1,
+        explicitContentCover: json["explicit_Content_Cover"] ?? -1,
         preview: json["preview"] ?? '',
         bpm: (json['bpm'] is int
                 ? (json['bpm'] as int).toDouble()

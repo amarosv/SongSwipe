@@ -147,5 +147,10 @@
     "your_friend": "tu amigo",
     "see_fav_tracks": "ver sus canciones favoritas",
     "see_their_stats": "ver sus estadísticas",
-    "no_last_swipes": "no se encontraron swipes"
+    "no_last_swipes": "no se encontraron swipes",
+    "liked": "guardada",
+    "disliked": "descartada",
+    "no_tracks": "no se encontraron canciones",
+    "showing": "mostrando",
+    "tracks": "cancion/es"
 }

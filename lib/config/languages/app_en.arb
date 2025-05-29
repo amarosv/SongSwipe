@@ -148,5 +148,10 @@
     "your_friend": "your friend",
     "see_fav_tracks": "see their favorite tracks",
     "see_their_stats": "see their stats",
-    "no_last_swipes": "no swipes found"
+    "no_last_swipes": "no swipes found",
+    "liked": "liked",
+    "disliked": "disliked",
+    "no_tracks": "no tracks found",
+    "showing": "showing",
+    "tracks": "track/s"
 }

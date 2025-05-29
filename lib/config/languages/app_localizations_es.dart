@@ -472,4 +472,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get no_last_swipes => 'no se encontraron swipes';
+
+  @override
+  String get liked => 'guardada';
+
+  @override
+  String get disliked => 'descartada';
+
+  @override
+  String get no_tracks => 'no se encontraron canciones';
+
+  @override
+  String get showing => 'mostrando';
+
+  @override
+  String get tracks => 'cancion/es';
 }

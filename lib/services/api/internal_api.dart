@@ -33,7 +33,8 @@ Future<bool> registerUserInDatabase(
   String email = user!.email!;
 
   // 1. Guardamos la imagen del usuario en Imgbb
-  String urlImage = user!.photoURL ?? 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
+  String urlImage =
+      user!.photoURL ?? 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
 
   if (image != null) {
     urlImage = await saveImageInImagekit(uid, image);
@@ -305,14 +306,12 @@ Future<List<dynamic>> areTrackInDatabase({required List<int> tracksIds}) async {
   Uri url = Uri.parse('$apiUser/$uid/tracks_not_saved');
 
   // Llamada a la API para obtener si la canción está guardada
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: jsonEncode(tracksIds)
-  );
+  final response = await http.post(url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(tracksIds));
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
@@ -334,14 +333,12 @@ Future<int> saveSwipes({required List<Swipe> swipes}) async {
   Uri url = Uri.parse('$apiUser/$uid/save_swipes');
 
   // Llamada a la API para obtener si la canción está guardada
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: jsonEncode(swipes)
-  );
+  final response = await http.post(url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(swipes));
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
@@ -376,7 +373,8 @@ Future<List<UserApp>> getUsersByUsername({required String username}) async {
 /// @param uid UID del usuario actual <br>
 /// @param uidFriend UID del usuario amigo <br>
 /// @returns Son o no amigos
-Future<bool> checkIfIsMyFriend({required String uid, required String uidFriend}) async {
+Future<bool> checkIfIsMyFriend(
+    {required String uid, required String uidFriend}) async {
   // Variable que almacena si son amigos
   bool isFriend = false;
 
@@ -401,7 +399,8 @@ Future<bool> checkIfIsMyFriend({required String uid, required String uidFriend})
 /// @param uid UID del usuario actual <br>
 /// @param uidFriend UID del usuario seguido <br>
 /// @returns Lo sigue o no
-Future<bool> checkIfIsFollowed({required String uid, required String uidFriend}) async {
+Future<bool> checkIfIsFollowed(
+    {required String uid, required String uidFriend}) async {
   // Variable que almacena si lo sigue
   bool followed = false;
 
@@ -426,21 +425,20 @@ Future<bool> checkIfIsFollowed({required String uid, required String uidFriend})
 /// @param uid UID del usuario emisor <br>
 /// @param uidFriend UID del usuario receptor <br>
 /// @returns Número de filas afectadas
-Future<int> sendRequest({required String uid, required String uidFriend}) async {
+Future<int> sendRequest(
+    {required String uid, required String uidFriend}) async {
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
 
   Uri url = Uri.parse('$apiUser/$uid/send_request');
 
   // Llamada a la API para enviar una solicitud
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: jsonEncode(uidFriend)
-  );
+  final response = await http.post(url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(uidFriend));
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
@@ -454,21 +452,20 @@ Future<int> sendRequest({required String uid, required String uidFriend}) async 
 /// @param uid UID del usuario emisor <br>
 /// @param uidFriend UID del usuario receptor <br>
 /// @returns Número de filas afectadas
-Future<int> deleteRequest({required String uid, required String uidFriend}) async {
+Future<int> deleteRequest(
+    {required String uid, required String uidFriend}) async {
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
 
   Uri url = Uri.parse('$apiUser/$uid/delete_request');
 
   // Llamada a la API para eliminar una solicitud enviada
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: jsonEncode(uidFriend)
-  );
+  final response = await http.post(url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(uidFriend));
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
@@ -482,21 +479,20 @@ Future<int> deleteRequest({required String uid, required String uidFriend}) asyn
 /// @param uid UID del usuario receptor <br>
 /// @param uidFriend UID del usuario emisor <br>
 /// @returns Número de filas afectadas
-Future<int> acceptRequest({required String uid, required String uidFriend}) async {
+Future<int> acceptRequest(
+    {required String uid, required String uidFriend}) async {
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
 
   Uri url = Uri.parse('$apiUser/$uidFriend/accept_request');
 
   // Llamada a la API para aceptar la solicitud
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: jsonEncode(uid)
-  );
+  final response = await http.post(url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(uid));
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
@@ -514,21 +510,20 @@ Future<int> acceptRequest({required String uid, required String uidFriend}) asyn
 /// @param uid UID del usuario receptor <br>
 /// @param uidFriend UID del usuario emisor <br>
 /// @returns Número de filas afectadas
-Future<int> declineRequest({required String uid, required String uidFriend}) async {
+Future<int> declineRequest(
+    {required String uid, required String uidFriend}) async {
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
 
   Uri url = Uri.parse('$apiUser/$uid/decline_request');
 
   // Llamada a la API para rechazar la solicitud
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: jsonEncode(uidFriend)
-  );
+  final response = await http.post(url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(uidFriend));
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
@@ -542,20 +537,18 @@ Future<int> declineRequest({required String uid, required String uidFriend}) asy
 /// @param uid UID del usuario emisor <br>
 /// @param uidFriend UID del usuario receptor <br>
 /// @returns Se ha enviado o no la solicitud de amistad
-Future<bool> isFriendSentRequest({required String uid, required String uidFriend}) async {
+Future<bool> isFriendSentRequest(
+    {required String uid, required String uidFriend}) async {
   // Variable que almacenará si se ha enviado la solicitud de amistad
   bool sent = false;
 
   Uri url = Uri.parse('$apiUser/$uid/request_sent/$uidFriend');
 
   // Llamada a la API para obtener si se ha enviado una solicitud
-  final response = await http.get(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    }
-  );
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
@@ -576,18 +569,15 @@ Future<List<UserApp>> getSentRequests({required String uid}) async {
   Uri url = Uri.parse('$apiUser/$uid/list_sent_requests');
 
   // Llamada a la API para obtener las solicitudes enviadas
-  final response = await http.get(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    }
-  );
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      users = (data as List).map((user) => UserApp.fromJson(user)).toList();
+    final data = json.decode(response.body);
+    users = (data as List).map((user) => UserApp.fromJson(user)).toList();
   }
 
   return users;
@@ -604,18 +594,15 @@ Future<List<UserApp>> getReceiveRequests({required String uid}) async {
   Uri url = Uri.parse('$apiUser/$uid/list_receive_requests');
 
   // Llamada a la API para obtener las solicitudes recibidas
-  final response = await http.get(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    }
-  );
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      users = (data as List).map((user) => UserApp.fromJson(user)).toList();
+    final data = json.decode(response.body);
+    users = (data as List).map((user) => UserApp.fromJson(user)).toList();
   }
 
   return users;
@@ -625,21 +612,20 @@ Future<List<UserApp>> getReceiveRequests({required String uid}) async {
 /// @param uid UID del emisor <br>
 /// @param uidFriend UID del amigo <br>
 /// @returns Amigo eliminado o no
-Future<bool> deleteFriend({required String uid, required String uidFriend}) async {
+Future<bool> deleteFriend(
+    {required String uid, required String uidFriend}) async {
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
 
   Uri url = Uri.parse('$apiUser/$uid/delete_friend');
 
   // Llamada a la API para eliminar a un amigo
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: jsonEncode(uidFriend)
-  );
+  final response = await http.post(url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(uidFriend));
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
@@ -658,19 +644,46 @@ Future<List<Track>> getLast5Swipes({required String uid}) async {
   Uri url = Uri.parse('$apiUser/$uid/last_swipes');
 
   // Llamada a la API para obtener las solicitudes recibidas
-  final response = await http.get(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    }
-  );
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
 
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      tracks = (data as List).map((track) => Track.fromJson(track)).toList();
+    final data = json.decode(response.body);
+    tracks = (data as List).map((track) => Track.fromJson(track)).toList();
   }
 
   return tracks;
+}
+
+/// Esta función recibe el UID de un usuario y un booleano que indica si quiere buscar las canciones que le han gustado
+/// o que no y las devuelve como una lista paginada <br>
+/// @param uid UID del usuario <br>
+/// @param liked (opcional) Boolean que indica si desea obtener las que le gustó o las que no <br>
+/// @param url (opcional) URL a buscar <br>
+/// @returns Lista de canciones paginada
+Future<PaginatedTracks> getLibraryUser(
+    {required String uid, bool liked = true, String url = '', int limit = 10}) async {
+  PaginatedTracks paginatedTracks = PaginatedTracks.empty();
+
+  if (url.isEmpty) {
+    url = '$apiUser/$uid/${liked ? 'liked' : 'disliked'}';
+  }
+
+  Uri uri = Uri.parse(url);
+
+  // Llamada a la API para obtener las solicitudes recibidas
+  final response = await http.get(uri, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    paginatedTracks = PaginatedTracks.fromJson(json.decode(response.body));
+  }
+
+  return paginatedTracks;
 }

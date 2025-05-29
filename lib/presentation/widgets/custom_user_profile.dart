@@ -318,15 +318,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                                       Track track = tracks[index];
 
                                       // Construye la cadena de artistas y contributors
-                                      String buildArtistsText() {
-                                        final names = <String>{};
-                                        names.add(track.artist.name);
-                                        for (final contributor
-                                            in track.contributors) {
-                                          names.add(contributor.name);
-                                        }
-                                        return names.join(', ');
-                                      }
+                                      String artists = buildArtistsText(track: track);
 
                                       return GestureDetector(
                                         onTap: () => context.push('/track?id=${track.id}'),
@@ -365,7 +357,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                                                               overflow: TextOverflow.ellipsis),
                                                         ),
                                                         Text(
-                                                          buildArtistsText(),
+                                                          artists,
                                                           style: TextStyle(
                                                               fontSize: 14,
                                                               overflow: TextOverflow.ellipsis),

@@ -303,15 +303,7 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                                             Track track = tracks[index];
 
                                             // Construye la cadena de artistas y contributors
-                                            String buildArtistsText() {
-                                              final names = <String>{};
-                                              names.add(track.artist.name);
-                                              for (final contributor
-                                                  in track.contributors) {
-                                                names.add(contributor.name);
-                                              }
-                                              return names.join(', ');
-                                            }
+                                            String artists = buildArtistsText(track: track);
 
                                             return GestureDetector(
                                               onTap: () => context.push(
@@ -360,7 +352,7 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                                                                             .ellipsis),
                                                               ),
                                                               Text(
-                                                                buildArtistsText(),
+                                                                artists,
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         14,

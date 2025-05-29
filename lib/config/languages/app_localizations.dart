@@ -993,6 +993,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'no swipes found'**
   String get no_last_swipes;
+
+  /// No description provided for @liked.
+  ///
+  /// In en, this message translates to:
+  /// **'liked'**
+  String get liked;
+
+  /// No description provided for @disliked.
+  ///
+  /// In en, this message translates to:
+  /// **'disliked'**
+  String get disliked;
+
+  /// No description provided for @no_tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'no tracks found'**
+  String get no_tracks;
+
+  /// No description provided for @showing.
+  ///
+  /// In en, this message translates to:
+  /// **'showing'**
+  String get showing;
+
+  /// No description provided for @tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'track/s'**
+  String get tracks;
 }
 
 class _AppLocalizationsDelegate

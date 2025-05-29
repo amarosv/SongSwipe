@@ -33,15 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _currentIndex = widget.pageIndex;
   }
 
-  // Lista de vistas
-  late final List<Widget> _viewRoutes = [
-    const SettingsView(),
-    const Scaffold(),
-    DiscoverView(key: _discoverViewKey),
-    const Scaffold(),
-    const ProfileView(),
-  ];
-
   // Función que se ejecuta cuandos seleccionamos una vista
   void _onTabTapped(int index) async {
     // Si vamos al perfil (índice 4), guardamos los swipes antes de cambiar de vista
@@ -84,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
         currentView = DiscoverView(key: _discoverViewKey);
         break;
       case 3:
-        currentView = const Scaffold(); // o lo que corresponda
+        currentView = const LibraryView();
         break;
       case 4:
         currentView = const ProfileView();

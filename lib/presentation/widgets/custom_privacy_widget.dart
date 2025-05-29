@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:songswipe/helpers/strings_methods.dart';
+import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
 /// Widget personalizado para la privacidad <br>

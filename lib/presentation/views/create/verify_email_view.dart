@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
-import 'package:songswipe/helpers/strings_methods.dart';
+import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:toastification/toastification.dart';
 
