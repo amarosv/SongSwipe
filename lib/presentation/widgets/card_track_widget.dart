@@ -95,7 +95,6 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
         ),
         child: BlurryContainer(
           borderRadius: BorderRadius.circular(8),
-          // border removed, since BlurryContainer does not support it
           height: height,
           padding: EdgeInsets.zero,
           blur: 10,

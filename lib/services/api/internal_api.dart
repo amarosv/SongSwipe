@@ -378,8 +378,6 @@ Future<bool> checkIfIsMyFriend(
   // Variable que almacena si son amigos
   bool isFriend = false;
 
-  print('$uid - $uidFriend');
-
   final url = Uri.parse('$apiUser/$uid/is_my_friend/$uidFriend');
 
   try {
@@ -403,8 +401,6 @@ Future<bool> checkIfIsFollowed(
     {required String uid, required String uidFriend}) async {
   // Variable que almacena si lo sigue
   bool followed = false;
-
-  print('$uid - $uidFriend');
 
   final url = Uri.parse('$apiUser/$uid/following/$uidFriend');
 

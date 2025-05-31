@@ -133,7 +133,7 @@ Future<List<Track>> getDiscoverTracks({required List<int> swipesNotUpload}) asyn
     for (int index in artistIndices) {
       int randomIndex =
           random.nextInt(290); // Índice aleatorio para cada solicitud
-      artistFutures.add(getTracksByArtist(artists[index], randomIndex));
+      artistFutures.add(getTracksByArtist(artists[index], randomIndex, swipesNotUpload));
     }
 
     // Seleccionar un género aleatorio
@@ -180,37 +180,38 @@ Future<List<Track>> getDiscoverTracks({required List<int> swipesNotUpload}) asyn
   return tracks;
 }
 
-Future<List<Track>> getTracksByArtist(int artistId, int index) async {
+Future<List<Track>> getTracksByArtist(int artistId, int index, List<int> swipesNotUpload) async {
+  List<Track> tracks = [];
+
   // Primero obtenemos los detalles del artista
   Artist artistDetails =
       await getArtistDetails(artistID: artistId, savedTracks: 0);
 
   final url =
-      'https://api.deezer.com/artist/$artistId/top?limit=10&index=$index';
+      '${Environment.apiUrlDeezer}artist/$artistId/top?limit=10&index=$index';
   final response = await http.get(Uri.parse(url));
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
     final trackList = data['data'] as List<dynamic>;
 
-    // Crear una lista de pistas que no están guardadas en la base de datos
-    List<Track> filteredTracks = [];
+    List<int> tracksIds = [];
+
     for (var item in trackList) {
       Track track = Track.fromJson(item);
-
-      // Verificar si la canción está en la base de datos
-      // TODO: Debe comprobarlas todas a la vez, no de 1 en 1 ya que tira azure
-      // bool isInDatabase = await isTrackInDatabase(trackId: track.id);
-      bool isInDatabase = false;
-
-      if (!isInDatabase) {
-        // Asignar los detalles del artista
-        // track.artist = artistDetails;
-        filteredTracks.add(track);
-      }
+      tracksIds.add(track.id);
     }
 
-    return filteredTracks;
+    // Comprobamos cuales de esas canciones el usuario ya ha reaccionado
+    List<dynamic> idsNotSaved = await areTrackInDatabase(tracksIds: tracksIds);
+
+    // Eliminamos las canciones a las que el usuario ya ha reaccionado
+    tracks.removeWhere((track) => !idsNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));
+
+    // Mezclar la lista de pistas
+    tracks.shuffle();
+
+    return tracks;
   } else {
     print('Error: ${response.statusCode}');
     return [];
@@ -244,7 +245,7 @@ Future<List<Track>> getTracks(
   List<Track> tracks = [];
 
   final url =
-      'https://api.deezer.com/chart/$method/tracks?limit=$limit&index=$index';
+      '${Environment.apiUrlDeezer}chart/$method/tracks?limit=$limit&index=$index';
 
   try {
     final response = await http.get(Uri.parse(url));

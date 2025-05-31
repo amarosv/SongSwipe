@@ -129,10 +129,10 @@ class Track {
         trackPosition: json["track_position"] ?? 0,
         diskNumber: json["disk_number"] ?? 0,
         rank: json["rank"] ?? 0,
-        releaseDate: json["release_Date"] ?? '',
-        explicitLyrics: json["explicit_Lyrics"] ?? false,
-        explicitContentLyrics: json["explicit_Content_Lyrics"] ?? -1,
-        explicitContentCover: json["explicit_Content_Cover"] ?? -1,
+        releaseDate: json["release_date"] ?? '',
+        explicitLyrics: json["explicit_lyrics"] ?? false,
+        explicitContentLyrics: json["explicit_content_lyrics"] ?? -1,
+        explicitContentCover: json["explicit_content_cover"] ?? -1,
         preview: json["preview"] ?? '',
         bpm: (json['bpm'] is int
                 ? (json['bpm'] as int).toDouble()
@@ -150,8 +150,8 @@ class Track {
                     Contributor.fromJson(item as Map<String, dynamic>))
                 .toList() ??
             [],
-        md5Image: json["mD5_Image"] != null
-          ? 'https://e-cdn-images.dzcdn.net/images/cover/${json['mD5_Image']}/500x500.jpg'
+        md5Image: json["md5_image"] != null
+          ? 'https://e-cdn-images.dzcdn.net/images/cover/${json['md5_image']}/500x500.jpg'
           : '',
         trackToken: json["track_token"] ?? '',
         artist: json['artist'] != null

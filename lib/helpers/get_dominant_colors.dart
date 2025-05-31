@@ -9,6 +9,7 @@ import 'package:songswipe/models/export_models.dart';
 /// @returns Color dominante
 Future<Color> extractDominantColor(
     {required String imagePath}) async {
+      print(imagePath);
   List<Color> colors = [];
   Color dominantColor = Color.fromARGB(172, 74, 78, 148);
 
