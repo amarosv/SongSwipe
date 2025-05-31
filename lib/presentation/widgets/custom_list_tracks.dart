@@ -4,18 +4,27 @@ import 'package:marquee/marquee.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 
-
-class ListTracks extends StatelessWidget {
+/// Widget personalizado que define como se muestra una canción en una lista <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
+class CustomListTracks extends StatelessWidget {
   final Track track;
   final String artists;
-  final List<Track> allTracks;
+  final int allTracksLength;
   final int index;
+  final bool isSelecting;
+  final bool isSelected;
+  final VoidCallback? onSelect;
   
-  const ListTracks({
+  const CustomListTracks({
     super.key,
     required this.track,
     required this.artists,
-    required this.allTracks, required this.index,
+    required this.allTracksLength,
+    required this.index,
+    this.isSelecting = false,
+    this.isSelected = false,
+    this.onSelect,
   });
 
   @override
@@ -23,7 +32,7 @@ class ListTracks extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => context.push('/track?id=${track.id}'),
+        onTap: () => isSelecting ? onSelect!() : context.push('/track?id=${track.id}'),
         child: Padding(
           padding: const EdgeInsets.only(
               top: 10, left: 10, right: 10),
@@ -33,6 +42,17 @@ class ListTracks extends StatelessWidget {
                 mainAxisAlignment:
                     MainAxisAlignment.spaceBetween,
                 children: [
+                  if (isSelecting)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Checkbox(
+                        shape: CircleBorder(),
+                        value: isSelected,
+                        onChanged: (_) => onSelect?.call(),
+                        checkColor: Colors.white,
+                        activeColor: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
                   // Portada
                   ClipRRect(
                     borderRadius: BorderRadius.circular(6),
@@ -43,7 +63,7 @@ class ListTracks extends StatelessWidget {
                   ),
     
                   const SizedBox(width: 20),
-    
+
                   Expanded(
                     child: Stack(
                       children: [
@@ -141,7 +161,10 @@ class ListTracks extends StatelessWidget {
                                 );
                               }
     
-                              return resultText;
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 32), // espacio para el icono de explícito
+                                child: resultText,
+                              );
                             }),
     
                             // Artistas
@@ -270,7 +293,7 @@ class ListTracks extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              index < allTracks.length - 1
+              index < allTracksLength - 1
                   ? Divider(
                       color: Theme.of(context)
                           .colorScheme

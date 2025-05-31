@@ -196,7 +196,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                               capitalizeFirstLetter(text: localization.swipes),
                           value: GestureDetector(
                             onTap: () =>
-                                context.push('/swipes?uid=${widget.uidUser}'),
+                                context.push('/swipes?uid=${widget.uidUser}&liked=2'),
                             child: Text(
                               humanReadbleNumber(userProfile.swipes),
                               overflow: TextOverflow.ellipsis,

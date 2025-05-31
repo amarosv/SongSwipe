@@ -118,7 +118,7 @@ class _ProfileViewState extends State<ProfileView> {
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
                           value: GestureDetector(
-                            onTap: () => context.push('/swipes?uid=$_uid'),
+                            onTap: () => context.push('/swipes?uid=$_uid&liked=2'),
                             child: Text(
                               humanReadbleNumber(_userProfile.swipes),
                               overflow: TextOverflow.ellipsis,

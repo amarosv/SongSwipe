@@ -152,5 +152,7 @@
     "disliked": "scartata",
     "no_tracks": "nessuna canzone trovata",
     "showing": "mostrando",
-    "tracks": "canzone/i"
+    "tracks": "canzone/i",
+    "export_tracks": "esportare canzoni",
+    "selected_tracks": "canzone/i selezionate"
 }

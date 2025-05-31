@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
-import 'package:marquee/marquee.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/services/api/internal_api.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+
+import '../../../widgets/export_widgets.dart';
 
 /// Vista para la pantalla de las canciones con like <br>
 /// @author Amaro Suárez <br>
@@ -18,7 +20,7 @@ class LikedView extends StatefulWidget {
   final bool grid;
 
   /// Callback para notificar el total de canciones
-  final Function(int) onTotalChanged;
+  final Function((int total, bool selecting)) onTotalChanged;
 
   const LikedView({
     super.key,
@@ -47,6 +49,12 @@ class _LikedViewState extends State<LikedView>
 
   // Variable que indica el número total de canciones
   int totalTracks = 0;
+  // Variable que almacena si s
+  //e están seleccionando canciones
+  bool selecting = false;
+
+  // Lista que almacena las canciones seleccionadas
+  Set<Track> selectedTracks = {};
 
   @override
   void initState() {
@@ -58,6 +66,10 @@ class _LikedViewState extends State<LikedView>
   void _fetchTracks() async {
     if (!isLoadingMore) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) {
+          return;
+        }
+
         setState(() => isLoadingMore = true);
 
         final data = await getLibraryUser(
@@ -68,7 +80,10 @@ class _LikedViewState extends State<LikedView>
           isLoadingMore = false;
           totalTracks = data.totalTracks;
         });
-        widget.onTotalChanged(totalTracks);
+
+        if (!selecting) {
+          widget.onTotalChanged((totalTracks, false));
+        }
       });
     }
   }
@@ -81,6 +96,9 @@ class _LikedViewState extends State<LikedView>
     super.build(context);
     final localization = AppLocalizations.of(context)!;
 
+    final size = MediaQuery.of(context).size;
+    final height = size.height;
+
     return allTracks.isEmpty && !isLoadingMore
         ? Center(
             child: Text(capitalizeFirstLetter(text: localization.no_tracks)),
@@ -91,295 +109,164 @@ class _LikedViewState extends State<LikedView>
               )
             : VisibilityDetector(
                 key: const Key('disliked-view'),
-                onVisibilityChanged: (info) =>
-                    widget.onTotalChanged(totalTracks),
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    // padding: EdgeInsets.zero,
-                    // physics: NeverScrollableScrollPhysics(),
-                    itemCount: isLoadingMore ? allTracks.length + 1 : allTracks.length,
-                    itemBuilder: (context, index) {
-                      Widget result;
+                onVisibilityChanged: (info) {
+                  widget.onTotalChanged((
+                    selecting ? selectedTracks.length : totalTracks,
+                    selecting
+                  ));
+                },
+                child: Scaffold(
+                  body: !widget.grid
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          // padding: EdgeInsets.zero,
+                          // physics: NeverScrollableScrollPhysics(),
+                          itemCount: isLoadingMore
+                              ? allTracks.length + 1
+                              : allTracks.length,
+                          itemBuilder: (context, index) {
+                            Widget result;
 
-                      if (index == allTracks.length) {
-                        result = const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        Track track = allTracks[index];
+                            if (index == allTracks.length) {
+                              result = const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              Track track = allTracks[index];
 
-                        String artists = buildArtistsText(track: track);
+                              String artists = buildArtistsText(track: track);
 
-                        if (index == allTracks.length - 1 &&
-                            nextUrl.isNotEmpty) {
-                          _fetchTracks();
-                        }
+                              if (index == allTracks.length - 1 &&
+                                  nextUrl.isNotEmpty) {
+                                _fetchTracks();
+                              }
 
-                        result = Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => context.push('/track?id=${track.id}'),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 10, left: 10, right: 10),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      // Portada
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(6),
-                                        child: Image(
-                                          image: NetworkImage(track.md5Image),
-                                          width: 70,
-                                        ),
-                                      ),
+                              result = CustomListTracks(
+                                  track: track,
+                                  artists: artists,
+                                  allTracksLength: allTracks.length,
+                                  index: index,
+                                  isSelecting: selecting,
+                                  isSelected: selectedTracks.contains(track),
+                                  onSelect: () {
+                                    setState(() {
+                                      if (selectedTracks.contains(track)) {
+                                        selectedTracks.remove(track);
+                                      } else {
+                                        selectedTracks.add(track);
+                                      }
 
-                                      const SizedBox(width: 20),
+                                      widget.onTotalChanged(
+                                          (selectedTracks.length, true));
+                                    });
+                                  });
+                            }
 
-                                      Expanded(
-                                        child: Stack(
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                // Título
-                                                LayoutBuilder(builder:
-                                                    (context, constraints) {
-                                                  Widget resultText;
+                            return result;
+                          })
+                      : GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisExtent: height * 0.36),
+                          itemCount: isLoadingMore
+                              ? allTracks.length + 1
+                              : allTracks.length,
+                          itemBuilder: (context, index) {
+                            Widget result;
 
-                                                  final text = track.title;
-                                                  final textPainter =
-                                                      TextPainter(
-                                                          text: TextSpan(
-                                                            text: text,
-                                                            style: TextStyle(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .colorScheme
-                                                                    .primary,
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis),
-                                                          ),
-                                                          maxLines: 1,
-                                                          textDirection:
-                                                              TextDirection.ltr)
-                                                        ..layout(
-                                                            maxWidth: double
-                                                                .infinity);
+                            if (index == allTracks.length) {
+                              result = const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              Track track = allTracks[index];
 
-                                                  final textWidth =
-                                                      textPainter.size.width;
+                              String artists = buildArtistsText(track: track);
 
-                                                  if (textWidth >
-                                                      constraints.maxWidth) {
-                                                    resultText = SizedBox(
-                                                      height: 25,
-                                                      child: Marquee(
-                                                        text: text,
-                                                        style: TextStyle(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .primary,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis),
-                                                        scrollAxis:
-                                                            Axis.horizontal,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        blankSpace: 20.0,
-                                                        velocity: 40.0,
-                                                        pauseAfterRound:
-                                                            Duration(
-                                                                seconds: 4),
-                                                        startPadding: 0.0,
-                                                        accelerationDuration:
-                                                            Duration(
-                                                                seconds: 2),
-                                                        accelerationCurve:
-                                                            Curves.linear,
-                                                        decelerationDuration:
-                                                            Duration(
-                                                                milliseconds:
-                                                                    500),
-                                                        decelerationCurve:
-                                                            Curves.easeOut,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    resultText = Text(
-                                                      text,
-                                                      style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary,
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          overflow: TextOverflow
-                                                              .ellipsis),
-                                                    );
-                                                  }
+                              if (index == allTracks.length - 1 &&
+                                  nextUrl.isNotEmpty) {
+                                _fetchTracks();
+                              }
 
-                                                  return resultText;
-                                                }),
+                              result = CustomGridTracks(
+                                  height: height,
+                                  track: track,
+                                  artists: artists,
+                                  index: index,
+                                  isSelecting: selecting,
+                                  isSelected: selectedTracks.contains(track),
+                                  onSelect: () {
+                                    setState(() {
+                                      if (selectedTracks.contains(track)) {
+                                        selectedTracks.remove(track);
+                                      } else {
+                                        selectedTracks.add(track);
+                                      }
 
-                                                // Artistas
-                                                LayoutBuilder(builder:
-                                                    (context, constraints) {
-                                                  Widget resultText;
+                                      widget.onTotalChanged(
+                                          (selectedTracks.length, true));
+                                    });
+                                  });
+                            }
 
-                                                  final text = artists;
-                                                  final textPainter =
-                                                      TextPainter(
-                                                          text: TextSpan(
-                                                            text: text,
-                                                            style: TextStyle(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .colorScheme
-                                                                    .primary,
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis),
-                                                          ),
-                                                          maxLines: 1,
-                                                          textDirection:
-                                                              TextDirection.ltr)
-                                                        ..layout(
-                                                            maxWidth: double
-                                                                .infinity);
-
-                                                  final textWidth =
-                                                      textPainter.size.width;
-
-                                                  if (textWidth >
-                                                      constraints.maxWidth) {
-                                                    resultText = SizedBox(
-                                                      height: 20,
-                                                      child: Marquee(
-                                                        text: text,
-                                                        style: TextStyle(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .primary,
-                                                            fontSize: 14,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis),
-                                                        scrollAxis:
-                                                            Axis.horizontal,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        blankSpace: 20.0,
-                                                        velocity: 40.0,
-                                                        pauseAfterRound:
-                                                            Duration(
-                                                                seconds: 4),
-                                                        startPadding: 0.0,
-                                                        accelerationDuration:
-                                                            Duration(
-                                                                seconds: 2),
-                                                        accelerationCurve:
-                                                            Curves.linear,
-                                                        decelerationDuration:
-                                                            Duration(
-                                                                milliseconds:
-                                                                    500),
-                                                        decelerationCurve:
-                                                            Curves.easeOut,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    resultText = Text(
-                                                      text,
-                                                      style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary,
-                                                          fontSize: 14,
-                                                          overflow: TextOverflow
-                                                              .ellipsis),
-                                                    );
-                                                  }
-
-                                                  return resultText;
-                                                }),
-
-                                                // Fecha de lanzamiento
-                                                Text(
-                                                  formatDate(
-                                                      date: track.releaseDate,
-                                                      context: context),
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            if (track.explicitLyrics ||
-                                                track.explicitContentCover ==
-                                                    1 ||
-                                                track.explicitContentLyrics ==
-                                                    1)
-                                              Positioned(
-                                                top: 0,
-                                                right: 0,
-                                                child: Icon(
-                                                  Icons.explicit,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary,
-                                                  size: 28,
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  index < allTracks.length - 1
-                                      ? Divider(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary)
-                                      : Container()
-                                ],
-                              ),
+                            return result;
+                          }),
+                  floatingActionButton: selecting
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            FloatingActionButton(
+                              onPressed: () => {
+                                // TODO: Enviar a la siguiente pantalla
+                              },
+                              shape: CircleBorder(),
+                              child: Icon(Icons.outbond),
                             ),
-                          ),
-                        );
-                      }
+                            const SizedBox(height: 10),
+                            FloatingActionButton(
+                                shape: CircleBorder(),
+                                child: Icon(Icons.close),
+                                onPressed: () {
+                                  setState(() {
+                                    selecting = !selecting;
+                                    selectedTracks.clear();
+                                  });
 
-                      return result;
-                    }),
+                                  if (!selecting) {
+                                    widget.onTotalChanged((totalTracks, false));
+                                  }
+                                })
+                          ],
+                        )
+                      : SpeedDial(
+                          animatedIcon: AnimatedIcons.menu_arrow,
+                          children: [
+                            SpeedDialChild(
+                                shape: CircleBorder(),
+                                child: Icon(Icons.swipe),
+                                label: 'Swipe',
+                                onTap: () => context
+                                    .push('/swipe?uid=${widget.uid}&liked=1')),
+                            SpeedDialChild(
+                                shape: CircleBorder(),
+                                child: Icon(Icons.outbond),
+                                label: capitalizeFirstLetter(
+                                    text: localization.export_tracks),
+                                onTap: () {
+                                  setState(() {
+                                    selecting = !selecting;
+                                    selectedTracks.clear();
+                                  });
+
+                                  if (!selecting) {
+                                    widget.onTotalChanged((totalTracks, false));
+                                  }
+                                })
+                          ],
+                        ),
+                ),
               );
   }
 }

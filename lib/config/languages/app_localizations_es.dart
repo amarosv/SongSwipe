@@ -487,4 +487,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tracks => 'cancion/es';
+
+  @override
+  String get export_tracks => 'exportar canciones';
+
+  @override
+  String get selected_tracks => 'cancion/es seleccionadas';
 }

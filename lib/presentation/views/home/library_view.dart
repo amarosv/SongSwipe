@@ -27,7 +27,10 @@ class _LibraryViewState extends State<LibraryView>
   bool _grid = true;
 
   // Variable que almacena el total de canciones
-  int totalTracks = 0;
+  int _totalTracks = 0;
+
+  // Variable que almacena si se están seleccionando canciones
+  bool _isSelecting = false;
 
   @override
   void initState() {
@@ -53,7 +56,10 @@ class _LibraryViewState extends State<LibraryView>
             child: Text(
               capitalizeFirstLetter(
                   text:
-                      '${localization.showing} $totalTracks ${localization.tracks}'),
+                      !_isSelecting
+                        ? '${localization.showing} $_totalTracks ${localization.tracks}'
+                        : '$_totalTracks  ${localization.selected_tracks}'
+              ),
               style: TextStyle(fontSize: 16),
             ),
           ),
@@ -129,10 +135,13 @@ class _LibraryViewState extends State<LibraryView>
             LikedView(
               uid: _uid,
               grid: _grid,
-              onTotalChanged: (count) => {
+              onTotalChanged: ((int count, bool selecting) res) => {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (mounted) {
-                    setState(() => totalTracks = count);
+                    setState(() {
+                      _totalTracks = res.$1;
+                      _isSelecting = res.$2;
+                    });
                   }
                 })
               },
@@ -140,10 +149,13 @@ class _LibraryViewState extends State<LibraryView>
             DislikedView(
               uid: _uid,
               grid: _grid,
-              onTotalChanged: (count) => {
+              onTotalChanged: ((int count, bool selecting) res) => {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (mounted) {
-                    setState(() => totalTracks = count);
+                    setState(() {
+                      _totalTracks = res.$1;
+                      _isSelecting = res.$2;
+                    });
                   }
                 })
               },

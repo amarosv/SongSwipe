@@ -153,5 +153,7 @@
     "disliked": "disliked",
     "no_tracks": "no tracks found",
     "showing": "showing",
-    "tracks": "track/s"
+    "tracks": "track/s",
+    "export_tracks": "export tracks",
+    "selected_tracks": "selected track/s"
 }

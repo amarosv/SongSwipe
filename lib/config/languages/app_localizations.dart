@@ -1023,6 +1023,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'track/s'**
   String get tracks;
+
+  /// No description provided for @export_tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'export tracks'**
+  String get export_tracks;
+
+  /// No description provided for @selected_tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'selected track/s'**
+  String get selected_tracks;
 }
 
 class _AppLocalizationsDelegate

@@ -125,9 +125,10 @@ class AppRouter {
         },
       ),
       // TODO: /track
-      // TODO: /swipes
+      // TODO: /swipes 0 = dislike, 1 = liked, 2 = all
       // TODO: /followers
       // TODO: /following
+      // TODO: /export debe aceptar una lista de tracks
       GoRoute(
         path: '/home/:page',
         name: HomeScreen.name,

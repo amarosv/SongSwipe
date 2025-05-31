@@ -480,4 +480,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tracks => 'track/s';
+
+  @override
+  String get export_tracks => 'export tracks';
+
+  @override
+  String get selected_tracks => 'selected track/s';
 }

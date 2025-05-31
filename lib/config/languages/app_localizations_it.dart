@@ -485,4 +485,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tracks => 'canzone/i';
+
+  @override
+  String get export_tracks => 'esportare canzoni';
+
+  @override
+  String get selected_tracks => 'canzone/i selezionate';
 }

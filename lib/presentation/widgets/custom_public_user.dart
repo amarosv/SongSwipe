@@ -171,7 +171,7 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                                   onTap: () => (isFriend ||
                                           userSettings.privacyVisSavedSongs ==
                                               0)
-                                      ? context.push('/swipes?uid=$uid')
+                                      ? context.push('/swipes?uid=$uid&liked=2')
                                       : null,
                                   child: Text(
                                     humanReadbleNumber(userProfile.swipes),
