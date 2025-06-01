@@ -13,4 +13,6 @@ export 'settings/audio_screen.dart';
 export 'settings/language_screen.dart';
 export 'settings/notifications_screen.dart';
 export 'settings/privacy_screen.dart';
+export 'track/info_track_screen.dart';
+export 'track/lyrics_screen.dart';
 export 'user_screen.dart';

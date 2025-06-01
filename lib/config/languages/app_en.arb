@@ -155,5 +155,17 @@
     "showing": "showing",
     "tracks": "track/s",
     "export_tracks": "export tracks",
-    "selected_tracks": "selected track/s"
+    "selected_tracks": "selected track/s",
+    "release_date": "release date",
+    "duration": "duration",
+    "album": "album",
+    "position_album": "position in the album",
+    "ranking": "ranking",
+    "explicit_content": "explicit content",
+    "lyrics": "lyrics",
+    "by": "by",
+    "likes": "likes",
+    "dislikes": "dislikes",
+    "related_tracks": "related tracks",
+    "see_more": "see more..."
 }

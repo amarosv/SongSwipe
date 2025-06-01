@@ -9,6 +9,9 @@ import 'package:songswipe/services/api/externals_api.dart';
 
 User? user = FirebaseAuth.instance.currentUser;
 String apiUser = '${Environment.apiUrl}/user';
+String apiTrack = '${Environment.apiUrl}/track';
+String apiAlbum = '${Environment.apiUrl}/album';
+String apiArtist = '${Environment.apiUrl}/artist';
 
 /// Función que recibe un nombre, apellidos, nombre de usuario y una imagen (opcional) y registra
 /// al usuario en la base de datos <br>
@@ -639,7 +642,7 @@ Future<List<Track>> getLast5Swipes({required String uid}) async {
 
   Uri url = Uri.parse('$apiUser/$uid/last_swipes');
 
-  // Llamada a la API para obtener las solicitudes recibidas
+  // Llamada a la API para obtener los últimos 5 swipes
   final response = await http.get(url, headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -670,7 +673,7 @@ Future<PaginatedTracks> getLibraryUser(
 
   Uri uri = Uri.parse(url);
 
-  // Llamada a la API para obtener las solicitudes recibidas
+  // Llamada a la API para obtener las canciones del usuario
   final response = await http.get(uri, headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -682,4 +685,121 @@ Future<PaginatedTracks> getLibraryUser(
   }
 
   return paginatedTracks;
+}
+
+/// Esta función recibe el UID de un usuario y un ID de canción y devuelve si el usuario la
+/// ha marcado como me gusta <br>
+/// @param uid UID del usuario <br>
+/// @param idTrack ID de la canción <br>
+/// @returns Bool que indica si ha marcado la canción como me gusta
+Future<bool> isTrackLiked({required String uid, required int idTrack}) async{
+  bool exists = false;
+
+  Uri url = Uri.parse('$apiUser/$uid/is_track_liked/$idTrack');
+
+  // Llamada a la API para obtener si se ha marcado la canción como favorita
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    exists = json.decode(response.body);
+  }
+
+  return exists;
+}
+
+/// Esta función recibe el UID de un usuario, el ID de una canción y el nuevo valor del like del Swipe
+/// y lo actualiza en la base de datos <br>
+/// @param uid UID del usuario <br>
+/// @param idTrack ID de la canción <br>
+/// @param newLike Valor del nuevo like del Swipe <br>
+/// @returns Bool que indica si se ha actualizado
+Future<bool> updateSwipe({required String uid, required int idTrack, required int newLike}) async {
+  String uid = user!.uid;
+
+  Uri url = Uri.parse('$apiUser/$uid/update_swipe');
+
+  // Llamada a la API para guardar los ajustes
+  final response = await http.put(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: jsonEncode({
+      'id': idTrack,
+      'like': newLike
+    }),
+  );
+
+  return response.statusCode == 200;
+}
+
+/// Función que recibe el ID de una canción y devuelve sus stats <br>
+/// @param idTrack ID de la canción <br>
+/// @returns Stats
+Future<Stats> getTrackStats({required int idTrack}) async{
+  Stats stats = Stats.empty();
+
+  Uri url = Uri.parse('$apiTrack/$idTrack/stats');
+
+  // Llamada a la API para obtener las stats de la canción
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    stats = Stats.fromJson(json.decode(response.body));
+  }
+
+  return stats;
+}
+
+/// Función que recibe el ID de un album y devuelve sus stats <br>
+/// @param idAlbum ID de la album <br>
+/// @returns Stats
+Future<Stats> getAlbumStats({required int idAlbum}) async{
+  Stats stats = Stats.empty();
+
+  Uri url = Uri.parse('$apiAlbum/$idAlbum/stats');
+
+  // Llamada a la API para obtener las stats del album
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    stats = Stats.fromJson(json.decode(response.body));
+  }
+
+  return stats;
+}
+
+/// Función que recibe el ID de un artista y devuelve sus stats <br>
+/// @param idArtist ID del artista <br>
+/// @returns Stats
+Future<Stats> getArtistStats({required int idArtist}) async{
+  Stats stats = Stats.empty();
+
+  Uri url = Uri.parse('$apiArtist/$idArtist/stats');
+
+  // Llamada a la API para obtener las stats del artista
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    stats = Stats.fromJson(json.decode(response.body));
+  }
+
+  return stats;
 }

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
@@ -63,17 +64,25 @@ class _LikedViewState extends State<LikedView>
   }
 
   // Función que obtiene las canciones
-  void _fetchTracks() async {
+  void _fetchTracks({bool reset = false}) async {
     if (!isLoadingMore) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (!mounted) {
-          return;
-        }
+        if (!mounted) return;
 
         setState(() => isLoadingMore = true);
 
+        if (reset) {
+          allTracks.clear();
+          nextUrl = '';
+        }
+
         final data = await getLibraryUser(
-            uid: widget.uid, url: nextUrl, liked: true, limit: limit);
+          uid: widget.uid,
+          url: nextUrl,
+          liked: true,
+          limit: limit,
+        );
+
         setState(() {
           allTracks.addAll(data.tracks);
           nextUrl = data.linkNextPage;
@@ -117,101 +126,113 @@ class _LikedViewState extends State<LikedView>
                 },
                 child: Scaffold(
                   body: !widget.grid
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          // padding: EdgeInsets.zero,
-                          // physics: NeverScrollableScrollPhysics(),
-                          itemCount: isLoadingMore
-                              ? allTracks.length + 1
-                              : allTracks.length,
-                          itemBuilder: (context, index) {
-                            Widget result;
-
-                            if (index == allTracks.length) {
-                              result = const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else {
-                              Track track = allTracks[index];
-
-                              String artists = buildArtistsText(track: track);
-
-                              if (index == allTracks.length - 1 &&
-                                  nextUrl.isNotEmpty) {
-                                _fetchTracks();
+                      ? FadeInLeft(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            // padding: EdgeInsets.zero,
+                            // physics: NeverScrollableScrollPhysics(),
+                            itemCount: isLoadingMore
+                                ? allTracks.length + 1
+                                : allTracks.length,
+                            itemBuilder: (context, index) {
+                              Widget result;
+                        
+                              if (index == allTracks.length) {
+                                result = const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else {
+                                Track track = allTracks[index];
+                        
+                                String artists = track.buildArtistsText();
+                        
+                                if (index == allTracks.length - 1 &&
+                                    nextUrl.isNotEmpty) {
+                                  _fetchTracks();
+                                }
+                        
+                                result = FadeInLeft(
+                                  child: CustomListTracks(
+                                    track: track,
+                                    artists: artists,
+                                    allTracksLength: allTracks.length,
+                                    index: index,
+                                    isSelecting: selecting,
+                                    isSelected: selectedTracks.contains(track),
+                                    onSelect: () {
+                                      setState(() {
+                                        if (selectedTracks.contains(track)) {
+                                          selectedTracks.remove(track);
+                                        } else {
+                                          selectedTracks.add(track);
+                                        }
+                                                          
+                                        widget.onTotalChanged(
+                                            (selectedTracks.length, true));
+                                      });
+                                    },
+                                    onRefresh: () => _fetchTracks(reset: true),
+                                  ),
+                                );
                               }
-
-                              result = CustomListTracks(
-                                  track: track,
-                                  artists: artists,
-                                  allTracksLength: allTracks.length,
-                                  index: index,
-                                  isSelecting: selecting,
-                                  isSelected: selectedTracks.contains(track),
-                                  onSelect: () {
-                                    setState(() {
-                                      if (selectedTracks.contains(track)) {
-                                        selectedTracks.remove(track);
-                                      } else {
-                                        selectedTracks.add(track);
-                                      }
-
-                                      widget.onTotalChanged(
-                                          (selectedTracks.length, true));
-                                    });
-                                  });
-                            }
-
-                            return result;
-                          })
-                      : GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisExtent: height * 0.36),
-                          itemCount: isLoadingMore
-                              ? allTracks.length + 1
-                              : allTracks.length,
-                          itemBuilder: (context, index) {
-                            Widget result;
-
-                            if (index == allTracks.length) {
-                              result = const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else {
-                              Track track = allTracks[index];
-
-                              String artists = buildArtistsText(track: track);
-
-                              if (index == allTracks.length - 1 &&
-                                  nextUrl.isNotEmpty) {
-                                _fetchTracks();
+                        
+                              return result;
+                            }),
+                      )
+                      : FadeInDown(
+                        child: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisExtent: height * 0.36),
+                            itemCount: isLoadingMore
+                                ? allTracks.length + 1
+                                : allTracks.length,
+                            itemBuilder: (context, index) {
+                              Widget result;
+                        
+                              if (index == allTracks.length) {
+                                result = const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else {
+                                Track track = allTracks[index];
+                        
+                                String artists = track.buildArtistsText();
+                        
+                                if (index == allTracks.length - 1 &&
+                                    nextUrl.isNotEmpty) {
+                                  _fetchTracks();
+                                }
+                        
+                                result = FadeInDown(
+                                  child: CustomGridTracks(
+                                    height: height,
+                                    track: track,
+                                    artists: artists,
+                                    index: index,
+                                    isSelecting: selecting,
+                                    isSelected: selectedTracks.contains(track),
+                                    onSelect: () {
+                                      setState(() {
+                                        if (selectedTracks.contains(track)) {
+                                          selectedTracks.remove(track);
+                                        } else {
+                                          selectedTracks.add(track);
+                                        }
+                                                          
+                                        widget.onTotalChanged(
+                                            (selectedTracks.length, true));
+                                      });
+                                    },
+                                    onRefresh: () => _fetchTracks(reset: true),
+                                  ),
+                                );
                               }
-
-                              result = CustomGridTracks(
-                                  height: height,
-                                  track: track,
-                                  artists: artists,
-                                  index: index,
-                                  isSelecting: selecting,
-                                  isSelected: selectedTracks.contains(track),
-                                  onSelect: () {
-                                    setState(() {
-                                      if (selectedTracks.contains(track)) {
-                                        selectedTracks.remove(track);
-                                      } else {
-                                        selectedTracks.add(track);
-                                      }
-
-                                      widget.onTotalChanged(
-                                          (selectedTracks.length, true));
-                                    });
-                                  });
-                            }
-
-                            return result;
-                          }),
+                        
+                              return result;
+                            }),
+                      ),
                   floatingActionButton: selecting
                       ? Column(
                           mainAxisSize: MainAxisSize.min,

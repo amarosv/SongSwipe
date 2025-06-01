@@ -5,14 +5,26 @@ import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 
+/// Widget personalizado que define como se muestra una canción en un grid <br>
+/// @author Amaro Suárez <br>
+/// @version 1.0
 class CustomGridTracks extends StatelessWidget {
+  /// Altura
   final double height;
+  /// Canción a mostrar
   final Track track;
+  /// Nombre de los artistas
   final String artists;
+  /// Indice en la lista
   final int index;
+  /// Variable que indica si se está seleccionando canciones
   final bool isSelecting;
+  /// Variable que indica si se ha seleccionado
   final bool isSelected;
+  /// Función que se ejecuta al seleccionar o deseleccionar
   final VoidCallback? onSelect;
+  /// Función que se ejecuta para refrescar la lista
+  final VoidCallback? onRefresh;
 
   const CustomGridTracks({
     super.key,
@@ -23,6 +35,7 @@ class CustomGridTracks extends StatelessWidget {
     this.isSelecting = false,
     this.isSelected = false,
     this.onSelect,
+    this.onRefresh,
   });
 
   @override
@@ -36,7 +49,17 @@ class CustomGridTracks extends StatelessWidget {
               left: index % 2 == 0 ? 10 : 5,
               right: index % 2 == 0 ? 5 : 10),
           child: GestureDetector(
-            onTap: () => isSelecting ? onSelect!() : context.push('/track?id=${track.id}'),
+            onTap: () async {
+              if (isSelecting) {
+                onSelect!();
+              } else {
+                final result = await context.push('/track?id=${track.id}');
+
+                if (result == true) {
+                  onRefresh?.call();
+                }
+              }
+            },
             child: CustomContainer(
                 color: Theme.of(context).colorScheme.primary,
                 child: Column(

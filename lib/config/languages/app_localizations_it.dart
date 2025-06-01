@@ -491,4 +491,40 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get selected_tracks => 'canzone/i selezionate';
+
+  @override
+  String get release_date => 'data di rilascio';
+
+  @override
+  String get duration => 'durata';
+
+  @override
+  String get album => 'album';
+
+  @override
+  String get position_album => 'posizione nell\'album';
+
+  @override
+  String get ranking => 'classifica';
+
+  @override
+  String get explicit_content => 'contenuto esplicito';
+
+  @override
+  String get lyrics => 'testi';
+
+  @override
+  String get by => 'di';
+
+  @override
+  String get likes => 'piace';
+
+  @override
+  String get dislikes => 'antipatie';
+
+  @override
+  String get related_tracks => 'canzoni correlate';
+
+  @override
+  String get see_more => 'vedere di più...';
 }

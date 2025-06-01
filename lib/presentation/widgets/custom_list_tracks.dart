@@ -8,14 +8,30 @@ import 'package:songswipe/models/export_models.dart';
 /// @author Amaro Suárez <br>
 /// @version 1.0
 class CustomListTracks extends StatelessWidget {
+  /// Canción a mostrar
   final Track track;
+
+  /// Nombre de los artistas
   final String artists;
+
+  /// Número de canciones en la lista
   final int allTracksLength;
+
+  /// Indice en la lista
   final int index;
+
+  /// Variable que indica si se está seleccionando canciones
   final bool isSelecting;
+
+  /// Variable que indica si se ha seleccionado
   final bool isSelected;
+
+  /// Función que se ejecuta al seleccionar o deseleccionar
   final VoidCallback? onSelect;
-  
+
+  /// Función que se ejecuta para refrescar la lista
+  final VoidCallback? onRefresh;
+
   const CustomListTracks({
     super.key,
     required this.track,
@@ -25,6 +41,7 @@ class CustomListTracks extends StatelessWidget {
     this.isSelecting = false,
     this.isSelected = false,
     this.onSelect,
+    this.onRefresh,
   });
 
   @override
@@ -32,15 +49,23 @@ class CustomListTracks extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => isSelecting ? onSelect!() : context.push('/track?id=${track.id}'),
+        onTap: () async {
+          if (isSelecting) {
+            onSelect!();
+          } else {
+            final result = await context.push('/track?id=${track.id}');
+
+            if (result == true) {
+              onRefresh?.call();
+            }
+          }
+        },
         child: Padding(
-          padding: const EdgeInsets.only(
-              top: 10, left: 10, right: 10),
+          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
           child: Column(
             children: [
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (isSelecting)
                     Padding(
@@ -55,94 +80,67 @@ class CustomListTracks extends StatelessWidget {
                     ),
                   // Portada
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(8),
                     child: Image(
                       image: NetworkImage(track.md5Image),
-                      width: 70,
+                      width: 80,
                     ),
                   ),
-    
+
                   const SizedBox(width: 20),
 
                   Expanded(
                     child: Stack(
                       children: [
                         Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Título
-                            LayoutBuilder(builder:
-                                (context, constraints) {
+                            LayoutBuilder(builder: (context, constraints) {
                               Widget resultText;
-    
+
                               final text = track.title;
-                              final textPainter =
-                                  TextPainter(
-                                      text: TextSpan(
-                                        text: text,
-                                        style: TextStyle(
-                                            color: Theme.of(
-                                                    context)
-                                                .colorScheme
-                                                .primary,
-                                            fontSize: 18,
-                                            fontWeight:
-                                                FontWeight
-                                                    .bold,
-                                            overflow:
-                                                TextOverflow
-                                                    .ellipsis),
-                                      ),
-                                      maxLines: 1,
-                                      textDirection:
-                                          TextDirection.ltr)
-                                    ..layout(
-                                        maxWidth: double
-                                            .infinity);
-    
-                              final textWidth =
-                                  textPainter.size.width;
-    
-                              if (textWidth >
-                                  constraints.maxWidth) {
+                              final textPainter = TextPainter(
+                                  text: TextSpan(
+                                    text: text,
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        overflow: TextOverflow.ellipsis),
+                                  ),
+                                  maxLines: 1,
+                                  textDirection: TextDirection.ltr)
+                                ..layout(maxWidth: double.infinity);
+
+                              final textWidth = textPainter.size.width;
+
+                              if (textWidth > constraints.maxWidth) {
                                 resultText = SizedBox(
                                   height: 25,
                                   child: Marquee(
                                     text: text,
                                     style: TextStyle(
-                                        color: Theme.of(
-                                                context)
+                                        color: Theme.of(context)
                                             .colorScheme
                                             .primary,
                                         fontSize: 18,
-                                        fontWeight:
-                                            FontWeight.bold,
-                                        overflow:
-                                            TextOverflow
-                                                .ellipsis),
-                                    scrollAxis:
-                                        Axis.horizontal,
+                                        fontWeight: FontWeight.bold,
+                                        overflow: TextOverflow.ellipsis),
+                                    scrollAxis: Axis.horizontal,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
+                                        CrossAxisAlignment.start,
                                     blankSpace: 20.0,
                                     velocity: 40.0,
-                                    pauseAfterRound:
-                                        Duration(
-                                            seconds: 4),
+                                    pauseAfterRound: Duration(seconds: 4),
                                     startPadding: 0.0,
-                                    accelerationDuration:
-                                        Duration(
-                                            seconds: 2),
-                                    accelerationCurve:
-                                        Curves.linear,
+                                    accelerationDuration: Duration(seconds: 2),
+                                    accelerationCurve: Curves.linear,
                                     decelerationDuration:
-                                        Duration(
-                                            milliseconds:
-                                                500),
-                                    decelerationCurve:
-                                        Curves.easeOut,
+                                        Duration(milliseconds: 500),
+                                    decelerationCurve: Curves.easeOut,
                                   ),
                                 );
                               } else {
@@ -150,93 +148,66 @@ class CustomListTracks extends StatelessWidget {
                                   text,
                                   style: TextStyle(
                                       color:
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          Theme.of(context).colorScheme.primary,
                                       fontSize: 18,
-                                      fontWeight:
-                                          FontWeight.bold,
-                                      overflow: TextOverflow
-                                          .ellipsis),
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis),
                                 );
                               }
-    
+
                               return Padding(
-                                padding: const EdgeInsets.only(right: 32), // espacio para el icono de explícito
+                                padding: const EdgeInsets.only(
+                                    right:
+                                        32), // espacio para el icono de explícito
                                 child: resultText,
                               );
                             }),
-    
+
                             // Artistas
-                            LayoutBuilder(builder:
-                                (context, constraints) {
+                            LayoutBuilder(builder: (context, constraints) {
                               Widget resultText;
-    
+
                               final text = artists;
-                              final textPainter =
-                                  TextPainter(
-                                      text: TextSpan(
-                                        text: text,
-                                        style: TextStyle(
-                                            color: Theme.of(
-                                                    context)
-                                                .colorScheme
-                                                .primary,
-                                            fontSize: 18,
-                                            fontWeight:
-                                                FontWeight
-                                                    .bold,
-                                            overflow:
-                                                TextOverflow
-                                                    .ellipsis),
-                                      ),
-                                      maxLines: 1,
-                                      textDirection:
-                                          TextDirection.ltr)
-                                    ..layout(
-                                        maxWidth: double
-                                            .infinity);
-    
-                              final textWidth =
-                                  textPainter.size.width;
-    
-                              if (textWidth >
-                                  constraints.maxWidth) {
+                              final textPainter = TextPainter(
+                                  text: TextSpan(
+                                    text: text,
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        overflow: TextOverflow.ellipsis),
+                                  ),
+                                  maxLines: 1,
+                                  textDirection: TextDirection.ltr)
+                                ..layout(maxWidth: double.infinity);
+
+                              final textWidth = textPainter.size.width;
+
+                              if (textWidth > constraints.maxWidth) {
                                 resultText = SizedBox(
                                   height: 20,
                                   child: Marquee(
                                     text: text,
                                     style: TextStyle(
-                                        color: Theme.of(
-                                                context)
+                                        color: Theme.of(context)
                                             .colorScheme
                                             .primary,
                                         fontSize: 14,
-                                        overflow:
-                                            TextOverflow
-                                                .ellipsis),
-                                    scrollAxis:
-                                        Axis.horizontal,
+                                        overflow: TextOverflow.ellipsis),
+                                    scrollAxis: Axis.horizontal,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
+                                        CrossAxisAlignment.start,
                                     blankSpace: 20.0,
                                     velocity: 40.0,
-                                    pauseAfterRound:
-                                        Duration(
-                                            seconds: 4),
+                                    pauseAfterRound: Duration(seconds: 4),
                                     startPadding: 0.0,
-                                    accelerationDuration:
-                                        Duration(
-                                            seconds: 2),
-                                    accelerationCurve:
-                                        Curves.linear,
+                                    accelerationDuration: Duration(seconds: 2),
+                                    accelerationCurve: Curves.linear,
                                     decelerationDuration:
-                                        Duration(
-                                            milliseconds:
-                                                500),
-                                    decelerationCurve:
-                                        Curves.easeOut,
+                                        Duration(milliseconds: 500),
+                                    decelerationCurve: Curves.easeOut,
                                   ),
                                 );
                               } else {
@@ -244,44 +215,34 @@ class CustomListTracks extends StatelessWidget {
                                   text,
                                   style: TextStyle(
                                       color:
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          Theme.of(context).colorScheme.primary,
                                       fontSize: 14,
-                                      overflow: TextOverflow
-                                          .ellipsis),
+                                      overflow: TextOverflow.ellipsis),
                                 );
                               }
-    
+
                               return resultText;
                             }),
-    
+
                             // Fecha de lanzamiento
                             Text(
                               formatDate(
-                                  date: track.releaseDate,
-                                  context: context),
+                                  date: track.releaseDate, context: context),
                               style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             )
                           ],
                         ),
                         if (track.explicitLyrics ||
-                            track.explicitContentCover ==
-                                1 ||
-                            track.explicitContentLyrics ==
-                                1)
+                            track.explicitContentCover == 1 ||
+                            track.explicitContentLyrics == 1)
                           Positioned(
                             top: 0,
                             right: 0,
                             child: Icon(
                               Icons.explicit,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary,
+                              color: Theme.of(context).colorScheme.primary,
                               size: 28,
                             ),
                           ),
@@ -294,10 +255,7 @@ class CustomListTracks extends StatelessWidget {
                 height: 10,
               ),
               index < allTracksLength - 1
-                  ? Divider(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary)
+                  ? Divider(color: Theme.of(context).colorScheme.primary)
                   : Container()
             ],
           ),

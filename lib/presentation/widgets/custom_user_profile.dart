@@ -195,8 +195,8 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
                           value: GestureDetector(
-                            onTap: () =>
-                                context.push('/swipes?uid=${widget.uidUser}&liked=2'),
+                            onTap: () => context
+                                .push('/swipes?uid=${widget.uidUser}&liked=2'),
                             child: Text(
                               humanReadbleNumber(userProfile.swipes),
                               overflow: TextOverflow.ellipsis,
@@ -318,10 +318,11 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                                       Track track = tracks[index];
 
                                       // Construye la cadena de artistas y contributors
-                                      String artists = buildArtistsText(track: track);
+                                      String artists = track.buildArtistsText();
 
                                       return GestureDetector(
-                                        onTap: () => context.push('/track?id=${track.id}'),
+                                        onTap: () => context
+                                            .push('/track?id=${track.id}'),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 10),
@@ -338,29 +339,38 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                                                 children: [
                                                   ClipRRect(
                                                     borderRadius:
-                                                        BorderRadius.circular(6),
+                                                        BorderRadius.circular(
+                                                            6),
                                                     child: Image(
                                                       image: NetworkImage(
                                                           track.md5Image),
                                                       width: 64,
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
                                                   Expanded(
                                                     child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Text(
                                                           track.title,
                                                           style: TextStyle(
                                                               fontSize: 18,
-                                                              overflow: TextOverflow.ellipsis),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis),
                                                         ),
                                                         Text(
                                                           artists,
                                                           style: TextStyle(
                                                               fontSize: 14,
-                                                              overflow: TextOverflow.ellipsis),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis),
                                                         )
                                                       ],
                                                     ),

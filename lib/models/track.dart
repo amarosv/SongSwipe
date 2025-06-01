@@ -82,87 +82,90 @@ class Track {
   /// Tipo de la canción
   final String type;
 
+  /// Valor del Swipe
   final bool like;
 
+  /// Letras de la canción
+  late String lyrics;
+
   /// Constructor de la canción
-  Track({
-    required this.id,
-    required this.readable,
-    required this.title,
-    required this.titleShort,
-    required this.titleVersion,
-    required this.isrc,
-    required this.link,
-    required this.share,
-    required this.duration,
-    required this.trackPosition,
-    required this.diskNumber,
-    required this.rank,
-    required this.releaseDate,
-    required this.explicitLyrics,
-    required this.explicitContentLyrics,
-    required this.explicitContentCover,
-    required this.preview,
-    required this.bpm,
-    required this.gain,
-    required this.availableCountries,
-    required this.contributors,
-    required this.md5Image,
-    required this.trackToken,
-    required this.artist,
-    required this.album,
-    required this.type,
-    this.like = false
-  });
+  Track(
+      {required this.id,
+      required this.readable,
+      required this.title,
+      required this.titleShort,
+      required this.titleVersion,
+      required this.isrc,
+      required this.link,
+      required this.share,
+      required this.duration,
+      required this.trackPosition,
+      required this.diskNumber,
+      required this.rank,
+      required this.releaseDate,
+      required this.explicitLyrics,
+      required this.explicitContentLyrics,
+      required this.explicitContentCover,
+      required this.preview,
+      required this.bpm,
+      required this.gain,
+      required this.availableCountries,
+      required this.contributors,
+      required this.md5Image,
+      required this.trackToken,
+      required this.artist,
+      required this.album,
+      required this.type,
+      this.like = false,
+      this.lyrics = ''});
 
   /// Método que parsea un JSON en Canción
   factory Track.fromJson(Map<String, dynamic> json) => Track(
-        id: json["id"] ?? 0,
-        readable: json["readable"] ?? false,
-        title: json["title"] ?? '',
-        titleShort: json["title_short"] ?? '',
-        titleVersion: json["title_version"] ?? '',
-        isrc: json["isrc"] ?? '',
-        link: json["link"] ?? '',
-        share: json["share"] ?? '',
-        duration: json["duration"] ?? 0,
-        trackPosition: json["track_position"] ?? 0,
-        diskNumber: json["disk_number"] ?? 0,
-        rank: json["rank"] ?? 0,
-        releaseDate: json["release_date"] ?? '',
-        explicitLyrics: json["explicit_lyrics"] ?? false,
-        explicitContentLyrics: json["explicit_content_lyrics"] ?? -1,
-        explicitContentCover: json["explicit_content_cover"] ?? -1,
-        preview: json["preview"] ?? '',
-        bpm: (json['bpm'] is int
-                ? (json['bpm'] as int).toDouble()
-                : json['bpm']) ??
-            0.0,
-        gain: (json['gain'] is int
-                ? (json['gain'] as int).toDouble()
-                : json['gain']) ??
-            0.0,
-        availableCountries: json['available_countries'] != null
-            ? List<String>.from(json['available_countries'])
-            : [],
-        contributors: (json['contributors'] as List<dynamic>?)
-                ?.map((item) =>
-                    Contributor.fromJson(item as Map<String, dynamic>))
-                .toList() ??
-            [],
-        md5Image: json["md5_image"] != null
+      id: json["id"] ?? 0,
+      readable: json["readable"] ?? false,
+      title: json["title"] ?? '',
+      titleShort: json["title_short"] ?? '',
+      titleVersion: json["title_version"] ?? '',
+      isrc: json["isrc"] ?? '',
+      link: json["link"] ?? '',
+      share: json["share"] ?? '',
+      duration: json["duration"] ?? 0,
+      trackPosition: json["track_position"] ?? 0,
+      diskNumber: json["disk_number"] ?? 0,
+      rank: json["rank"] ?? 0,
+      releaseDate: json["release_date"] ?? '',
+      explicitLyrics: json["explicit_lyrics"] ?? false,
+      explicitContentLyrics: json["explicit_content_lyrics"] ?? -1,
+      explicitContentCover: json["explicit_content_cover"] ?? -1,
+      preview: json["preview"] ?? '',
+      bpm: (json['bpm'] is int
+              ? (json['bpm'] as int).toDouble()
+              : json['bpm']) ??
+          0.0,
+      gain: (json['gain'] is int
+              ? (json['gain'] as int).toDouble()
+              : json['gain']) ??
+          0.0,
+      availableCountries: json['available_countries'] != null
+          ? List<String>.from(json['available_countries'])
+          : [],
+      contributors: (json['contributors'] as List<dynamic>?)
+              ?.map(
+                  (item) => Contributor.fromJson(item as Map<String, dynamic>))
+              .toList() ??
+          [],
+      md5Image: json["md5_image"] != null
           ? 'https://e-cdn-images.dzcdn.net/images/cover/${json['md5_image']}/500x500.jpg'
           : '',
-        trackToken: json["track_token"] ?? '',
-        artist: json['artist'] != null
-            ? Artist.fromJson(json['artist'], 0)
-            : Artist.empty(),
-        album: json['album'] != null
-            ? Album.fromJson(json['album'])
-            : Album.empty(),
-        type: json["type"] ?? '',
-        like: json["like"] ?? false,
-      );
+      trackToken: json["track_token"] ?? '',
+      artist: json['artist'] != null
+          ? Artist.fromJson(json['artist'], 0)
+          : Artist.empty(),
+      album:
+          json['album'] != null ? Album.fromJson(json['album']) : Album.empty(),
+      type: json["type"] ?? '',
+      like: json["like"] ?? false,
+      lyrics: json["lyrics"] ?? '');
 
   /// Método que crea una canción vacía
   factory Track.empty() {
@@ -194,6 +197,34 @@ class Track {
         album: Album.empty(),
         type: '',
         like: false,
-    );
+        lyrics: '');
+  }
+
+  /// Función que construye la cadena de artistas y contribuidores de la canción <br>
+  /// @returns Cadena de artistas y contribuidores
+  String buildArtistsText() {
+    final names = <String>{};
+    names.add(artist.name);
+    for (final contributor in contributors) {
+      names.add(contributor.name);
+    }
+    return names.join(', ');
+  }
+
+  /// Esta función devuelve las 4 primeras líneas de las letras <br>
+  /// @returns 4 primeras líneas de las letras de la canción
+  String getFirstFourLyricsLines() {
+    // Variable que almacena las primeras cuatro líneas
+    String result = '';
+
+    List<String> lines = lyrics.split('\n');
+
+    for (int i = 0; i < 4; i++) {
+      String line = i >= lines.length ? '' : '${lines[i]}\n';
+
+      result += line;
+    }
+
+    return result;
   }
 }

@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_imagekit/flutter_imagekit.dart';
+import 'package:http/http.dart' as http;
 import 'package:songswipe/config/constants/environment.dart';
 import 'package:songswipe/helpers/utils.dart';
 
@@ -55,4 +57,27 @@ Future<String> saveImageInImagekit(String uid, File image) async {
   });
 
   return urlImage;
+}
+
+/// Esta función recibe el nombre del artista y el título de la canción y devuelve sus letras <br>
+/// @param artistName Nombre del artistas <br>
+/// @param trackTitle Título de la canción <br>
+/// @returns Letras de la canción
+Future<String> getLyrics({required String artistName, required String trackTitle}) async {
+  String lyrics = '';
+
+  Uri url = Uri.parse('https://api.lyrics.ovh/v1/$artistName/$trackTitle');
+
+  // Llamada a la API para obtener las letras de la canción
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    lyrics = json.decode(response.body)['lyrics'];
+  }
+
+  return lyrics;
 }

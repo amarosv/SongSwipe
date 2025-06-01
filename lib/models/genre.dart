@@ -36,7 +36,7 @@ class Genre {
   /// Método que parsea un JSON en Género
   factory Genre.fromJson(Map<String, dynamic> json) {
     return Genre(
-        id: json['id'],
+        id: json['id'] ?? -1,
         name: json['name'] ?? '',
         picture: json['picture'] ?? '',
         pictureSmall: json['picture_small'] ?? '',

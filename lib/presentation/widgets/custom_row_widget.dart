@@ -17,7 +17,12 @@ class CustomRow extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title),
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold
+              ),
+            ),
             Flexible(
               child: Align(
                 alignment: Alignment.centerRight,

@@ -474,10 +474,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get no_last_swipes => 'no se encontraron swipes';
 
   @override
-  String get liked => 'guardada';
+  String get liked => 'guardadas';
 
   @override
-  String get disliked => 'descartada';
+  String get disliked => 'descartadas';
 
   @override
   String get no_tracks => 'no se encontraron canciones';
@@ -493,4 +493,40 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get selected_tracks => 'cancion/es seleccionadas';
+
+  @override
+  String get release_date => 'fecha de lanzamiento';
+
+  @override
+  String get duration => 'duración';
+
+  @override
+  String get album => 'álbum';
+
+  @override
+  String get position_album => 'posición en el álbum';
+
+  @override
+  String get ranking => 'ranking';
+
+  @override
+  String get explicit_content => 'contenido explícito';
+
+  @override
+  String get lyrics => 'letras';
+
+  @override
+  String get by => 'de';
+
+  @override
+  String get likes => 'me gustas';
+
+  @override
+  String get dislikes => 'no me gustas';
+
+  @override
+  String get related_tracks => 'canciones relacionadas';
+
+  @override
+  String get see_more => 'ver más...';
 }

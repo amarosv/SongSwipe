@@ -486,4 +486,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selected_tracks => 'selected track/s';
+
+  @override
+  String get release_date => 'release date';
+
+  @override
+  String get duration => 'duration';
+
+  @override
+  String get album => 'album';
+
+  @override
+  String get position_album => 'position in the album';
+
+  @override
+  String get ranking => 'ranking';
+
+  @override
+  String get explicit_content => 'explicit content';
+
+  @override
+  String get lyrics => 'lyrics';
+
+  @override
+  String get by => 'by';
+
+  @override
+  String get likes => 'likes';
+
+  @override
+  String get dislikes => 'dislikes';
+
+  @override
+  String get related_tracks => 'related tracks';
+
+  @override
+  String get see_more => 'see more...';
 }

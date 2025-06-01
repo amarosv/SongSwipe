@@ -154,5 +154,17 @@
     "showing": "mostrando",
     "tracks": "canzone/i",
     "export_tracks": "esportare canzoni",
-    "selected_tracks": "canzone/i selezionate"
+    "selected_tracks": "canzone/i selezionate",
+    "release_date": "data di rilascio",
+    "duration": "durata",
+    "album": "album",
+    "position_album": "posizione nell'album",
+    "ranking": "classifica",
+    "explicit_content": "contenuto esplicito",
+    "lyrics": "testi",
+    "by": "di",
+    "likes": "piace",
+    "dislikes": "antipatie",
+    "related_tracks": "canzoni correlate",
+    "see_more": "vedere di più..."
 }

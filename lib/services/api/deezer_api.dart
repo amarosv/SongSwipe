@@ -103,6 +103,9 @@ Future<List<Genre>> searchGenre(String query) async {
   return listaGeneros;
 }
 
+/// Función que obtiene las canciones a descubrir, sin añadir las que ya ha reaccionado <br>
+/// @param swipesNotUpload Lista de ids que se han reaccionado pero aún no se han subido <br>
+/// @returns Lista de canciones
 Future<List<Track>> getDiscoverTracks({required List<int> swipesNotUpload}) async {
   List<Track> tracks = [];
   Random random = Random();
@@ -180,6 +183,11 @@ Future<List<Track>> getDiscoverTracks({required List<int> swipesNotUpload}) asyn
   return tracks;
 }
 
+/// Función que obtiene canciones de un artista, evitando las que ya se han reaccionado <br>
+/// @param artistId ID del artista <br>
+/// @param index Indice de la canción a obtener <br>
+/// @param swipesNotUpload Lista de ids que se han reaccionado pero aún no se han subido <br>
+/// @returns Lista de canciones
 Future<List<Track>> getTracksByArtist(int artistId, int index, List<int> swipesNotUpload) async {
   List<Track> tracks = [];
 
@@ -218,6 +226,10 @@ Future<List<Track>> getTracksByArtist(int artistId, int index, List<int> swipesN
   }
 }
 
+/// Función que obtiene los detalles del artista <br>
+/// @param savedTracks Número de canciones guardadas del artista <br>
+/// @param artistID ID del artista <br>
+/// @returns Artista
 Future<Artist> getArtistDetails(
     {required savedTracks, required int artistID}) async {
   Artist artist = Artist.empty();
@@ -240,6 +252,11 @@ Future<Artist> getArtistDetails(
   return artist;
 }
 
+/// Función que obtiene canciones <br>
+/// @param method Método del chart <br>
+/// @param limit Límite <br>
+/// @param index Índice <br>
+/// @returns Lista de canciones
 Future<List<Track>> getTracks(
     {required int method, required int limit, required int index}) async {
   List<Track> tracks = [];
@@ -274,6 +291,11 @@ Future<List<Track>> getTracks(
   return tracks;
 }
 
+/// Función que obtiene las canciones recomendadas de un artista, evitando las que ya se han reaccionado <br>
+/// @param artistID ID del artista <br>
+/// @param limit Límite <br>
+/// @param swipesNotUpload Lista de ids que se han reaccionado pero aún no se han subido <br>
+/// @returns Lista de canciones
 Future<List<Track>> getRecommendedTracks(
     {required int artistID, required int limit, required List<int> swipesNotUpload}) async {
   List<Track> tracks = [];
@@ -313,4 +335,87 @@ Future<List<Track>> getRecommendedTracks(
   }
 
   return tracks;
+}
+
+/// Esta función recibe un id de canción y devuelve un objeto con todos sus datos <br>
+/// @param idTrack ID de la canción <br>
+/// @returns Track
+Future<Track> getTrackById({required int idTrack}) async {
+  // Variable que almacena la canción
+  Track track = Track.empty();
+
+  final url = '${Environment.apiUrlDeezer}track/$idTrack';
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    // Convertimos el json en Track
+    track = Track.fromJson(data);
+  }
+
+  return track;
+}
+
+/// Función que obtiene las canciones recomendadas de un artista <br>
+/// @param artistID ID del artista <br>
+/// @returns Lista de canciones
+Future<List<Track>> getRecommendedTracksByArtist({required int artistID}) async {
+  List<Track> tracks = [];
+  final url = 'https://api.deezer.com/artist/$artistID/radio?limit=10';
+
+  try {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final trackList = data['data'] as List<dynamic>;
+
+      tracks = trackList.map((item) => Track.fromJson(item)).toList();
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+
+  return tracks;
+}
+
+/// Función que obtiene los detalles de un album <br>
+/// @param albumID ID del album <br>
+/// @returns Album
+Future<Album> getAlbumDetails({required int albumID}) async {
+  Album album = Album.empty();
+
+  final url = '${Environment.apiUrlDeezer}album/$albumID';
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    // Convertimos el json en Album
+    album = Album.fromJson(data);
+  }
+
+  return album;
+}
+
+/// Función que obtiene los detalles de un género <br>
+/// @param genreID ID del género <br>
+/// @returns Genero
+Future<Genre> getGenreDetails({required int genreID}) async {
+  Genre genre = Genre.empty();
+
+  final url = '${Environment.apiUrlDeezer}genre/$genreID';
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    // Convertimos el json en Genre
+    genre = Genre.fromJson(data);
+  }
+
+  return genre;
 }

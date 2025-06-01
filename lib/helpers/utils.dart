@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
-import 'package:songswipe/models/track.dart';
 import 'package:toastification/toastification.dart';
 
 /// Función que recibe un texto y pone la primera letra y sus iniciales tras los espacios en mayúscula <br>
@@ -235,14 +234,26 @@ String formatWithThousandsSeparator(int number) {
   return formatter.format(number);
 }
 
-/// Función que construye la cadena de artistas y contribuidores de una canción <br>
-/// @param track Canción <br>
-/// @returns Cadena de artistas y contribuidores
-String buildArtistsText({required Track track}) {
-  final names = <String>{};
-  names.add(track.artist.name);
-  for (final contributor in track.contributors) {
-    names.add(contributor.name);
-  }
-  return names.join(', ');
+/// Esta función recibe la duración de una canción en segundos y lo convierte a
+/// minutos y segundos <br>
+/// @param totalSeconds Segundos totales de la canción <br>
+/// @returns Cadena con los minutos y segundos
+String formatDuration(int totalSeconds) {
+  int minutes = totalSeconds ~/ 60; // Calcula los minutos
+  int seconds = totalSeconds % 60; // Calcula los segundos restantes
+  String secondsStr = seconds.toString().padLeft(2, '0');
+  return '$minutes min $secondsStr sg';
+}
+
+/// Esta función recibe una fecha completa y devuelve solo el año <br>
+/// @param date Fecha completa <br>
+/// @returns Año
+String dateToYear({required String date}) {
+  String year = '';
+
+  List<String> parts = date.split('-');
+
+  year = parts.first;
+
+  return year;
 }

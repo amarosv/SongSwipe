@@ -124,7 +124,24 @@ class AppRouter {
           return UserScreen(uidUser: uid!,);
         },
       ),
-      // TODO: /track
+      GoRoute(
+        path: '/track',
+        name: InfoTrackScreen.name,
+        builder: (context, state) {
+          final idTrack = int.parse(state.uri.queryParameters['id']!);
+          return InfoTrackScreen(idTrack: idTrack,);
+        },
+      ),
+      GoRoute(
+        path: '/lyrics',
+        name: LyricsScreen.name,
+        builder: (context, state) {
+          final lyrics = state.uri.queryParameters['lyrics']!;
+          final trackTitle = state.uri.queryParameters['title']!;
+          final trackArtists = state.uri.queryParameters['artists']!;
+          return LyricsScreen(lyrics: lyrics, trackTitle: trackTitle, trackArtists: trackArtists);
+        },
+      ),
       // TODO: /swipes 0 = dislike, 1 = liked, 2 = all
       // TODO: /followers
       // TODO: /following

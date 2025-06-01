@@ -263,12 +263,12 @@ class _DiscoverViewState extends State<DiscoverView>
     // Variable donde se almacenará el swipe
     Swipe swipe;
 
-    print(_cards[currentIndex!].track.id);
-    if (currentIndex >= _cards.length) {
+    // print(_cards[currentIndex!].track.id);
+    if (currentIndex! >= _cards.length) {
       currentIndex = _cards.length - 1;
     }
 
-    print('$currentIndex de ${_cards.length}');
+    // print('$currentIndex de ${_cards.length}');
 
     // Comprobamos en que dirección se ha deslizado la canción
     switch (direction) {
@@ -296,7 +296,7 @@ class _DiscoverViewState extends State<DiscoverView>
       case CardSwiperDirection.left:
         {
           // Dislike
-          print(_cards[_currentIndex].track.title);
+          // print(_cards[_currentIndex].track.title);
           _dislikeTrack();
           break;
         }

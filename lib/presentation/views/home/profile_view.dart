@@ -204,7 +204,7 @@ class _ProfileViewState extends State<ProfileView> {
                           value: _languageCode != 'en'
                               ? convertDate(_userProfile.dateJoining)
                               : _userProfile.dateJoining),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
                     ],
                   ),
                 ),

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
@@ -132,33 +133,37 @@ class _LibraryViewState extends State<LibraryView>
         ),
         body: TabBarView(
           children: [
-            LikedView(
-              uid: _uid,
-              grid: _grid,
-              onTotalChanged: ((int count, bool selecting) res) => {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (mounted) {
-                    setState(() {
-                      _totalTracks = res.$1;
-                      _isSelecting = res.$2;
-                    });
-                  }
-                })
-              },
+            FadeIn(
+              child: LikedView(
+                uid: _uid,
+                grid: _grid,
+                onTotalChanged: ((int count, bool selecting) res) => {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted) {
+                      setState(() {
+                        _totalTracks = res.$1;
+                        _isSelecting = res.$2;
+                      });
+                    }
+                  })
+                },
+              ),
             ),
-            DislikedView(
-              uid: _uid,
-              grid: _grid,
-              onTotalChanged: ((int count, bool selecting) res) => {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (mounted) {
-                    setState(() {
-                      _totalTracks = res.$1;
-                      _isSelecting = res.$2;
-                    });
-                  }
-                })
-              },
+            FadeIn(
+              child: DislikedView(
+                uid: _uid,
+                grid: _grid,
+                onTotalChanged: ((int count, bool selecting) res) => {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted) {
+                      setState(() {
+                        _totalTracks = res.$1;
+                        _isSelecting = res.$2;
+                      });
+                    }
+                  })
+                },
+              ),
             ),
           ],
         ),

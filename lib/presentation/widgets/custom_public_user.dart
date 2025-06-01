@@ -303,7 +303,8 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                                             Track track = tracks[index];
 
                                             // Construye la cadena de artistas y contributors
-                                            String artists = buildArtistsText(track: track);
+                                            String artists =
+                                                track.buildArtistsText();
 
                                             return GestureDetector(
                                               onTap: () => context.push(

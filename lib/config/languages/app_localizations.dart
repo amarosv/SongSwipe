@@ -1035,6 +1035,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'selected track/s'**
   String get selected_tracks;
+
+  /// No description provided for @release_date.
+  ///
+  /// In en, this message translates to:
+  /// **'release date'**
+  String get release_date;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'duration'**
+  String get duration;
+
+  /// No description provided for @album.
+  ///
+  /// In en, this message translates to:
+  /// **'album'**
+  String get album;
+
+  /// No description provided for @position_album.
+  ///
+  /// In en, this message translates to:
+  /// **'position in the album'**
+  String get position_album;
+
+  /// No description provided for @ranking.
+  ///
+  /// In en, this message translates to:
+  /// **'ranking'**
+  String get ranking;
+
+  /// No description provided for @explicit_content.
+  ///
+  /// In en, this message translates to:
+  /// **'explicit content'**
+  String get explicit_content;
+
+  /// No description provided for @lyrics.
+  ///
+  /// In en, this message translates to:
+  /// **'lyrics'**
+  String get lyrics;
+
+  /// No description provided for @by.
+  ///
+  /// In en, this message translates to:
+  /// **'by'**
+  String get by;
+
+  /// No description provided for @likes.
+  ///
+  /// In en, this message translates to:
+  /// **'likes'**
+  String get likes;
+
+  /// No description provided for @dislikes.
+  ///
+  /// In en, this message translates to:
+  /// **'dislikes'**
+  String get dislikes;
+
+  /// No description provided for @related_tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'related tracks'**
+  String get related_tracks;
+
+  /// No description provided for @see_more.
+  ///
+  /// In en, this message translates to:
+  /// **'see more...'**
+  String get see_more;
 }
 
 class _AppLocalizationsDelegate
