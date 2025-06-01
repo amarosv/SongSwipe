@@ -41,7 +41,6 @@ class LyricsView extends StatelessWidget {
                     text: TextSpan(
                       text: text,
                       style: TextStyle(
-                          color: Colors.black,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis),
@@ -58,7 +57,6 @@ class LyricsView extends StatelessWidget {
                     child: Marquee(
                       text: text,
                       style: TextStyle(
-                          color: Colors.black,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis),
@@ -80,7 +78,6 @@ class LyricsView extends StatelessWidget {
                     child: Text(
                       text,
                       style: TextStyle(
-                          color: Colors.black,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis),
@@ -121,7 +118,6 @@ class LyricsView extends StatelessWidget {
                       child: Marquee(
                         text: text,
                         style: TextStyle(
-                            color: Colors.black,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.italic,
@@ -143,8 +139,7 @@ class LyricsView extends StatelessWidget {
                       alignment: Alignment.topCenter,
                       child: Text(
                         text,
-                        style: TextStyle(
-                            color: Colors.black,
+                        style: TextStyle( 
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.italic,
