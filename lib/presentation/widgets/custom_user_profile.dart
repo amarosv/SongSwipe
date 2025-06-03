@@ -287,6 +287,15 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                         const SizedBox(
                           height: 30,
                         ),
+                        // Últimos 5 swipes
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            upperCaseAfterSpace(text: localization.last_swipes),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          ),
+                        ),
                         CustomContainer(
                           child: FutureBuilder(
                               future: getLast5Swipes(uid: widget.uidUser),
@@ -320,7 +329,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                                       // Construye la cadena de artistas y contributors
                                       String artists = track.buildArtistsText();
 
-                                      return GestureDetector(
+                                      return InkWell(
                                         onTap: () => context
                                             .push('/track?id=${track.id}'),
                                         child: Padding(

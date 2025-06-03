@@ -167,5 +167,6 @@
     "likes": "likes",
     "dislikes": "dislikes",
     "related_tracks": "related tracks",
-    "see_more": "see more..."
+    "see_more": "see more...",
+    "last_swipes": "last 5 swipes"
 }

@@ -166,5 +166,6 @@
     "likes": "piace",
     "dislikes": "antipatie",
     "related_tracks": "canzoni correlate",
-    "see_more": "vedere di più..."
+    "see_more": "vedere di più...",
+    "last_swipes": "ultimi 5 swipes"
 }

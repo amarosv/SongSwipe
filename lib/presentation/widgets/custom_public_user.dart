@@ -234,6 +234,18 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                             children: [
                               const SizedBox(height: 30),
 
+                              // Últimos 5 swipes
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  upperCaseAfterSpace(
+                                      text: localization.last_swipes),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                              ),
+
                               // Ver canciones favoritas
                               CustomNavigator(
                                 title: Text(
@@ -306,7 +318,7 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                                             String artists =
                                                 track.buildArtistsText();
 
-                                            return GestureDetector(
+                                            return InkWell(
                                               onTap: () => context.push(
                                                   '/track?id=${track.id}'),
                                               child: Padding(

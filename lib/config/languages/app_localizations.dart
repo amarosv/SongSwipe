@@ -1107,6 +1107,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'see more...'**
   String get see_more;
+
+  /// No description provided for @last_swipes.
+  ///
+  /// In en, this message translates to:
+  /// **'last 5 swipes'**
+  String get last_swipes;
 }
 
 class _AppLocalizationsDelegate

@@ -522,4 +522,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get see_more => 'see more...';
+
+  @override
+  String get last_swipes => 'last 5 swipes';
 }

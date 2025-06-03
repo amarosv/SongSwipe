@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +17,12 @@ import 'package:songswipe/services/api/internal_api.dart';
 Future<void> main() async {
   // Esperamos a que se haya inicializado el widget
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Bloqueamos la orientación a portrait
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   // Inicializamos Firebase
   await Firebase.initializeApp(

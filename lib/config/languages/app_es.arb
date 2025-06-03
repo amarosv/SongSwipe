@@ -166,5 +166,6 @@
     "likes": "me gustas",
     "dislikes": "no me gustas",
     "related_tracks": "canciones relacionadas",
-    "see_more": "ver más..."
+    "see_more": "ver más...",
+    "last_swipes": "últimos 5 swipes"
 }
