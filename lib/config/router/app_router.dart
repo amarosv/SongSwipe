@@ -139,7 +139,9 @@ class AppRouter {
           final lyrics = state.uri.queryParameters['lyrics']!;
           final trackTitle = state.uri.queryParameters['title']!;
           final trackArtists = state.uri.queryParameters['artists']!;
-          return LyricsScreen(lyrics: lyrics, trackTitle: trackTitle, trackArtists: trackArtists);
+          final trackCover = state.uri.queryParameters['cover']!;
+
+          return LyricsScreen(lyrics: lyrics, trackTitle: trackTitle, trackArtists: trackArtists, trackCover: trackCover,);
         },
       ),
       // TODO: /swipes 0 = dislike, 1 = liked, 2 = all

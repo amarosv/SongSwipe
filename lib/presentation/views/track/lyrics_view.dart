@@ -13,11 +13,15 @@ class LyricsView extends StatelessWidget {
 
   /// Artistas de la canción
   final String trackArtists;
+
+  /// Url de la imagen de la canción
+  final String trackCover;
+
   const LyricsView(
       {super.key,
       required this.lyrics,
       required this.trackTitle,
-      required this.trackArtists});
+      required this.trackArtists, required this.trackCover});
 
   @override
   Widget build(BuildContext context) {

@@ -273,7 +273,10 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                       centerTitle: true,
                       flexibleSpace: FlexibleSpaceBar(
                         centerTitle: true,
-                        background: Image.network(_track.md5Image),
+                        background: Image.network(
+                          _track.md5Image,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       actions: [actionWidget()],
                     ),
@@ -510,7 +513,7 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                                             horizontal: 20),
                                         child: GestureDetector(
                                           onTap: () => context.push(
-                                              '/lyrics?lyrics=${_track.lyrics}&title=${_track.title}&artists=${_track.buildArtistsText()}'),
+                                              '/lyrics?lyrics=${_track.lyrics}&title=${_track.title}&artists=${_track.buildArtistsText()}&cover=${_track.md5Image}'),
                                           child: CustomContainer(
                                             child: Padding(
                                               padding: const EdgeInsets.all(10),
