@@ -1,8 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/export_providers.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/services/api/internal_api.dart';
@@ -13,7 +15,7 @@ import '../../../widgets/export_widgets.dart';
 /// Vista para la pantalla de las canciones con like <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class LikedView extends StatefulWidget {
+class LikedView extends ConsumerStatefulWidget {
   /// UID del usuario
   final String uid;
 
@@ -31,10 +33,10 @@ class LikedView extends StatefulWidget {
   });
 
   @override
-  State<LikedView> createState() => _LikedViewState();
+  ConsumerState<LikedView> createState() => _LikedViewState();
 }
 
-class _LikedViewState extends State<LikedView>
+class _LikedViewState extends ConsumerState<LikedView>
     with AutomaticKeepAliveClientMixin {
   // Variable que almacena el próximo enlace
   String nextUrl = '';
@@ -68,6 +70,8 @@ class _LikedViewState extends State<LikedView>
     if (!isLoadingMore) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;
+
+        print('Cargando...');
 
         setState(() => isLoadingMore = true);
 
@@ -108,6 +112,13 @@ class _LikedViewState extends State<LikedView>
     final size = MediaQuery.of(context).size;
     final height = size.height;
 
+    ref.listen<bool>(swipeChangedProvider, (prev, next) {
+      if (next == true && mounted) {
+        _fetchTracks(reset: true);
+        ref.read(swipeChangedProvider.notifier).state = false;
+      }
+    });
+
     return allTracks.isEmpty && !isLoadingMore
         ? Center(
             child: Text(capitalizeFirstLetter(text: localization.no_tracks)),
@@ -127,112 +138,112 @@ class _LikedViewState extends State<LikedView>
                 child: Scaffold(
                   body: !widget.grid
                       ? FadeInLeft(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            // padding: EdgeInsets.zero,
-                            // physics: NeverScrollableScrollPhysics(),
-                            itemCount: isLoadingMore
-                                ? allTracks.length + 1
-                                : allTracks.length,
-                            itemBuilder: (context, index) {
-                              Widget result;
-                        
-                              if (index == allTracks.length) {
-                                result = const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              } else {
-                                Track track = allTracks[index];
-                        
-                                String artists = track.buildArtistsText();
-                        
-                                if (index == allTracks.length - 1 &&
-                                    nextUrl.isNotEmpty) {
-                                  _fetchTracks();
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              // padding: EdgeInsets.zero,
+                              // physics: NeverScrollableScrollPhysics(),
+                              itemCount: isLoadingMore
+                                  ? allTracks.length + 1
+                                  : allTracks.length,
+                              itemBuilder: (context, index) {
+                                Widget result;
+
+                                if (index == allTracks.length) {
+                                  result = const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else {
+                                  Track track = allTracks[index];
+
+                                  String artists = track.buildArtistsText();
+
+                                  if (index == allTracks.length - 1 &&
+                                      nextUrl.isNotEmpty) {
+                                    _fetchTracks();
+                                  }
+
+                                  result = FadeInLeft(
+                                    child: CustomListTracks(
+                                      track: track,
+                                      artists: artists,
+                                      allTracksLength: allTracks.length,
+                                      index: index,
+                                      isSelecting: selecting,
+                                      isSelected:
+                                          selectedTracks.contains(track),
+                                      onSelect: () {
+                                        setState(() {
+                                          if (selectedTracks.contains(track)) {
+                                            selectedTracks.remove(track);
+                                          } else {
+                                            selectedTracks.add(track);
+                                          }
+
+                                          widget.onTotalChanged(
+                                              (selectedTracks.length, true));
+                                        });
+                                      },
+                                    ),
+                                  );
                                 }
-                        
-                                result = FadeInLeft(
-                                  child: CustomListTracks(
-                                    track: track,
-                                    artists: artists,
-                                    allTracksLength: allTracks.length,
-                                    index: index,
-                                    isSelecting: selecting,
-                                    isSelected: selectedTracks.contains(track),
-                                    onSelect: () {
-                                      setState(() {
-                                        if (selectedTracks.contains(track)) {
-                                          selectedTracks.remove(track);
-                                        } else {
-                                          selectedTracks.add(track);
-                                        }
-                                                          
-                                        widget.onTotalChanged(
-                                            (selectedTracks.length, true));
-                                      });
-                                    },
-                                    onRefresh: () => _fetchTracks(reset: true),
-                                  ),
-                                );
-                              }
-                        
-                              return result;
-                            }),
-                      )
+
+                                return result;
+                              }),
+                        )
                       : FadeInDown(
-                        child: GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    mainAxisExtent: height * 0.36),
-                            itemCount: isLoadingMore
-                                ? allTracks.length + 1
-                                : allTracks.length,
-                            itemBuilder: (context, index) {
-                              Widget result;
-                        
-                              if (index == allTracks.length) {
-                                result = const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              } else {
-                                Track track = allTracks[index];
-                        
-                                String artists = track.buildArtistsText();
-                        
-                                if (index == allTracks.length - 1 &&
-                                    nextUrl.isNotEmpty) {
-                                  _fetchTracks();
+                          child: GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisExtent: height * 0.36),
+                              itemCount: isLoadingMore
+                                  ? allTracks.length + 1
+                                  : allTracks.length,
+                              itemBuilder: (context, index) {
+                                Widget result;
+
+                                if (index == allTracks.length) {
+                                  result = const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else {
+                                  Track track = allTracks[index];
+
+                                  String artists = track.buildArtistsText();
+
+                                  if (index == allTracks.length - 1 &&
+                                      nextUrl.isNotEmpty) {
+                                    _fetchTracks();
+                                  }
+
+                                  result = FadeInDown(
+                                    child: CustomGridTracks(
+                                      height: height,
+                                      track: track,
+                                      artists: artists,
+                                      index: index,
+                                      isSelecting: selecting,
+                                      isSelected:
+                                          selectedTracks.contains(track),
+                                      onSelect: () {
+                                        setState(() {
+                                          if (selectedTracks.contains(track)) {
+                                            selectedTracks.remove(track);
+                                          } else {
+                                            selectedTracks.add(track);
+                                          }
+
+                                          widget.onTotalChanged(
+                                              (selectedTracks.length, true));
+                                        });
+                                      },
+                                    ),
+                                  );
                                 }
-                        
-                                result = FadeInDown(
-                                  child: CustomGridTracks(
-                                    height: height,
-                                    track: track,
-                                    artists: artists,
-                                    index: index,
-                                    isSelecting: selecting,
-                                    isSelected: selectedTracks.contains(track),
-                                    onSelect: () {
-                                      setState(() {
-                                        if (selectedTracks.contains(track)) {
-                                          selectedTracks.remove(track);
-                                        } else {
-                                          selectedTracks.add(track);
-                                        }
-                                                          
-                                        widget.onTotalChanged(
-                                            (selectedTracks.length, true));
-                                      });
-                                    },
-                                    onRefresh: () => _fetchTracks(reset: true),
-                                  ),
-                                );
-                              }
-                        
-                              return result;
-                            }),
-                      ),
+
+                                return result;
+                              }),
+                        ),
                   floatingActionButton: selecting
                       ? Column(
                           mainAxisSize: MainAxisSize.min,

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/presentation/views/export_views.dart';
@@ -35,16 +36,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Función que se ejecuta cuandos seleccionamos una vista
   void _onTabTapped(int index) async {
-    // Si vamos al perfil (índice 4), guardamos los swipes antes de cambiar de vista
+    // Si vamos al perfil (índice 4) o a la libreria (índice 3), guardamos los swipes antes de cambiar de vista
     // Esto se debe a que aunque en DiscoverView se guardan los swipes al cambiar de vista o salir de la app,
     // si el cambio de vista es de Discover a Profile, puede darse el caso de que los swipes aún no se han guardado
     // acabando eso en que la vista Profile no mostraría la información correcta
-    if (index == 4) {
+    if (index == 4 || index == 3) {
       // Accedemos a los swipes
       final discoverState = _discoverViewKey.currentState as dynamic;
 
       if (discoverState != null && discoverState.swipes.isNotEmpty) {
-        await saveSwipes(swipes: discoverState.swipes);
+        await saveSwipes(uid: FirebaseAuth.instance.currentUser!.uid, swipes: discoverState.swipes);
       }
     }
 

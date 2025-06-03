@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -234,11 +235,10 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
             // Texto informativo para el username
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child:
-                  Text(
-                    capitalizeFirstLetter(text: localization.username_info),
-                    style: TextStyle(color: Colors.grey),
-                  ),
+              child: Text(
+                capitalizeFirstLetter(text: localization.username_info),
+                style: TextStyle(color: Colors.grey),
+              ),
             ),
 
             // CustomTextField para el nombre
@@ -342,6 +342,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
                           // Registramos al usuario en la base de datos
                           bool registered = await registerUserInDatabase(
+                              user: FirebaseAuth.instance.currentUser!,
                               name: name,
                               lastName: lastName,
                               username: username,

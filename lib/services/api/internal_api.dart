@@ -7,14 +7,14 @@ import 'package:songswipe/config/constants/environment.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/services/api/externals_api.dart';
 
-User? user = FirebaseAuth.instance.currentUser;
 String apiUser = '${Environment.apiUrl}/user';
 String apiTrack = '${Environment.apiUrl}/track';
 String apiAlbum = '${Environment.apiUrl}/album';
 String apiArtist = '${Environment.apiUrl}/artist';
 
-/// Función que recibe un nombre, apellidos, nombre de usuario y una imagen (opcional) y registra
+/// Función que recibe un objeto user, nombre, apellidos, nombre de usuario y una imagen (opcional) y registra
 /// al usuario en la base de datos <br>
+/// @param user Usuario <br>
 /// @param name Nombre del usuario <br>
 /// @param lastName Apellidos del usuario <br>
 /// @param username Nombre de usuario <br>
@@ -22,7 +22,8 @@ String apiArtist = '${Environment.apiUrl}/artist';
 /// @param supplier Proovedor
 /// @returns boolean que indica si el usuario se pudo crear en la base de datos
 Future<bool> registerUserInDatabase(
-    {required String name,
+    {required User user,
+    required String name,
     required String lastName,
     required String username,
     File? image,
@@ -32,12 +33,12 @@ Future<bool> registerUserInDatabase(
   bool registered = false;
 
   // Variables que contienen datos del usuario
-  String uid = user!.uid;
-  String email = user!.email!;
+  String uid = user.uid;
+  String email = user.email!;
 
   // 1. Guardamos la imagen del usuario en Imgbb
   String urlImage =
-      user!.photoURL ?? 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
+      user.photoURL ?? 'https://i.ibb.co/tTR5wWd9/default-profile.jpg';
 
   if (image != null) {
     urlImage = await saveImageInImagekit(uid, image);
@@ -231,11 +232,10 @@ Future<UserSettings> getUserSettings({required String uid}) async {
 }
 
 /// Actualiza los ajustes del usuario <br>
+/// @param uid UID del usuario <br>
 /// @param settings Nuevos ajustes del usuario
 /// @returns Se ha actualizado o no
-Future<bool> updateUserSettings(UserSettings settings) async {
-  String uid = user!.uid;
-
+Future<bool> updateUserSettings({required String uid, required UserSettings settings}) async {
   Uri url = Uri.parse('$apiUser/$uid/settings');
 
   // Llamada a la API para guardar los ajustes
@@ -298,10 +298,10 @@ Future<List<int>> getFavoriteGenres({required String uid}) async {
 }
 
 /// Obtiene si el usuario ha guardado la canción <br>
+/// @param uid UID del usuario <br>
 /// @param tracksIds Lista de IDs de cnanciones <br>
 /// @returns Lista con los ids de las canciones que no estan guardadas
-Future<List<dynamic>> areTrackInDatabase({required List<int> tracksIds}) async {
-  String uid = user!.uid;
+Future<List<dynamic>> areTrackInDatabase({required String uid, required List<int> tracksIds}) async {
 
   // Variable que almacenará los ids de las canciones
   List<dynamic> tracksNotSaved = [];
@@ -325,11 +325,10 @@ Future<List<dynamic>> areTrackInDatabase({required List<int> tracksIds}) async {
 }
 
 /// Guarda los swipes en la base de datos <br>
+/// @param uid UID del usuario <br>
 /// @param swipes Lista de swipes <br>
 /// @returns Número de filas afectadas
-Future<int> saveSwipes({required List<Swipe> swipes}) async {
-  String uid = user!.uid;
-
+Future<int> saveSwipes({required String uid, required List<Swipe> swipes}) async {
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
 
@@ -718,8 +717,6 @@ Future<bool> isTrackLiked({required String uid, required int idTrack}) async{
 /// @param newLike Valor del nuevo like del Swipe <br>
 /// @returns Bool que indica si se ha actualizado
 Future<bool> updateSwipe({required String uid, required int idTrack, required int newLike}) async {
-  String uid = user!.uid;
-
   Uri url = Uri.parse('$apiUser/$uid/update_swipe');
 
   // Llamada a la API para guardar los ajustes

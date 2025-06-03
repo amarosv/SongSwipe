@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/export_providers.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/user_settings.dart';
-import 'package:songswipe/presentation/providers/export_providers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/internal_api.dart';
 
@@ -99,7 +99,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
   @override
   void dispose() {
     if (_userSettingsComparator != _userSettings) {
-      updateUserSettings(_userSettings);
+      updateUserSettings(uid: _uid, settings: _userSettings);
     }
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -109,7 +109,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused &&
         _userSettingsComparator != _userSettings) {
-      updateUserSettings(_userSettings);
+      updateUserSettings(uid: _uid, settings: _userSettings);
       _userSettingsComparator = _userSettings.copy();
     }
   }
@@ -158,7 +158,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                           _userSettings.mode = 1;
                         });
 
-                        await updateUserSettings(_userSettings);
+                        await updateUserSettings(uid: _uid, settings: _userSettings);
 
                         // Colocamos que no estamos usando el modo del sistema
                         ref
@@ -198,7 +198,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                           _userSettings.mode = 2;
                         });
 
-                        await updateUserSettings(_userSettings);
+                        await updateUserSettings(uid: _uid, settings: _userSettings);
 
                         // Colocamos que no estamos usando el modo del sistema
                         ref
@@ -238,7 +238,7 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                           _userSettings.mode = 3;
                         });
 
-                        await updateUserSettings(_userSettings);
+                        await updateUserSettings(uid: _uid, settings: _userSettings);
 
                         // Llamamos al notifier para cambiar de modo
                         ref

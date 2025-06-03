@@ -104,9 +104,10 @@ Future<List<Genre>> searchGenre(String query) async {
 }
 
 /// Función que obtiene las canciones a descubrir, sin añadir las que ya ha reaccionado <br>
+/// @param uid UID del usuario <br>
 /// @param swipesNotUpload Lista de ids que se han reaccionado pero aún no se han subido <br>
 /// @returns Lista de canciones
-Future<List<Track>> getDiscoverTracks({required List<int> swipesNotUpload}) async {
+Future<List<Track>> getDiscoverTracks({required String uid, required List<int> swipesNotUpload}) async {
   List<Track> tracks = [];
   Random random = Random();
 
@@ -136,7 +137,7 @@ Future<List<Track>> getDiscoverTracks({required List<int> swipesNotUpload}) asyn
     for (int index in artistIndices) {
       int randomIndex =
           random.nextInt(290); // Índice aleatorio para cada solicitud
-      artistFutures.add(getTracksByArtist(artists[index], randomIndex, swipesNotUpload));
+      artistFutures.add(getTracksByArtist(uid: uid, artistId: artists[index], index: randomIndex, swipesNotUpload: swipesNotUpload));
     }
 
     // Seleccionar un género aleatorio
@@ -168,7 +169,7 @@ Future<List<Track>> getDiscoverTracks({required List<int> swipesNotUpload}) asyn
     }
 
     // Comprobamos cuales de esas canciones el usuario ya ha reaccionado
-    List<dynamic> idsNotSaved = await areTrackInDatabase(tracksIds: tracksIds);
+    List<dynamic> idsNotSaved = await areTrackInDatabase(uid: uid, tracksIds: tracksIds);
 
     // Eliminamos las canciones a las que el usuario ya ha reaccionado
     tracks.removeWhere((track) => !idsNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));
@@ -184,11 +185,12 @@ Future<List<Track>> getDiscoverTracks({required List<int> swipesNotUpload}) asyn
 }
 
 /// Función que obtiene canciones de un artista, evitando las que ya se han reaccionado <br>
+/// @param uid UID del usuario <br>
 /// @param artistId ID del artista <br>
 /// @param index Indice de la canción a obtener <br>
 /// @param swipesNotUpload Lista de ids que se han reaccionado pero aún no se han subido <br>
 /// @returns Lista de canciones
-Future<List<Track>> getTracksByArtist(int artistId, int index, List<int> swipesNotUpload) async {
+Future<List<Track>> getTracksByArtist({required String uid, required int artistId, required int index, required List<int> swipesNotUpload}) async {
   List<Track> tracks = [];
 
   // Primero obtenemos los detalles del artista
@@ -211,7 +213,7 @@ Future<List<Track>> getTracksByArtist(int artistId, int index, List<int> swipesN
     }
 
     // Comprobamos cuales de esas canciones el usuario ya ha reaccionado
-    List<dynamic> idsNotSaved = await areTrackInDatabase(tracksIds: tracksIds);
+    List<dynamic> idsNotSaved = await areTrackInDatabase(uid: uid, tracksIds: tracksIds);
 
     // Eliminamos las canciones a las que el usuario ya ha reaccionado
     tracks.removeWhere((track) => !idsNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));
@@ -292,12 +294,13 @@ Future<List<Track>> getTracks(
 }
 
 /// Función que obtiene las canciones recomendadas de un artista, evitando las que ya se han reaccionado <br>
+/// @param uid UID del usuario <br>
 /// @param artistID ID del artista <br>
 /// @param limit Límite <br>
 /// @param swipesNotUpload Lista de ids que se han reaccionado pero aún no se han subido <br>
 /// @returns Lista de canciones
 Future<List<Track>> getRecommendedTracks(
-    {required int artistID, required int limit, required List<int> swipesNotUpload}) async {
+    {required String uid, required int artistID, required int limit, required List<int> swipesNotUpload}) async {
   List<Track> tracks = [];
   List<int> tracksIds = [];
   List<dynamic> tracksNotSaved = [];
@@ -320,7 +323,7 @@ Future<List<Track>> getRecommendedTracks(
       }
 
       // Comprobamos cuales de esas canciones el usuario ya ha reaccionado
-      tracksNotSaved = await areTrackInDatabase(tracksIds: tracksIds);
+      tracksNotSaved = await areTrackInDatabase(uid: uid, tracksIds: tracksIds);
 
       // Eliminamos las canciones a las que el usuario ya ha reaccionado
       filteredTracks.removeWhere((track) => !tracksNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));

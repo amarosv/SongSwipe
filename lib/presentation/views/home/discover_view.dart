@@ -83,7 +83,7 @@ class _DiscoverViewState extends State<DiscoverView>
     super.initState();
     // Almacenamos el uid del usuario
     _uid = _user.uid;
-    
+
     // Obtenemos los datos del usuario
     _getUserSettings();
 
@@ -185,7 +185,8 @@ class _DiscoverViewState extends State<DiscoverView>
     });
 
     try {
-      List<Track> tracks = await getDiscoverTracks(swipesNotUpload: swipes.map((s) => s.id).toList());
+      List<Track> tracks = await getDiscoverTracks(
+          uid: _uid, swipesNotUpload: swipes.map((s) => s.id).toList());
 
       // Filtrar duplicados antes de crear newCards
       final swipedIds = swipes.map((s) => s.id).toSet();
@@ -374,8 +375,11 @@ class _DiscoverViewState extends State<DiscoverView>
 
   // Cargar recomendaciones basadas en una canción (trackId)
   Future<void> _loadRecommendedTracks(int artistID) async {
-    var recommendedTracks =
-        await getRecommendedTracks(artistID: artistID, limit: 5, swipesNotUpload: swipes.map((s) => s.id).toList());
+    var recommendedTracks = await getRecommendedTracks(
+        uid: _uid,
+        artistID: artistID,
+        limit: 5,
+        swipesNotUpload: swipes.map((s) => s.id).toList());
 
     // Filtrar recommendedTracks para evitar duplicados antes de crear newCards
     final swipedIds = swipes.map((s) => s.id).toSet();
@@ -413,7 +417,7 @@ class _DiscoverViewState extends State<DiscoverView>
     WidgetsBinding.instance.removeObserver(this);
     if (swipes.isNotEmpty) {
       Future(() async {
-        await saveSwipes(swipes: swipes);
+        await saveSwipes(uid: _uid, swipes: swipes);
       });
     }
     super.dispose();
@@ -421,10 +425,19 @@ class _DiscoverViewState extends State<DiscoverView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused && swipes.isNotEmpty) {
-      Future(() async {
-        await saveSwipes(swipes: swipes);
-      });
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached ||
+        state == AppLifecycleState.hidden) {
+      _audioPlayer.pause();
+      
+      if (swipes.isNotEmpty) {
+        Future(() async {
+          await saveSwipes(uid: _uid, swipes: swipes);
+        });
+      }
+    } else if (state == AppLifecycleState.resumed) {
+      _audioPlayer.resume();
     }
   }
 
@@ -512,101 +525,141 @@ class _DiscoverViewState extends State<DiscoverView>
                             ? const Center(child: CircularProgressIndicator())
                             : Column(
                                 children: [
-                              // Carta
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 20, top: 50),
-                                  child: CardSwiper(
-                                    initialIndex: _currentIndex,
-                                    cardsCount: _cards.length,
-                                    onSwipe: _onSwipe,
-                                    controller: _swiperController,
-                                    cardBuilder: (context, index,
-                                        percentThresholdX, percentThresholdY) {
-                                      if (index == _cards.length - 3 &&
-                                          !_isLoading) {
-                                        _loadTracks();
-                                      }
-                                      if (_cards.length < index) {
-                                        return const CircularProgressIndicator();
-                                      } else {
-                                        return _cards[index];
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                              // Botones
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  _userSettings.cardSkipSongs
-                                      ? CircleAvatar(
-                                          radius: 28,
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withValues(alpha: 0.8),
-                                          child: IconButton(
-                                            icon: Icon(Icons.skip_next,
-                                                color: Colors.white),
-                                            onPressed: () {
-                                              _swiperController.swipe(
-                                                  CardSwiperDirection.top);
-                                              _playPreview(
-                                                  _cards[_currentIndex]
-                                                      .track
-                                                      .preview,
-                                                  _cards[_currentIndex]
-                                                      .track
-                                                      .md5Image);
-                                            },
-                                          ),
-                                        )
-                                      : Container(),
-                                  CircleAvatar(
-                                    radius: 28,
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withValues(alpha: 0.8),
-                                    child: IconButton(
-                                      icon: Icon(Icons.close,
-                                          color: Colors.white),
-                                      onPressed: () {
-                                        // Acción para descartar canción
-                                        _dislikeTrack();
-                                        _swiperController.swipe(CardSwiperDirection.left);
-                                      },
+                                  // Carta
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 20, top: 50),
+                                      child: CardSwiper(
+                                        initialIndex: _currentIndex,
+                                        cardsCount: _cards.length,
+                                        onSwipe: _onSwipe,
+                                        controller: _swiperController,
+                                        cardBuilder: (context,
+                                            index,
+                                            percentThresholdX,
+                                            percentThresholdY) {
+                                          if (index == _cards.length - 3 &&
+                                              !_isLoading) {
+                                            _loadTracks();
+                                          }
+                                          if (_cards.length < index) {
+                                            return const CircularProgressIndicator();
+                                          } else {
+                                            return _cards[index];
+                                          }
+                                        },
+                                      ),
                                     ),
                                   ),
-                                  // Play/Pause con progreso
-                                  Stack(
-                                    alignment: Alignment.center,
+                                  // Botones
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      SizedBox(
-                                        height: 56,
-                                        width: 56,
-                                        child: CircularProgressIndicator(
-                                          value:
-                                              _previewDuration.inMilliseconds ==
+                                      _userSettings.cardSkipSongs
+                                          ? CircleAvatar(
+                                              radius: 28,
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                                  .withValues(alpha: 0.8),
+                                              child: IconButton(
+                                                icon: Icon(Icons.skip_next,
+                                                    color: Colors.white),
+                                                onPressed: () {
+                                                  _swiperController.swipe(
+                                                      CardSwiperDirection.top);
+                                                  _playPreview(
+                                                      _cards[_currentIndex]
+                                                          .track
+                                                          .preview,
+                                                      _cards[_currentIndex]
+                                                          .track
+                                                          .md5Image);
+                                                },
+                                              ),
+                                            )
+                                          : Container(),
+                                      CircleAvatar(
+                                        radius: 28,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary
+                                            .withValues(alpha: 0.8),
+                                        child: IconButton(
+                                          icon: Icon(Icons.close,
+                                              color: Colors.white),
+                                          onPressed: () {
+                                            // Acción para descartar canción
+                                            _dislikeTrack();
+                                            _swiperController.swipe(
+                                                CardSwiperDirection.left);
+                                          },
+                                        ),
+                                      ),
+                                      // Play/Pause con progreso
+                                      Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          SizedBox(
+                                            height: 56,
+                                            width: 56,
+                                            child: CircularProgressIndicator(
+                                              value: _previewDuration
+                                                          .inMilliseconds ==
                                                       0
                                                   ? 0
                                                   : _currentPosition
                                                           .inMilliseconds /
                                                       _previewDuration
                                                           .inMilliseconds,
-                                          strokeWidth: 5,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .primary),
-                                          backgroundColor: Colors.white
-                                              .withValues(alpha: 0.2),
-                                        ),
+                                              strokeWidth: 5,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .primary),
+                                              backgroundColor: Colors.white
+                                                  .withValues(alpha: 0.2),
+                                            ),
+                                          ),
+                                          CircleAvatar(
+                                            radius: 28,
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withValues(alpha: 0.8),
+                                            child: IconButton(
+                                              icon: Icon(
+                                                _isPlaying
+                                                    ? Icons.pause
+                                                    : Icons.play_arrow,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: () async {
+                                                if (!autoAudio) {
+                                                  _playPreview(
+                                                      _cards[_currentIndex]
+                                                          .track
+                                                          .preview,
+                                                      _cards[_currentIndex]
+                                                          .track
+                                                          .md5Image);
+                                                } else {
+                                                  if (_isPlaying) {
+                                                    await _audioPlayer.pause();
+                                                  } else {
+                                                    await _audioPlayer.resume();
+                                                  }
+                                                  setState(() {
+                                                    _isPlaying = !_isPlaying;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       CircleAvatar(
                                         radius: 28,
@@ -616,93 +669,58 @@ class _DiscoverViewState extends State<DiscoverView>
                                             .withValues(alpha: 0.8),
                                         child: IconButton(
                                           icon: Icon(
-                                            _isPlaying
-                                                ? Icons.pause
-                                                : Icons.play_arrow,
+                                            Icons.favorite,
                                             color: Colors.white,
                                           ),
-                                          onPressed: () async {
-                                            if (!autoAudio) {
-                                              _playPreview(
-                                                  _cards[_currentIndex]
-                                                      .track
-                                                      .preview,
-                                                  _cards[_currentIndex]
-                                                      .track
-                                                      .md5Image);
-                                            } else {
-                                              if (_isPlaying) {
-                                                await _audioPlayer.pause();
-                                              } else {
-                                                await _audioPlayer.resume();
-                                              }
-                                              setState(() {
-                                                _isPlaying = !_isPlaying;
-                                              });
-                                            }
+                                          onPressed: () {
+                                            // Acción para guardar canción
+                                            _likeTrack();
+                                            _swiperController.swipe(
+                                                CardSwiperDirection.right);
                                           },
                                         ),
                                       ),
+                                      _userSettings.cardSkipSongs
+                                          ? CircleAvatar(
+                                              radius: 28,
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                                  .withValues(alpha: 0.8),
+                                              child: IconButton(
+                                                icon: Icon(
+                                                  Icons.replay,
+                                                  color: _currentIndex == 0
+                                                      ? Colors.white
+                                                          .withOpacity(0.3)
+                                                      : Colors.white,
+                                                ),
+                                                onPressed: _currentIndex == 0
+                                                    ? null
+                                                    : () {
+                                                        setState(() {
+                                                          _currentIndex--;
+                                                        });
+                                                        _swiperController
+                                                            .undo();
+                                                        // _swiperController.swipe(CardSwiperDirection.bottom);
+                                                        _playPreview(
+                                                            _cards[_currentIndex]
+                                                                .track
+                                                                .preview,
+                                                            _cards[_currentIndex]
+                                                                .track
+                                                                .md5Image);
+                                                      },
+                                              ))
+                                          : Container()
                                     ],
                                   ),
-                                  CircleAvatar(
-                                    radius: 28,
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withValues(alpha: 0.8),
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.favorite,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        // Acción para guardar canción
-                                        _likeTrack();
-                                        _swiperController.swipe(CardSwiperDirection.right);
-                                      },
-                                    ),
-                                  ),
-                                  _userSettings.cardSkipSongs
-                                      ? CircleAvatar(
-                                          radius: 28,
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withValues(alpha: 0.8),
-                                          child: IconButton(
-                                            icon: Icon(
-                                              Icons.replay,
-                                              color: _currentIndex == 0
-                                                  ? Colors.white
-                                                      .withOpacity(0.3)
-                                                  : Colors.white,
-                                            ),
-                                            onPressed: _currentIndex == 0
-                                                ? null
-                                                : () {
-                                                    setState(() {
-                                                      _currentIndex--;
-                                                    });
-                                                    _swiperController.undo();
-                                                    // _swiperController.swipe(CardSwiperDirection.bottom);
-                                                    _playPreview(
-                                                        _cards[_currentIndex]
-                                                            .track
-                                                            .preview,
-                                                        _cards[_currentIndex]
-                                                            .track
-                                                            .md5Image);
-                                                  },
-                                          ))
-                                      : Container()
+                                  const SizedBox(
+                                    height: 40,
+                                  )
                                 ],
                               ),
-                              const SizedBox(
-                                height: 40,
-                              )
-                            ],
-                          ),
                   ),
                 ],
               );
@@ -804,7 +822,7 @@ class _DiscoverViewState extends State<DiscoverView>
                     setState(() {
                       _userSettings.showTutorial = false;
                     });
-                    updateUserSettings(_userSettings);
+                    updateUserSettings(uid: _uid, settings: _userSettings);
                   }
                 });
               },

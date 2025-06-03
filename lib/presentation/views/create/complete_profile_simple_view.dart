@@ -170,6 +170,7 @@ class _CompleteProfileSimpleViewState extends State<CompleteProfileSimpleView> {
                         if (username.isNotEmpty) {
                           // Registramos al usuario en la base de datos
                           bool registered = await registerUserInDatabase(
+                              user: user,
                               name: user.displayName!,
                               lastName: ' ',
                               username: username,

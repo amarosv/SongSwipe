@@ -7,11 +7,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/config/export_config.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/export_providers.dart';
 import 'package:songswipe/config/router/app_router.dart';
 import 'package:songswipe/firebase_options.dart';
 import 'package:songswipe/helpers/preferences.dart';
 import 'package:songswipe/models/export_models.dart';
-import 'package:songswipe/presentation/providers/export_providers.dart';
 import 'package:songswipe/services/api/internal_api.dart';
 
 Future<void> main() async {

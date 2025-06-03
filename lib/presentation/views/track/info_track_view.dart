@@ -1,9 +1,11 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marquee/marquee.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/export_providers.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
@@ -14,17 +16,18 @@ import 'package:songswipe/services/api/internal_api.dart';
 /// Vista de información de la canción <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class InfoTrackView extends StatefulWidget {
+class InfoTrackView extends ConsumerStatefulWidget {
   /// ID de la canción a mostrar
   final int idTrack;
 
   const InfoTrackView({super.key, required this.idTrack});
 
   @override
-  State<InfoTrackView> createState() => _InfoTrackViewState();
+  ConsumerState<InfoTrackView> createState() => _InfoTrackViewState();
 }
 
-class _InfoTrackViewState extends State<InfoTrackView> {
+class _InfoTrackViewState extends ConsumerState<InfoTrackView>
+    with WidgetsBindingObserver {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
@@ -82,6 +85,8 @@ class _InfoTrackViewState extends State<InfoTrackView> {
     });
     _loadTrack(widget.idTrack);
     _scrollController.addListener(_updateTextOpacity);
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   // Función que carga los datos de la canción
@@ -155,12 +160,29 @@ class _InfoTrackViewState extends State<InfoTrackView> {
 
   @override
   void dispose() {
-    _audioPlayer.stop(); // Asegura detener el audio
-    _audioPlayer.dispose(); // Libera los recursos del reproductor
-
+    _disposeAudioPlayer();
     _scrollController.removeListener(_updateTextOpacity);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  // Esta función detiene el player y libera sus recursos
+  void _disposeAudioPlayer() {
+    _audioPlayer.stop();
+    _audioPlayer.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if ((state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached ||
+        state == AppLifecycleState.hidden)) {
+      _audioPlayer.stop();
+      setState(() {
+        _isPlaying = false;
+      });
+    }
   }
 
   @override
@@ -200,6 +222,8 @@ class _InfoTrackViewState extends State<InfoTrackView> {
                                   style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       overflow: TextOverflow.ellipsis),
                                 ),
                                 maxLines: 1,
@@ -216,6 +240,8 @@ class _InfoTrackViewState extends State<InfoTrackView> {
                                   style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       overflow: TextOverflow.ellipsis),
                                   scrollAxis: Axis.horizontal,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,6 +262,8 @@ class _InfoTrackViewState extends State<InfoTrackView> {
                                 style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                     overflow: TextOverflow.ellipsis),
                               );
                             }
@@ -245,8 +273,7 @@ class _InfoTrackViewState extends State<InfoTrackView> {
                       centerTitle: true,
                       flexibleSpace: FlexibleSpaceBar(
                         centerTitle: true,
-                        background:
-                            Image.network(_track.md5Image, fit: BoxFit.cover),
+                        background: Image.network(_track.md5Image),
                       ),
                       actions: [actionWidget()],
                     ),
@@ -330,8 +357,13 @@ class _InfoTrackViewState extends State<InfoTrackView> {
                                 child: Row(
                                   children: _artists.map((artist) {
                                     return GestureDetector(
-                                      onTap: () => context
-                                          .push('/artist?id=${artist.id}'),
+                                      onTap: () {
+                                        setState(() {
+                                          _isPlaying = false;
+                                        });
+                                        _audioPlayer.pause();
+                                        context.push('/artist?id=${artist.id}');
+                                      },
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 12.0),
@@ -339,10 +371,20 @@ class _InfoTrackViewState extends State<InfoTrackView> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             // Imagen del artista
-                                            CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  artist.pictureBig),
-                                              radius: 40,
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                    width: 2),
+                                              ),
+                                              child: CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    artist.pictureBig),
+                                                radius: 40,
+                                              ),
                                             ),
                                             SizedBox(height: 4),
                                             // Nombre del artista
@@ -416,7 +458,8 @@ class _InfoTrackViewState extends State<InfoTrackView> {
                                       CustomRow(
                                         title: capitalizeFirstLetter(
                                             text: localization.ranking),
-                                        value: _track.rank.toString(),
+                                        value: formatWithThousandsSeparator(
+                                            _track.rank),
                                       ),
                                       const SizedBox(height: 20),
                                       CustomRow(
@@ -531,7 +574,10 @@ class _InfoTrackViewState extends State<InfoTrackView> {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
-                              child: CustomAlbumWidget(album: _album),
+                              child: GestureDetector(
+                                  onTap: () =>
+                                      context.push('/album?id=${_album.id}'),
+                                  child: CustomAlbumWidget(album: _album)),
                             ),
 
                             const SizedBox(height: 20),
@@ -632,8 +678,14 @@ class _InfoTrackViewState extends State<InfoTrackView> {
                                     child: Row(
                                       children: _relatedTracks.map((track) {
                                         return InkWell(
-                                          onTap: () => context
-                                              .push('/track?id=${track.id}'),
+                                          onTap: () {
+                                            setState(() {
+                                              _isPlaying = false;
+                                            });
+                                            _audioPlayer.pause();
+                                            context
+                                                .push('/track?id=${track.id}');
+                                          },
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 20, vertical: 20),
@@ -719,7 +771,9 @@ class _InfoTrackViewState extends State<InfoTrackView> {
               child: Icon(
                 Icons.arrow_back_ios_new_outlined,
                 key: ValueKey<bool>(_textOpacity > 0),
-                color: _textOpacity <= 0 ? Colors.white : Colors.black,
+                color: _textOpacity <= 0
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
@@ -729,44 +783,105 @@ class _InfoTrackViewState extends State<InfoTrackView> {
   }
 
   Widget actionWidget() {
-    return GestureDetector(
-      onTap: () {
-        // Actualizamos el Swipe para cambiar la canción de me gusta a no me gusta y viceversa
-        updateSwipe(
-            uid: _uid, idTrack: _track.id, newLike: _isFavorite ? 0 : 1);
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () async {
+            // Actualizamos el Swipe para cambiar la canción de me gusta a no me gusta y viceversa.
+            // Primero comprobamos si existe en la libreria del usuario
+            List<dynamic> tracks =
+                await areTrackInDatabase(uid: _uid, tracksIds: [_track.id]);
+            if (!tracks.contains(_track.id)) {
+              // La canción esta en la biblioteca
+              await updateSwipe(
+                  uid: _uid, idTrack: _track.id, newLike: _isFavorite ? 0 : 1);
+            } else {
+              // Creamos el Swipe
+              Swipe swipe = Swipe(
+                  id: _track.id,
+                  idAlbum: _track.album.id,
+                  idArtist: _track.artist.id,
+                  like: _isFavorite ? 0 : 1);
 
-        setState(() {
-          _isFavorite = !_isFavorite;
-          _hasChange = true;
-        });
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: AnimatedOpacity(
-          opacity: 1.0,
-          duration: Duration(milliseconds: 300),
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+              // Guardamos el Swipe
+              await saveSwipes(uid: _uid, swipes: [swipe]);
+            }
+
+            // Guardamos el cambio en el provider
+            ref.read(swipeChangedProvider.notifier).state = true;
+
+            setState(() {
+              _isFavorite = !_isFavorite;
+              _hasChange = true;
+            });
+          },
+          child: Padding(
             padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: _textOpacity <= 0
-                  ? Colors.black.withValues(alpha: 0.5)
-                  : Colors.transparent,
-            ),
-            child: AnimatedSwitcher(
-              duration: Duration(milliseconds: 200),
-              transitionBuilder: (child, animation) => ScaleTransition(
-                scale: animation,
-                child: child,
+            child: AnimatedOpacity(
+              opacity: 1.0,
+              duration: Duration(milliseconds: 300),
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _textOpacity <= 0
+                      ? Colors.black.withValues(alpha: 0.5)
+                      : Colors.transparent,
+                ),
+                child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 200),
+                  transitionBuilder: (child, animation) => ScaleTransition(
+                    scale: animation,
+                    child: child,
+                  ),
+                  child: Icon(
+                    _isFavorite ? Icons.favorite : Icons.favorite_border,
+                    key: ValueKey<bool>(_textOpacity > 0),
+                    color: _textOpacity <= 0
+                        ? Colors.white
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
               ),
-              child: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: Theme.of(context).colorScheme.primary,
-                  key: ValueKey<bool>(_textOpacity > 0)),
             ),
           ),
         ),
-      ),
+        GestureDetector(
+          onTap: () => _playPreview(),
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: AnimatedOpacity(
+              opacity: 1.0,
+              duration: Duration(milliseconds: 300),
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _textOpacity <= 0
+                      ? Colors.black.withValues(alpha: 0.5)
+                      : Colors.transparent,
+                ),
+                child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 200),
+                  transitionBuilder: (child, animation) => ScaleTransition(
+                    scale: animation,
+                    child: child,
+                  ),
+                  child: Icon(
+                    _isPlaying ? Icons.pause : Icons.play_arrow,
+                    key: ValueKey<bool>(_textOpacity > 0),
+                    color: _textOpacity <= 0
+                        ? Colors.white
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
