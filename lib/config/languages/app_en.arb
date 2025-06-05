@@ -171,5 +171,8 @@
     "last_swipes": "last 5 swipes",
     "number_songs": "number of songs",
     "type": "type",
-    "offered_by": "data offered by"
+    "offered_by": "data offered by",
+    "edit_profile": "edit profile",
+    "reset_picture": "reset picture",
+    "update": "update"
 }

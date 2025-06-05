@@ -4,22 +4,31 @@
 class UserApp {
   /// UID del usuario
   final String uid;
+
   /// Nombre del usuario
-  final String name;
+  String name;
+
   /// Apellidos del usuario
-  final String lastName;
+  String lastName;
+
   /// Email del usuario
   final String email;
+
   /// Url de la imagen del usuario
-  final String photoUrl;
+  String photoUrl;
+
   /// Fecha de unión del usuario
   final String dateJoining;
+
   /// Nombre de usuario
-  final String username;
+  String username;
+
   /// Proovedor del usuario
   final String supplier;
+
   /// Boolean que indica si el usuario está eliminado
   final bool userDeleted;
+
   /// Boolean que indica si el usuario tiene la cuenta bloqueada
   final bool userBlocked;
 
@@ -36,21 +45,20 @@ class UserApp {
     required this.userDeleted,
     required this.userBlocked,
   });
-  
+
   /// Método que crea un UserApp vacío
   factory UserApp.empty() {
     return UserApp(
-      uid: '',
-      name: '',
-      lastName: '',
-      email: '',
-      photoUrl: '',
-      dateJoining: '',
-      username: '',
-      supplier: '',
-      userDeleted: false,
-      userBlocked: false
-    );
+        uid: '',
+        name: '',
+        lastName: '',
+        email: '',
+        photoUrl: '',
+        dateJoining: '',
+        username: '',
+        supplier: '',
+        userDeleted: false,
+        userBlocked: false);
   }
 
   /// Método que parsea un JSON en UserApp
@@ -66,7 +74,7 @@ class UserApp {
         userDeleted: json["userDeleted"] ?? false,
         userBlocked: json["userBlocked"] ?? false,
       );
-  
+
   /// Método que convierte un UserApp en JSON
   Map<String, dynamic> toJson() => {
         "uid": uid,

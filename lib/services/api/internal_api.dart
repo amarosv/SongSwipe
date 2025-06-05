@@ -813,7 +813,7 @@ Future<Map<int, Stats>> getTracksStats({required List<int> idTracks}) async {
 
   Uri url = Uri.parse('$apiTrack/stats');
 
-  // Llamada a la API para obtener si la canción está guardada
+  // Llamada a la API para obtener las stats
   final response = await http.post(url,
       headers: {
         'Content-Type': 'application/json',
@@ -829,4 +829,55 @@ Future<Map<int, Stats>> getTracksStats({required List<int> idTracks}) async {
   }
 
   return stats;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve sus datos <br>
+/// @param uid UID del usuario <br>
+/// @returns Usuario
+Future<UserApp> getUserByUID({required String uid}) async {
+  // Variable que almacena los datos del usuario
+  UserApp userApp = UserApp.empty();
+
+  Uri url = Uri.parse('$apiUser/$uid');
+
+  // Llamada a la API para obtener los datos del usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    userApp = UserApp.fromJson(jsonDecode(response.body));
+  }
+
+  return userApp;
+}
+
+/// Esta función recibe un usuario actualizado y lo actualiza en la base de datos <br>
+/// @param user UserApp <br>
+/// @returns Bool que indica si se ha actualizado o no el usuario
+Future<bool> updateUser({required UserApp user}) async {
+  bool updated = false;
+
+  Uri url = Uri.parse('$apiUser/${user.uid}');
+
+  // Llamada a la API para obtener las stats
+  final response = await http.put(url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(user));
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    UserApp userApp = UserApp.fromJson(jsonDecode(response.body));
+
+    updated = user.photoUrl == userApp.photoUrl &&
+        user.name == userApp.name &&
+        user.lastName == userApp.lastName &&
+        user.username == userApp.username;
+  }
+
+  return updated;
 }

@@ -6,6 +6,7 @@ export 'create/select_artists_screen.dart';
 export 'create/select_genres_screen.dart';
 export 'create/signup_screen.dart';
 export 'create/verify_email_screen.dart';
+export 'edit_profile_screen.dart';
 export 'home/home_screen.dart';
 export 'info_album_screen.dart';
 export 'settings/about_screen.dart';

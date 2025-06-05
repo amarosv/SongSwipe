@@ -323,67 +323,67 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
             CustomButton(
                 backgroundColor:
                     _activatedButton ? Color(0xFFFF9E16) : Colors.grey,
-                onPressed: _activatedButton
-                    ? () async {
-                        String name = _nameController.text;
-                        String lastName = _lastNameController.text;
-                        String username = _usernameController.text;
+                onPressed: () async {
+                  if (_activatedButton) {
+                    String name = _nameController.text;
+                    String lastName = _lastNameController.text;
+                    String username = _usernameController.text;
 
-                        // Primero comprueba que estén los campos rellenos
-                        if (username.isNotEmpty &&
-                            name.isNotEmpty &&
-                            lastName.isNotEmpty) {
-                          String? base64Image;
+                    // Primero comprueba que estén los campos rellenos
+                    if (username.isNotEmpty &&
+                        name.isNotEmpty &&
+                        lastName.isNotEmpty) {
+                      String? base64Image;
 
-                          // Si hay imagen, la convertimos a base 64
-                          if (_image != null) {
-                            base64Image = await convertFileToBase64(_image!);
-                          }
-
-                          // Registramos al usuario en la base de datos
-                          bool registered = await registerUserInDatabase(
-                              user: FirebaseAuth.instance.currentUser!,
-                              name: name,
-                              lastName: lastName,
-                              username: username,
-                              image: _image);
-
-                          // Si se ha registrado correctamente, vamos a la siguiente pantalla
-                          if (registered) {
-                            context.go('/select-artists');
-                          }
-                        } else {
-                          // Mostramos la notificación
-                          toastification.show(
-                            type: ToastificationType.error,
-                            context: context,
-                            style: ToastificationStyle.flatColored,
-                            title: Text(capitalizeFirstLetter(
-                                text: localization.attention)),
-                            description: RichText(
-                                text: TextSpan(
-                                    text: capitalizeFirstLetter(
-                                        text: localization.fill_fields),
-                                    style: TextStyle(color: Colors.black))),
-                            autoCloseDuration: const Duration(seconds: 3),
-                          );
-
-                          setState(() {
-                            if (username.isEmpty) {
-                              _usernameRequired = true;
-                            }
-
-                            if (name.isEmpty) {
-                              _nameRequired = true;
-                            }
-
-                            if (lastName.isEmpty) {
-                              _lastNameRequired = true;
-                            }
-                          });
-                        }
+                      // Si hay imagen, la convertimos a base 64
+                      if (_image != null) {
+                        base64Image = await convertFileToBase64(_image!);
                       }
-                    : () {},
+
+                      // Registramos al usuario en la base de datos
+                      bool registered = await registerUserInDatabase(
+                          user: FirebaseAuth.instance.currentUser!,
+                          name: name,
+                          lastName: lastName,
+                          username: username,
+                          image: _image);
+
+                      // Si se ha registrado correctamente, vamos a la siguiente pantalla
+                      if (registered) {
+                        context.go('/select-artists');
+                      }
+                    } else {
+                      // Mostramos la notificación
+                      toastification.show(
+                        type: ToastificationType.error,
+                        context: context,
+                        style: ToastificationStyle.flatColored,
+                        title: Text(capitalizeFirstLetter(
+                            text: localization.attention)),
+                        description: RichText(
+                            text: TextSpan(
+                                text: capitalizeFirstLetter(
+                                    text: localization.fill_fields),
+                                style: TextStyle(color: Colors.black))),
+                        autoCloseDuration: const Duration(seconds: 3),
+                      );
+
+                      setState(() {
+                        if (username.isEmpty) {
+                          _usernameRequired = true;
+                        }
+
+                        if (name.isEmpty) {
+                          _nameRequired = true;
+                        }
+
+                        if (lastName.isEmpty) {
+                          _lastNameRequired = true;
+                        }
+                      });
+                    }
+                  }
+                },
                 text: capitalizeFirstLetter(text: localization.continue_s))
           ],
         ),

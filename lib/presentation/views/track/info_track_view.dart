@@ -207,555 +207,531 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
               child: CircularProgressIndicator(),
             )
           : CustomScrollView(
-            controller: _scrollController,
-            slivers: <Widget>[
-              SliverAppBar(
-                expandedHeight: height * 0.4,
-                floating: false,
-                pinned: true,
-                snap: false,
-                elevation: 4.0,
-                leading: CustomLeadingWidget(hasChange: _hasChange, textOpacity: _textOpacity),
-                title: Opacity(
-                    opacity: _textOpacity,
-                    child: LayoutBuilder(builder: (context, constraints) {
-                      Widget resultText;
-          
-                      final text = _track.title;
-                      final textPainter = TextPainter(
-                          text: TextSpan(
-                            text: text.toUpperCase(),
+              controller: _scrollController,
+              slivers: <Widget>[
+                SliverAppBar(
+                  expandedHeight: height * 0.4,
+                  floating: false,
+                  pinned: true,
+                  snap: false,
+                  elevation: 4.0,
+                  leading: CustomLeadingWidget(
+                      hasChange: _hasChange, textOpacity: _textOpacity),
+                  title: Opacity(
+                      opacity: _textOpacity,
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        Widget resultText;
+
+                        final text = _track.title;
+                        final textPainter = TextPainter(
+                            text: TextSpan(
+                              text: text.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                            maxLines: 1,
+                            textDirection: TextDirection.ltr)
+                          ..layout(maxWidth: double.infinity);
+
+                        final textWidth = textPainter.size.width;
+
+                        if (textWidth > constraints.maxWidth) {
+                          resultText = SizedBox(
+                            height: 30,
+                            child: Marquee(
+                              text: text.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  overflow: TextOverflow.ellipsis),
+                              scrollAxis: Axis.horizontal,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              blankSpace: 20.0,
+                              velocity: 40.0,
+                              pauseAfterRound: Duration(seconds: 4),
+                              startPadding: 0.0,
+                              accelerationDuration: Duration(seconds: 2),
+                              accelerationCurve: Curves.linear,
+                              decelerationDuration: Duration(milliseconds: 500),
+                              decelerationCurve: Curves.easeOut,
+                            ),
+                          );
+                        } else {
+                          resultText = Text(
+                            text.toUpperCase(),
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color:
-                                    Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context).colorScheme.primary,
                                 overflow: TextOverflow.ellipsis),
-                          ),
-                          maxLines: 1,
-                          textDirection: TextDirection.ltr)
-                        ..layout(maxWidth: double.infinity);
-          
-                      final textWidth = textPainter.size.width;
-          
-                      if (textWidth > constraints.maxWidth) {
-                        resultText = SizedBox(
-                          height: 30,
-                          child: Marquee(
-                            text: text.toUpperCase(),
-                            style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color:
-                                    Theme.of(context).colorScheme.primary,
-                                overflow: TextOverflow.ellipsis),
-                            scrollAxis: Axis.horizontal,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            blankSpace: 20.0,
-                            velocity: 40.0,
-                            pauseAfterRound: Duration(seconds: 4),
-                            startPadding: 0.0,
-                            accelerationDuration: Duration(seconds: 2),
-                            accelerationCurve: Curves.linear,
-                            decelerationDuration:
-                                Duration(milliseconds: 500),
-                            decelerationCurve: Curves.easeOut,
-                          ),
-                        );
-                      } else {
-                        resultText = Text(
-                          text.toUpperCase(),
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color:
-                                  Theme.of(context).colorScheme.primary,
-                              overflow: TextOverflow.ellipsis),
-                        );
-                      }
-          
-                      return resultText;
-                    })),
-                centerTitle: true,
-                flexibleSpace: FlexibleSpaceBar(
+                          );
+                        }
+
+                        return resultText;
+                      })),
                   centerTitle: true,
-                  background: Image.network(
-                    _track.md5Image,
-                    fit: BoxFit.cover,
+                  flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: true,
+                    background: Image.network(
+                      _track.md5Image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                  actions: [actionWidget()],
                 ),
-                actions: [actionWidget()],
-              ),
-              SliverToBoxAdapter(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // Título de la canción
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        child: LayoutBuilder(
-                            builder: (context, constraints) {
-                          Widget resultText;
-          
-                          final text = _track.title;
-                          final textPainter = TextPainter(
-                              text: TextSpan(
-                                text: text.toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis),
-                              ),
-                              maxLines: 1,
-                              textDirection: TextDirection.ltr)
-                            ..layout(maxWidth: double.infinity);
-          
-                          final textWidth = textPainter.size.width;
-          
-                          if (textWidth > constraints.maxWidth) {
-                            resultText = SizedBox(
-                              height: 30,
-                              child: Marquee(
-                                text: text.toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis),
-                                scrollAxis: Axis.horizontal,
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                blankSpace: 20.0,
-                                velocity: 40.0,
-                                pauseAfterRound: Duration(seconds: 4),
-                                startPadding: 0.0,
-                                accelerationDuration:
-                                    Duration(seconds: 2),
-                                accelerationCurve: Curves.linear,
-                                decelerationDuration:
-                                    Duration(milliseconds: 500),
-                                decelerationCurve: Curves.easeOut,
-                              ),
-                            );
-                          } else {
-                            resultText = Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                text.toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis),
-                              ),
-                            );
-                          }
-          
-                          return resultText;
-                        }),
-                      ),
-          
-                      const SizedBox(height: 20),
-          
-                      // Artistas
-                      SizedBox(
-                        height: 120,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            children: _artists.map((artist) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _isPlaying = false;
-                                  });
-                                  _audioPlayer.pause();
-                                  context.push('/artist?id=${artist.id}');
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      // Imagen del artista
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                              width: 2),
-                                        ),
-                                        child: CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              artist.pictureBig),
-                                          radius: 40,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      // Nombre del artista
-                                      Text(
-                                        artist.name,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
+                SliverToBoxAdapter(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Título de la canción
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          child: LayoutBuilder(builder: (context, constraints) {
+                            Widget resultText;
+
+                            final text = _track.title;
+                            final textPainter = TextPainter(
+                                text: TextSpan(
+                                  text: text.toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                                maxLines: 1,
+                                textDirection: TextDirection.ltr)
+                              ..layout(maxWidth: double.infinity);
+
+                            final textWidth = textPainter.size.width;
+
+                            if (textWidth > constraints.maxWidth) {
+                              resultText = SizedBox(
+                                height: 30,
+                                child: Marquee(
+                                  text: text.toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis),
+                                  scrollAxis: Axis.horizontal,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  blankSpace: 20.0,
+                                  velocity: 40.0,
+                                  pauseAfterRound: Duration(seconds: 4),
+                                  startPadding: 0.0,
+                                  accelerationDuration: Duration(seconds: 2),
+                                  accelerationCurve: Curves.linear,
+                                  decelerationDuration:
+                                      Duration(milliseconds: 500),
+                                  decelerationCurve: Curves.easeOut,
                                 ),
                               );
-                            }).toList(),
-                          ),
+                            } else {
+                              resultText = Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  text.toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                              );
+                            }
+
+                            return resultText;
+                          }),
                         ),
-                      ),
-          
-                      const SizedBox(
-                        height: 20,
-                      ),
-          
-                      // Información
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            capitalizeFirstLetter(
-                                text: localization.info),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                      ),
-          
-                      // Container con la información
-                      Padding(
-                        padding:
-                            EdgeInsetsGeometry.symmetric(horizontal: 20),
-                        child: CustomContainer(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 20),
-                                CustomRow(
-                                  title: capitalizeFirstLetter(
-                                      text: localization.release_date),
-                                  value: _track.releaseDate,
-                                ),
-                                const SizedBox(height: 20),
-                                CustomRow(
-                                  title: capitalizeFirstLetter(
-                                      text: localization.duration),
-                                  value: formatDuration(_track.duration),
-                                ),
-                                const SizedBox(height: 20),
-                                CustomRow(
-                                  title: capitalizeFirstLetter(
-                                      text: _album.recordType),
-                                  value: _track.album.title,
-                                ),
-                                const SizedBox(height: 20),
-                                CustomRow(
-                                  title:
-                                      '${capitalizeFirstLetter(text: localization.position_album)} ${_album.recordType}',
-                                  value: _track.trackPosition.toString(),
-                                ),
-                                const SizedBox(height: 20),
-                                CustomRow(
-                                  title: capitalizeFirstLetter(
-                                      text: localization.ranking),
-                                  value: formatWithThousandsSeparator(
-                                      _track.rank),
-                                ),
-                                const SizedBox(height: 20),
-                                CustomRow(
-                                  title: capitalizeFirstLetter(
-                                      text:
-                                          localization.explicit_content),
-                                  value: capitalizeFirstLetter(
-                                      text: _track.explicitLyrics ||
-                                              _track.explicitContentCover ==
-                                                  1 ||
-                                              _track.explicitContentLyrics ==
-                                                  1
-                                          ? localization.yes
-                                          : localization.no),
-                                ),
-                                const SizedBox(height: 5),
-                              ],
+
+                        const SizedBox(height: 20),
+
+                        // Artistas
+                        SizedBox(
+                          height: 120,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              children: _artists.map((artist) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _isPlaying = false;
+                                    });
+                                    _audioPlayer.pause();
+                                    context.push('/artist?id=${artist.id}');
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        // Imagen del artista
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                                width: 2),
+                                          ),
+                                          child: CircleAvatar(
+                                            backgroundImage:
+                                                NetworkImage(artist.pictureBig),
+                                            radius: 40,
+                                          ),
+                                        ),
+                                        SizedBox(height: 4),
+                                        // Nombre del artista
+                                        Text(
+                                          artist.name,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
                             ),
                           ),
                         ),
-                      ),
-          
-                      const SizedBox(height: 20),
-          
-                      // Letras
-                      _track.lyrics.isNotEmpty
-                          ? Column(
-                              children: [
-                                // Letras
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      capitalizeFirstLetter(
-                                          text: localization.lyrics),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
+
+                        const SizedBox(
+                          height: 20,
+                        ),
+
+                        // Información
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              capitalizeFirstLetter(text: localization.info),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                          ),
+                        ),
+
+                        // Container con la información
+                        Padding(
+                          padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+                          child: CustomContainer(
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 20),
+                                  CustomRow(
+                                    title: capitalizeFirstLetter(
+                                        text: localization.release_date),
+                                    value: _track.releaseDate,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomRow(
+                                    title: capitalizeFirstLetter(
+                                        text: localization.duration),
+                                    value: formatDuration(_track.duration),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomRow(
+                                    title: capitalizeFirstLetter(
+                                        text: _album.recordType),
+                                    value: _track.album.title,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomRow(
+                                    title:
+                                        '${capitalizeFirstLetter(text: localization.position_album)} ${_album.recordType}',
+                                    value: _track.trackPosition.toString(),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomRow(
+                                    title: capitalizeFirstLetter(
+                                        text: localization.ranking),
+                                    value: formatWithThousandsSeparator(
+                                        _track.rank),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomRow(
+                                    title: capitalizeFirstLetter(
+                                        text: localization.explicit_content),
+                                    value: capitalizeFirstLetter(
+                                        text: _track.explicitLyrics ||
+                                                _track.explicitContentCover ==
+                                                    1 ||
+                                                _track.explicitContentLyrics ==
+                                                    1
+                                            ? localization.yes
+                                            : localization.no),
+                                  ),
+                                  const SizedBox(height: 5),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Letras
+                        _track.lyrics.isNotEmpty
+                            ? Column(
+                                children: [
+                                  // Letras
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        capitalizeFirstLetter(
+                                            text: localization.lyrics),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
                                     ),
                                   ),
+
+                                  // Container con las letras
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: GestureDetector(
+                                      onTap: () => context.push(
+                                          '/lyrics?lyrics=${_track.lyrics}&title=${_track.title}&artists=${_track.buildArtistsText()}&cover=${_track.md5Image}'),
+                                      child: CustomContainer(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Column(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  _track
+                                                      .getFirstFourLyricsLines(),
+                                                  style: TextStyle(
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                      wordSpacing: 2,
+                                                      height: 1.8),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Text(
+                                                  capitalizeFirstLetter(
+                                                      text: localization
+                                                          .see_more),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              )
+                            : Container(),
+
+                        // Album
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              capitalizeFirstLetter(text: _album.recordType),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                          ),
+                        ),
+
+                        // Container con los datos del album
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _isPlaying = false;
+                                });
+                                _audioPlayer.pause();
+                                context.push('/album?id=${_album.id}');
+                              },
+                              child: CustomAlbumWidget(
+                                album: _album,
+                                stats: _albumStats,
+                              )),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Stats
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              capitalizeFirstLetter(text: localization.stats),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                          ),
+                        ),
+
+                        // Container con las stats
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: CustomContainer(
+                              child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Likes
+                                Column(
+                                  children: [
+                                    Icon(
+                                      Icons.thumb_up,
+                                      size: 32,
+                                    ),
+                                    Text(
+                                        '${humanReadbleNumber(_stats.likes)} likes')
+                                  ],
                                 ),
-          
-                                // Container con las letras
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: GestureDetector(
-                                    onTap: () => context.push(
-                                        '/lyrics?lyrics=${_track.lyrics}&title=${_track.title}&artists=${_track.buildArtistsText()}&cover=${_track.md5Image}'),
-                                    child: CustomContainer(
+                                // Dislikes
+                                Column(
+                                  children: [
+                                    Icon(
+                                      Icons.thumb_down,
+                                      size: 32,
+                                    ),
+                                    Text(
+                                        '${humanReadbleNumber(_stats.dislikes)} dislikes')
+                                  ],
+                                ),
+                                // Swipes
+                                Column(
+                                  children: [
+                                    Icon(
+                                      Icons.swipe_outlined,
+                                      size: 32,
+                                    ),
+                                    Text(
+                                        '${humanReadbleNumber(_stats.swipes)} swipes')
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Canciones relacionadas
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              capitalizeFirstLetter(
+                                  text: localization.related_tracks),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                          ),
+                        ),
+
+                        // Container con las canciones relacionadas
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: CustomContainer(
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: _relatedTracks.map((track) {
+                                    return InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _isPlaying = false;
+                                        });
+                                        _audioPlayer.pause();
+                                        context.push('/track?id=${track.id}');
+                                      },
                                       child: Padding(
-                                        padding: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 20),
                                         child: Column(
                                           children: [
-                                            Align(
-                                              alignment:
-                                                  Alignment.centerLeft,
-                                              child: Text(
-                                                _track
-                                                    .getFirstFourLyricsLines(),
-                                                style: TextStyle(
-                                                    fontStyle:
-                                                        FontStyle.italic,
-                                                    wordSpacing: 2,
-                                                    height: 1.8),
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: Image.network(
+                                                track.md5Image,
+                                                width: 80,
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
-                                            Align(
-                                              alignment:
-                                                  Alignment.topLeft,
-                                              child: Text(
-                                                capitalizeFirstLetter(
-                                                    text: localization
-                                                        .see_more),
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                textAlign:
-                                                    TextAlign.start,
-                                              ),
-                                            )
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              track.title,
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold),
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              track.buildArtistsText(),
+                                              style:
+                                                  const TextStyle(fontSize: 10),
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  }).toList(),
                                 ),
-                                const SizedBox(height: 20),
-                              ],
-                            )
-                          : Container(),
-          
-                      // Album
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            capitalizeFirstLetter(
-                                text: _album.recordType),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                      ),
-          
-                      // Container con los datos del album
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20),
-                        child: GestureDetector(
-                            onTap: () =>
-                                context.push('/album?id=${_album.id}'),
-                            child: CustomAlbumWidget(album: _album,
-                            stats: _albumStats,)),
-                      ),
-          
-                      const SizedBox(height: 20),
-          
-                      // Stats
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            capitalizeFirstLetter(
-                                text: localization.stats),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                      ),
-          
-                      // Container con las stats
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20),
-                        child: CustomContainer(
-                            child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Likes
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.thumb_up,
-                                    size: 32,
-                                  ),
-                                  Text(
-                                      '${humanReadbleNumber(_stats.likes)} likes')
-                                ],
-                              ),
-                              // Dislikes
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.thumb_down,
-                                    size: 32,
-                                  ),
-                                  Text(
-                                      '${humanReadbleNumber(_stats.dislikes)} dislikes')
-                                ],
-                              ),
-                              // Swipes
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.swipe_outlined,
-                                    size: 32,
-                                  ),
-                                  Text(
-                                      '${humanReadbleNumber(_stats.swipes)} swipes')
-                                ],
-                              ),
-                            ],
-                          ),
-                        )),
-                      ),
-          
-                      const SizedBox(height: 20),
-          
-                      // Canciones relacionadas
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            capitalizeFirstLetter(
-                                text: localization.related_tracks),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                      ),
-          
-                      // Container con las canciones relacionadas
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: CustomContainer(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: _relatedTracks.map((track) {
-                                  return InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _isPlaying = false;
-                                      });
-                                      _audioPlayer.pause();
-                                      context
-                                          .push('/track?id=${track.id}');
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 20),
-                                      child: Column(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Image.network(
-                                              track.md5Image,
-                                              width: 80,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            track.title,
-                                            style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight:
-                                                    FontWeight.bold),
-                                            overflow:
-                                                TextOverflow.ellipsis,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            track.buildArtistsText(),
-                                            style: const TextStyle(
-                                                fontSize: 10),
-                                            overflow:
-                                                TextOverflow.ellipsis,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
                               ),
                             ),
                           ),
                         ),
-                      ),
-          
-                      const SizedBox(
-                        height: 20,
-                      ),
 
-                      CustomAdvertisimentWidget(),
+                        const SizedBox(
+                          height: 20,
+                        ),
 
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
+                        CustomAdvertisimentWidget(),
+
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
+                )
+              ],
+            ),
     );
   }
 

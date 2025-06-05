@@ -59,6 +59,41 @@ Future<String> saveImageInImagekit(String uid, File image) async {
   return urlImage;
 }
 
+/// Elimina todas las imágenes del usuario desde su carpeta en ImageKit
+Future<void> deleteAllUserImagesFromImagekit(String uid) async {
+  final listUrl = Uri.parse('https://api.imagekit.io/v1/files?path=/users/$uid/&limit=1000');
+  final deleteUrl = Uri.parse('https://api.imagekit.io/v1/files/');
+
+  final authHeader = 'Basic ${base64Encode(utf8.encode('${Environment.apiKeyPrivateImageKit}:'))}';
+
+  // Obtener lista de imágenes
+  final listResponse = await http.get(
+    listUrl,
+    headers: {
+      'Authorization': authHeader,
+      'Accept': 'application/json',
+    },
+  );
+
+  if (listResponse.statusCode == 200) {
+    final List<dynamic> files = jsonDecode(listResponse.body);
+
+    for (final file in files) {
+      final String fileId = file['fileId'];
+
+      await http.delete(
+        Uri.parse('$deleteUrl$fileId'),
+        headers: {
+          'Authorization': authHeader,
+          'Accept': 'application/json',
+        },
+      );
+    }
+  } else {
+    print('Error al listar archivos de ImageKit: ${listResponse.body}');
+  }
+}
+
 /// Esta función recibe el nombre del artista y el título de la canción y devuelve sus letras <br>
 /// @param artistName Nombre del artistas <br>
 /// @param trackTitle Título de la canción <br>

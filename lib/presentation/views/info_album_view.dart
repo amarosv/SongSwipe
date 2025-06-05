@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marquee/marquee.dart';
@@ -23,14 +22,8 @@ class InfoAlbumView extends StatefulWidget {
 }
 
 class _InfoAlbumViewState extends State<InfoAlbumView> {
-  // Obtenemos el usuario actual
-  final User _user = FirebaseAuth.instance.currentUser!;
-
   // ScrollController
   final ScrollController _scrollController = ScrollController();
-
-  // Variable que almacena el uid del usuario actual
-  late String _uid;
 
   // Variable que almacena los datos del album
   late Album _album;
@@ -56,8 +49,6 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
   @override
   void initState() {
     super.initState();
-    print(widget.idAlbum);
-    _uid = _user.uid;
     _loadData();
     _scrollController.addListener(_updateTextOpacity);
   }

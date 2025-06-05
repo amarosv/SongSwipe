@@ -534,4 +534,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get offered_by => 'data offered by';
+
+  @override
+  String get reset_picture => 'reset picture';
+
+  @override
+  String get update => 'update';
 }

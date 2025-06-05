@@ -258,6 +258,12 @@ class _ProfileViewState extends State<ProfileView> {
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 foregroundColor: Colors.white,
+                function: () async {
+                  final result = await context.push('/edit-profile');
+                  if (result == true) {
+                    _getUserProfile();
+                  }
+                },
               ),
 
               const SizedBox(height: 20)

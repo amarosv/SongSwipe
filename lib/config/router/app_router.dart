@@ -117,6 +117,11 @@ class AppRouter {
         builder: (context, state) => AboutScreen(),
       ),
       GoRoute(
+        path: '/edit-profile',
+        name: EditProfileScreen.name,
+        builder: (context, state) => EditProfileScreen(),
+      ),
+      GoRoute(
         path: '/user',
         name: UserScreen.name,
         builder: (context, state) {

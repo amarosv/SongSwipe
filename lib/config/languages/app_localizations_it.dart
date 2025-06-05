@@ -539,4 +539,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get offered_by => 'dati offerti da';
+
+  @override
+  String get reset_picture => 'reimpostare la foto';
+
+  @override
+  String get update => 'aggiorna';
 }

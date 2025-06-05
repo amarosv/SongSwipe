@@ -87,6 +87,10 @@ class _LikedViewState extends ConsumerState<LikedView>
           limit: limit,
         );
 
+        if (!mounted) {
+          return;
+        }
+
         setState(() {
           allTracks.addAll(data.tracks);
           nextUrl = data.linkNextPage;

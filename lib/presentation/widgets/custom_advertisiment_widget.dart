@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// Widget que muestra de donde se obtienen los datos <br>
 /// @author Amaro Suárez <br>
-/// @version 1.0
+/// @version 2.0
 class CustomAdvertisimentWidget extends StatelessWidget {
   const CustomAdvertisimentWidget({super.key});
 

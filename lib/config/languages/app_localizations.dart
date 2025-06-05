@@ -1131,6 +1131,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'data offered by'**
   String get offered_by;
+
+  /// No description provided for @reset_picture.
+  ///
+  /// In en, this message translates to:
+  /// **'reset picture'**
+  String get reset_picture;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'update'**
+  String get update;
 }
 
 class _AppLocalizationsDelegate

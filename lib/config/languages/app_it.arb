@@ -170,5 +170,8 @@
     "last_swipes": "ultimi 5 swipes",
     "number_songs": "numero di canzoni",
     "type": "tipo",
-    "offered_by": "dati offerti da"
+    "offered_by": "dati offerti da",
+    "edit_profile": "modifica profilo",
+    "reset_picture": "reimpostare la foto",
+    "update": "aggiorna"
 }
