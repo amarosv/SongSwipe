@@ -388,7 +388,7 @@ Future<List<Track>> getRecommendedTracksByArtist({required int artistID}) async 
 /// Función que obtiene los detalles de un album <br>
 /// @param albumID ID del album <br>
 /// @returns Album
-Future<Album> getAlbumDetails({required int albumID}) async {
+Future<Album> getAlbumById({required int albumID}) async {
   Album album = Album.empty();
 
   final url = '${Environment.apiUrlDeezer}album/$albumID';

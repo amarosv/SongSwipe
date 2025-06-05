@@ -235,7 +235,8 @@ Future<UserSettings> getUserSettings({required String uid}) async {
 /// @param uid UID del usuario <br>
 /// @param settings Nuevos ajustes del usuario
 /// @returns Se ha actualizado o no
-Future<bool> updateUserSettings({required String uid, required UserSettings settings}) async {
+Future<bool> updateUserSettings(
+    {required String uid, required UserSettings settings}) async {
   Uri url = Uri.parse('$apiUser/$uid/settings');
 
   // Llamada a la API para guardar los ajustes
@@ -301,8 +302,8 @@ Future<List<int>> getFavoriteGenres({required String uid}) async {
 /// @param uid UID del usuario <br>
 /// @param tracksIds Lista de IDs de cnanciones <br>
 /// @returns Lista con los ids de las canciones que no estan guardadas
-Future<List<dynamic>> areTrackInDatabase({required String uid, required List<int> tracksIds}) async {
-
+Future<List<dynamic>> areTrackInDatabase(
+    {required String uid, required List<int> tracksIds}) async {
   // Variable que almacenará los ids de las canciones
   List<dynamic> tracksNotSaved = [];
 
@@ -328,7 +329,8 @@ Future<List<dynamic>> areTrackInDatabase({required String uid, required List<int
 /// @param uid UID del usuario <br>
 /// @param swipes Lista de swipes <br>
 /// @returns Número de filas afectadas
-Future<int> saveSwipes({required String uid, required List<Swipe> swipes}) async {
+Future<int> saveSwipes(
+    {required String uid, required List<Swipe> swipes}) async {
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
 
@@ -663,7 +665,10 @@ Future<List<Track>> getLast5Swipes({required String uid}) async {
 /// @param url (opcional) URL a buscar <br>
 /// @returns Lista de canciones paginada
 Future<PaginatedTracks> getLibraryUser(
-    {required String uid, bool liked = true, String url = '', int limit = 10}) async {
+    {required String uid,
+    bool liked = true,
+    String url = '',
+    int limit = 10}) async {
   PaginatedTracks paginatedTracks = PaginatedTracks.empty();
 
   if (url.isEmpty) {
@@ -691,7 +696,7 @@ Future<PaginatedTracks> getLibraryUser(
 /// @param uid UID del usuario <br>
 /// @param idTrack ID de la canción <br>
 /// @returns Bool que indica si ha marcado la canción como me gusta
-Future<bool> isTrackLiked({required String uid, required int idTrack}) async{
+Future<bool> isTrackLiked({required String uid, required int idTrack}) async {
   bool exists = false;
 
   Uri url = Uri.parse('$apiUser/$uid/is_track_liked/$idTrack');
@@ -716,7 +721,8 @@ Future<bool> isTrackLiked({required String uid, required int idTrack}) async{
 /// @param idTrack ID de la canción <br>
 /// @param newLike Valor del nuevo like del Swipe <br>
 /// @returns Bool que indica si se ha actualizado
-Future<bool> updateSwipe({required String uid, required int idTrack, required int newLike}) async {
+Future<bool> updateSwipe(
+    {required String uid, required int idTrack, required int newLike}) async {
   Uri url = Uri.parse('$apiUser/$uid/update_swipe');
 
   // Llamada a la API para guardar los ajustes
@@ -726,10 +732,7 @@ Future<bool> updateSwipe({required String uid, required int idTrack, required in
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
-    body: jsonEncode({
-      'id': idTrack,
-      'like': newLike
-    }),
+    body: jsonEncode({'id': idTrack, 'like': newLike}),
   );
 
   return response.statusCode == 200;
@@ -738,7 +741,7 @@ Future<bool> updateSwipe({required String uid, required int idTrack, required in
 /// Función que recibe el ID de una canción y devuelve sus stats <br>
 /// @param idTrack ID de la canción <br>
 /// @returns Stats
-Future<Stats> getTrackStats({required int idTrack}) async{
+Future<Stats> getTrackStats({required int idTrack}) async {
   Stats stats = Stats.empty();
 
   Uri url = Uri.parse('$apiTrack/$idTrack/stats');
@@ -760,7 +763,7 @@ Future<Stats> getTrackStats({required int idTrack}) async{
 /// Función que recibe el ID de un album y devuelve sus stats <br>
 /// @param idAlbum ID de la album <br>
 /// @returns Stats
-Future<Stats> getAlbumStats({required int idAlbum}) async{
+Future<Stats> getAlbumStats({required int idAlbum}) async {
   Stats stats = Stats.empty();
 
   Uri url = Uri.parse('$apiAlbum/$idAlbum/stats');
@@ -782,7 +785,7 @@ Future<Stats> getAlbumStats({required int idAlbum}) async{
 /// Función que recibe el ID de un artista y devuelve sus stats <br>
 /// @param idArtist ID del artista <br>
 /// @returns Stats
-Future<Stats> getArtistStats({required int idArtist}) async{
+Future<Stats> getArtistStats({required int idArtist}) async {
   Stats stats = Stats.empty();
 
   Uri url = Uri.parse('$apiArtist/$idArtist/stats');
@@ -796,6 +799,33 @@ Future<Stats> getArtistStats({required int idArtist}) async{
   // Si la respuesta es 200, parseamos el json
   if (response.statusCode == 200) {
     stats = Stats.fromJson(json.decode(response.body));
+  }
+
+  return stats;
+}
+
+/// Esta función recibe una lista de IDs de canciones y devuelve sus stats <br>
+/// @param idTracks Lista de IDs de canciones <br>
+/// @returns Mapa con el id de cada canción y sus stats
+Future<Map<int, Stats>> getTracksStats({required List<int> idTracks}) async {
+  // Variable que almacenará el mapa con los datos
+  Map<int, Stats> stats = <int, Stats>{};
+
+  Uri url = Uri.parse('$apiTrack/stats');
+
+  // Llamada a la API para obtener si la canción está guardada
+  final response = await http.post(url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(idTracks));
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> data = jsonDecode(response.body);
+    stats = data
+        .map((key, value) => MapEntry(int.parse(key), Stats.fromJson(value)));
   }
 
   return stats;

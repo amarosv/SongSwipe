@@ -144,6 +144,14 @@ class AppRouter {
           return LyricsScreen(lyrics: lyrics, trackTitle: trackTitle, trackArtists: trackArtists, trackCover: trackCover,);
         },
       ),
+      GoRoute(
+        path: '/album',
+        name: InfoAlbumScreen.name,
+        builder: (context, state) {
+          final idAlbum = int.parse(state.uri.queryParameters['id']!);
+          return InfoAlbumScreen(idAlbum: idAlbum,);
+        },
+      ),
       // TODO: /swipes 0 = dislike, 1 = liked, 2 = all
       // TODO: /followers
       // TODO: /following

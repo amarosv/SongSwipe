@@ -5,7 +5,6 @@ import 'package:songswipe/helpers/utils.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/deezer_api.dart';
-import 'package:songswipe/services/api/internal_api.dart';
 
 /// Widget personalizado para mostrar los datos del album <br>
 /// @author Amaro Suárez <br>
@@ -13,7 +12,11 @@ import 'package:songswipe/services/api/internal_api.dart';
 class CustomAlbumWidget extends StatefulWidget {
   /// Album
   final Album album;
-  const CustomAlbumWidget({super.key, required this.album});
+
+  /// Stats
+  final Stats stats;
+
+  const CustomAlbumWidget({super.key, required this.album, required this.stats});
 
   @override
   State<CustomAlbumWidget> createState() => _CustomAlbumWidgetState();
@@ -21,7 +24,6 @@ class CustomAlbumWidget extends StatefulWidget {
 
 class _CustomAlbumWidgetState extends State<CustomAlbumWidget> {
   late Genre genre = Genre.empty();
-  late Stats stats = Stats.empty();
 
   @override
   void initState() {
@@ -33,15 +35,13 @@ class _CustomAlbumWidgetState extends State<CustomAlbumWidget> {
   void loadData() async {
     try {
       final results = await Future.wait([
-        getGenreDetails(genreID: widget.album.genreId),
-        getAlbumStats(idAlbum: widget.album.id)
+        getGenreDetails(genreID: widget.album.genreId)
       ]);
 
       if (!mounted) return;
 
       setState(() {
-        genre = results[0] as Genre;
-        stats = results[1] as Stats;
+        genre = results[0];
       });
     } catch (e) {
       print('Error loading user data: $e');
@@ -200,7 +200,7 @@ class _CustomAlbumWidgetState extends State<CustomAlbumWidget> {
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          '${stats.likes} likes · ${stats.dislikes} dislikes · ${stats.swipes} swipes',
+                          '${widget.stats.likes} Likes · ${widget.stats.dislikes} Dislikes · ${widget.stats.swipes} Swipes',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),

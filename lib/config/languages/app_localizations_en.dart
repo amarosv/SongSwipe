@@ -497,7 +497,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get album => 'album';
 
   @override
-  String get position_album => 'position in the album';
+  String get position_album => 'position in the';
 
   @override
   String get ranking => 'ranking';
@@ -525,4 +525,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get last_swipes => 'last 5 swipes';
+
+  @override
+  String get number_songs => 'number of songs';
+
+  @override
+  String get type => 'type';
+
+  @override
+  String get offered_by => 'data offered by';
 }

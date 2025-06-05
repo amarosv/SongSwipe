@@ -1057,7 +1057,7 @@ abstract class AppLocalizations {
   /// No description provided for @position_album.
   ///
   /// In en, this message translates to:
-  /// **'position in the album'**
+  /// **'position in the'**
   String get position_album;
 
   /// No description provided for @ranking.
@@ -1113,6 +1113,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'last 5 swipes'**
   String get last_swipes;
+
+  /// No description provided for @number_songs.
+  ///
+  /// In en, this message translates to:
+  /// **'number of songs'**
+  String get number_songs;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'type'**
+  String get type;
+
+  /// No description provided for @offered_by.
+  ///
+  /// In en, this message translates to:
+  /// **'data offered by'**
+  String get offered_by;
 }
 
 class _AppLocalizationsDelegate

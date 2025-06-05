@@ -502,7 +502,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get album => 'album';
 
   @override
-  String get position_album => 'posizione nell\'album';
+  String get position_album => 'posizione nel';
 
   @override
   String get ranking => 'classifica';
@@ -530,4 +530,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get last_swipes => 'ultimi 5 swipes';
+
+  @override
+  String get number_songs => 'numero di canzoni';
+
+  @override
+  String get type => 'tipo';
+
+  @override
+  String get offered_by => 'dati offerti da';
 }

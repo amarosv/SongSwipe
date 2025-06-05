@@ -158,7 +158,7 @@
     "release_date": "fecha de lanzamiento",
     "duration": "duración",
     "album": "álbum",
-    "position_album": "posición en el álbum",
+    "position_album": "posición en el",
     "ranking": "ranking",
     "explicit_content": "contenido explícito",
     "lyrics": "letras",
@@ -167,5 +167,8 @@
     "dislikes": "no me gustas",
     "related_tracks": "canciones relacionadas",
     "see_more": "ver más...",
-    "last_swipes": "últimos 5 swipes"
+    "last_swipes": "últimos 5 swipes",
+    "number_songs": "número de canciones",
+    "type": "tipo",
+    "offered_by": "datos ofrecidos por"
 }
