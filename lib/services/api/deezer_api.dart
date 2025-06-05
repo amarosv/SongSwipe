@@ -407,7 +407,7 @@ Future<Album> getAlbumById({required int albumID}) async {
 /// Función que obtiene los detalles de un género <br>
 /// @param genreID ID del género <br>
 /// @returns Genero
-Future<Genre> getGenreDetails({required int genreID}) async {
+Future<Genre> getGenreById({required int genreID}) async {
   Genre genre = Genre.empty();
 
   final url = '${Environment.apiUrlDeezer}genre/$genreID';

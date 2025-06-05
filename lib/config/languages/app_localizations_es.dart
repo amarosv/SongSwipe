@@ -547,4 +547,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get update => 'actualizar';
+
+  @override
+  String get genre => 'género';
 }

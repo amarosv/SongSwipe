@@ -545,4 +545,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get update => 'aggiorna';
+
+  @override
+  String get genre => 'genere';
 }

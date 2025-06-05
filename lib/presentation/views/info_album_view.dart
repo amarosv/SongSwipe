@@ -40,6 +40,9 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
   // Variable que almacena las stats de cada canción
   late Map<int, Stats> _tracksStats = <int, Stats>{};
 
+  // Variable que almacena el género del album
+  late Genre _genre = Genre.empty();
+
   // Variable que almacena si se esta cargando el album
   bool _isLoading = true;
 
@@ -49,6 +52,7 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
   @override
   void initState() {
     super.initState();
+    print(widget.idAlbum);
     _loadData();
     _scrollController.addListener(_updateTextOpacity);
   }
@@ -66,7 +70,8 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
 
       final resultsTracks = await Future.wait([
         getTracksStats(
-            idTracks: _album.tracks.map((track) => track.id).toList())
+            idTracks: _album.tracks.map((track) => track.id).toList()),
+        getGenreById(genreID: _album.genreId)
       ]);
 
       setState(() {
@@ -78,7 +83,8 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
           return [...unique, artist];
         });
         _stats = results[1] as Stats;
-        _tracksStats = resultsTracks[0];
+        _tracksStats = resultsTracks[0] as Map<int, Stats>;
+        _genre = resultsTracks[1] as Genre;
         _isLoading = false;
       });
     } catch (e) {
@@ -399,6 +405,13 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                       text: localization.type),
                                   value: capitalizeFirstLetter(
                                       text: _album.recordType),
+                                ),
+                                const SizedBox(height: 20),
+                                CustomRow(
+                                  title: capitalizeFirstLetter(
+                                      text: localization.genre),
+                                  value: capitalizeFirstLetter(
+                                      text: _genre.name),
                                 ),
                                 const SizedBox(height: 20),
                                 CustomRow(

@@ -1143,6 +1143,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'update'**
   String get update;
+
+  /// No description provided for @genre.
+  ///
+  /// In en, this message translates to:
+  /// **'genre'**
+  String get genre;
 }
 
 class _AppLocalizationsDelegate

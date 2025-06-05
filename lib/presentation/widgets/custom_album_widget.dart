@@ -35,7 +35,7 @@ class _CustomAlbumWidgetState extends State<CustomAlbumWidget> {
   void loadData() async {
     try {
       final results = await Future.wait([
-        getGenreDetails(genreID: widget.album.genreId)
+        getGenreById(genreID: widget.album.genreId)
       ]);
 
       if (!mounted) return;
@@ -50,7 +50,7 @@ class _CustomAlbumWidgetState extends State<CustomAlbumWidget> {
 
   // Función que obtiene los datos del género
   void getGenre() async {
-    Genre temp = await getGenreDetails(genreID: widget.album.genreId);
+    Genre temp = await getGenreById(genreID: widget.album.genreId);
 
     setState(() {
       genre = temp;

@@ -540,4 +540,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get update => 'update';
+
+  @override
+  String get genre => 'genre';
 }
