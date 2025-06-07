@@ -157,6 +157,14 @@ class AppRouter {
           return InfoAlbumScreen(idAlbum: idAlbum,);
         },
       ),
+      GoRoute(
+        path: '/artist',
+        name: InfoArtistScreen.name,
+        builder: (context, state) {
+          final idArtist = int.parse(state.uri.queryParameters['id']!);
+          return InfoArtistScreen(idArtist: idArtist,);
+        },
+      ),
       // TODO: /swipes 0 = dislike, 1 = liked, 2 = all
       // TODO: /followers
       // TODO: /following

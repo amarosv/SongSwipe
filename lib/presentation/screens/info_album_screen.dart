@@ -6,7 +6,7 @@ import 'package:songswipe/presentation/views/info_album_view.dart';
 /// @version 1.0
 class InfoAlbumScreen extends StatelessWidget {
   /// Nombre de la ruta
-  static const name = 'album-screen';
+  static const name = 'info-album-screen';
 
   /// ID del album
   final int idAlbum;

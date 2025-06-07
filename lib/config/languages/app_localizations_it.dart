@@ -332,9 +332,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'ti invieremo una notifica se blocchiamo il tuo account';
 
   @override
-  String get info_app => 'aksajhsdhsadj';
-
-  @override
   String get mode => 'modalità';
 
   @override
@@ -548,4 +545,8 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get genre => 'genere';
+
+  @override
+  String get about_songswipe_text =>
+      'è un modo innovativo per scoprire musica adatta ai tuoi gusti. Scorri tra i brani, ascolta una breve anteprima e decidi se salvarli o ignorarli. Ogni canzone che ti piace viene salvata nella tua collezione personale, pronta per essere riascoltata in qualsiasi momento.\n\nPuoi anche connetterti con gli amici, esplorare la loro musica salvata e condividere con loro le tue scoperte. Quando trovi un brano che ti piace davvero, puoi facilmente trasferirlo al tuo servizio musicale preferito.\nScopri, connettiti e vivi la musica come mai prima.';
 }

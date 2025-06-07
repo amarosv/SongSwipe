@@ -102,7 +102,6 @@
     "label_weekly_recap": "ti invieremo una notifica ogni domenica alle 20:00",
     "account_blocked": "conto bloccato",
     "label_account_blocked": "ti invieremo una notifica se blocchiamo il tuo account",
-    "info_app": "aksajhsdhsadj",
     "mode": "modalità",
     "dark": "buio",
     "light": "luce",
@@ -174,5 +173,6 @@
     "edit_profile": "modifica profilo",
     "reset_picture": "reimpostare la foto",
     "update": "aggiorna",
-    "genre": "genere"
+    "genre": "genere",
+    "about_songswipe_text": "è un modo innovativo per scoprire musica adatta ai tuoi gusti. Scorri tra i brani, ascolta una breve anteprima e decidi se salvarli o ignorarli. Ogni canzone che ti piace viene salvata nella tua collezione personale, pronta per essere riascoltata in qualsiasi momento.\n\nPuoi anche connetterti con gli amici, esplorare la loro musica salvata e condividere con loro le tue scoperte. Quando trovi un brano che ti piace davvero, puoi facilmente trasferirlo al tuo servizio musicale preferito.\nScopri, connettiti e vivi la musica come mai prima."
 }

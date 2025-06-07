@@ -328,9 +328,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'we will send you a notification if we block your account';
 
   @override
-  String get info_app => 'aksajhsdhsadj';
-
-  @override
   String get mode => 'mode';
 
   @override
@@ -543,4 +540,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get genre => 'genre';
+
+  @override
+  String get about_songswipe_text =>
+      'is an innovative way to discover music that suits your style. Swipe through tracks, listen to a short preview, and decide whether to save or skip them. Every song you like is stored in your personal collection for easy access anytime.\n\nYou can also connect with friends, explore the music they’ve saved, and share your discoveries with them. When you find a track you love, you’ll have the option to transfer it to your usual music service.\nDiscover, connect, and enjoy music like never before.';
 }

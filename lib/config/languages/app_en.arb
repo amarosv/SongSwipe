@@ -102,7 +102,6 @@
     "label_weekly_recap": "we will send you a notification every sunday at 8pm",
     "account_blocked": "account blocked",
     "label_account_blocked": "we will send you a notification if we block your account",
-    "info_app": "aksajhsdhsadj",
     "mode": "mode",
     "dark": "dark",
     "light": "light",
@@ -175,5 +174,6 @@
     "edit_profile": "edit profile",
     "reset_picture": "reset picture",
     "update": "update",
-    "genre": "genre"
+    "genre": "genre",
+    "about_songswipe_text": "is an innovative way to discover music that suits your style. Swipe through tracks, listen to a short preview, and decide whether to save or skip them. Every song you like is stored in your personal collection for easy access anytime.\n\nYou can also connect with friends, explore the music they’ve saved, and share your discoveries with them. When you find a track you love, you’ll have the option to transfer it to your usual music service.\nDiscover, connect, and enjoy music like never before."
 }

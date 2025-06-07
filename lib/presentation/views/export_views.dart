@@ -24,6 +24,7 @@ export 'home/settings/notifications_view.dart';
 export 'home/settings/privacy_view.dart';
 export 'home/settings_view.dart';
 export 'info_album_view.dart';
+export 'info_artist_view.dart';
 export 'track/info_track_view.dart';
 export 'track/lyrics_view.dart';
 export 'user_view.dart';

@@ -718,12 +718,6 @@ abstract class AppLocalizations {
   /// **'we will send you a notification if we block your account'**
   String get label_account_blocked;
 
-  /// No description provided for @info_app.
-  ///
-  /// In en, this message translates to:
-  /// **'aksajhsdhsadj'**
-  String get info_app;
-
   /// No description provided for @mode.
   ///
   /// In en, this message translates to:
@@ -1149,6 +1143,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'genre'**
   String get genre;
+
+  /// No description provided for @about_songswipe_text.
+  ///
+  /// In en, this message translates to:
+  /// **'is an innovative way to discover music that suits your style. Swipe through tracks, listen to a short preview, and decide whether to save or skip them. Every song you like is stored in your personal collection for easy access anytime.\n\nYou can also connect with friends, explore the music they’ve saved, and share your discoveries with them. When you find a track you love, you’ll have the option to transfer it to your usual music service.\nDiscover, connect, and enjoy music like never before.'**
+  String get about_songswipe_text;
 }
 
 class _AppLocalizationsDelegate

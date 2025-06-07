@@ -9,6 +9,7 @@ export 'create/verify_email_screen.dart';
 export 'edit_profile_screen.dart';
 export 'home/home_screen.dart';
 export 'info_album_screen.dart';
+export 'info_artist_screen.dart';
 export 'settings/about_screen.dart';
 export 'settings/appearance_screen.dart';
 export 'settings/audio_screen.dart';

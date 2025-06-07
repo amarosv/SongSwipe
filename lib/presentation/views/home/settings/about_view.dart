@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
-import 'package:songswipe/helpers/utils.dart';
 
 /// Vista para la información de la app <br>
 /// @author Amaro Suárez <br>
@@ -24,7 +23,10 @@ class AboutView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
-            upperCaseAfterDot(text: localization.info_app)
+            'SongSwipe ${localization.about_songswipe_text}',
+            style: TextStyle(
+              fontSize: 20
+            ),
           ),
         ),
       ),

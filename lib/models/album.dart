@@ -133,8 +133,8 @@ class Album {
         coverBig: json["cover_big"] ?? '',
         coverXl: json["cover_xl"] ?? '',
         md5Image: json["md5_image"] != null
-          ? 'https://e-cdn-images.dzcdn.net/images/cover/${json['md5_image']}/500x500.jpg'
-          : '',
+            ? 'https://e-cdn-images.dzcdn.net/images/cover/${json['md5_image']}/500x500.jpg'
+            : '',
         genreId: json["genre_id"] ?? 0,
         genres: (json['genres']?['data'] as List<dynamic>?)
                 ?.map((item) => Genre.fromJson(item as Map<String, dynamic>))

@@ -234,18 +234,6 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                             children: [
                               const SizedBox(height: 30),
 
-                              // Últimos 5 swipes
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  upperCaseAfterSpace(
-                                      text: localization.last_swipes),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
-                              ),
-
                               // Ver canciones favoritas
                               CustomNavigator(
                                 title: Text(
@@ -281,135 +269,156 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                               const SizedBox(
                                 height: 30,
                               ),
-                              CustomContainer(
-                                child: FutureBuilder(
-                                    future: getLast5Swipes(uid: widget.uidUser),
-                                    builder: (context, snapshot) {
-                                      Widget result;
-
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        result = Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      } else if (snapshot.hasError) {
-                                        result = Center(
+                              FutureBuilder(
+                                  future: getLast5Swipes(uid: widget.uidUser),
+                                  builder: (context, snapshot) {
+                                    Widget result;
+                              
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      result = Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      result = Center(
+                                          child: Text(
+                                              'Error: ${snapshot.error}'));
+                                    } else if (!snapshot.hasData) {
+                                      result = Center(
+                                          child: Text(capitalizeFirstLetter(
+                                              text: localization
+                                                  .no_last_swipes)));
+                                    } else {
+                                      List<Track> tracks =
+                                          snapshot.data as List<Track>;
+                              
+                                      result = Column(
+                                        children: [
+                                          // Últimos 5 swipes
+                                          Align(
+                                            alignment: Alignment.centerLeft,
                                             child: Text(
-                                                'Error: ${snapshot.error}'));
-                                      } else if (!snapshot.hasData) {
-                                        result = Center(
-                                            child: Text(capitalizeFirstLetter(
-                                                text: localization
-                                                    .no_last_swipes)));
-                                      } else {
-                                        List<Track> tracks =
-                                            snapshot.data as List<Track>;
-
-                                        result = ListView.builder(
-                                          shrinkWrap: true,
-                                          padding: EdgeInsets.zero,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          itemCount: tracks.length,
-                                          itemBuilder: (context, index) {
-                                            Track track = tracks[index];
-
-                                            // Construye la cadena de artistas y contributors
-                                            String artists =
-                                                track.buildArtistsText();
-
-                                            return InkWell(
-                                              onTap: () => context.push(
-                                                  '/track?id=${track.id}'),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
+                                              upperCaseAfterSpace(
+                                                  text: localization
+                                                      .last_swipes),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ),
+                                          ),
+                                          
+                                          CustomContainer(
+                                            child: ListView.builder(
+                                              shrinkWrap: true,
+                                              padding: EdgeInsets.zero,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              itemCount: tracks.length,
+                                              itemBuilder: (context, index) {
+                                                Track track = tracks[index];
+                                                                          
+                                                // Construye la cadena de artistas y contributors
+                                                String artists =
+                                                    track.buildArtistsText();
+                                                                          
+                                                return InkWell(
+                                                  onTap: () => context.push(
+                                                      '/track?id=${track.id}'),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                         horizontal: 10),
-                                                child: Column(
-                                                  children: [
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    // Información de la canción
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                    child: Column(
                                                       children: [
-                                                        ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(6),
-                                                          child: Image(
-                                                            image: NetworkImage(
-                                                                track.md5Image),
-                                                            width: 64,
-                                                          ),
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        // Información de la canción
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          6),
+                                                              child: Image(
+                                                                image: NetworkImage(
+                                                                    track
+                                                                        .md5Image),
+                                                                width: 64,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Expanded(
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    track.title,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis),
+                                                                  ),
+                                                                  Text(
+                                                                    artists,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            track.like
+                                                                ? Icon(
+                                                                    Icons
+                                                                        .thumb_up,
+                                                                    color: Colors
+                                                                        .green,
+                                                                    size: 28,
+                                                                  )
+                                                                : Icon(
+                                                                    Icons
+                                                                        .thumb_down,
+                                                                    color: Colors
+                                                                        .red,
+                                                                    size: 28,
+                                                                  )
+                                                          ],
                                                         ),
                                                         const SizedBox(
-                                                          width: 10,
+                                                          height: 10,
                                                         ),
-                                                        Expanded(
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                track.title,
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        18,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis),
-                                                              ),
-                                                              Text(
-                                                                artists,
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        14,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        track.like
-                                                            ? Icon(
-                                                                Icons.thumb_up,
+                                                        index <
+                                                                tracks.length -
+                                                                    1
+                                                            ? Divider(
                                                                 color: Colors
-                                                                    .green,
-                                                                size: 28,
-                                                              )
-                                                            : Icon(
-                                                                Icons
-                                                                    .thumb_down,
-                                                                color:
-                                                                    Colors.red,
-                                                                size: 28,
-                                                              )
+                                                                    .white)
+                                                            : Container()
                                                       ],
                                                     ),
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    index < tracks.length - 1
-                                                        ? Divider(
-                                                            color: Colors.white)
-                                                        : Container()
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
-
-                                      return result;
-                                    }),
-                              ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                              
+                                    return result;
+                                  }),
                               const SizedBox(
                                 height: 30,
                               )
