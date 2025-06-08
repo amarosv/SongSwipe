@@ -42,7 +42,10 @@ class Artist {
   final String trackList;
 
   /// Número de canciones guardadas del artista
-  final int savedTracks;
+  int savedTracks;
+
+  /// Número de likes del artista
+  int likes;
 
   /// Constructor del Artist
   Artist({
@@ -60,6 +63,7 @@ class Artist {
     required this.radio,
     required this.trackList,
     required this.savedTracks,
+    this.likes = 0
   });
 
   /// Método que parsea un JSON en Artist
@@ -78,7 +82,8 @@ class Artist {
         nbFans: json['nb_fan'] ?? 0,
         radio: json['radio'] ?? false,
         trackList: json['tracklist'] ?? '',
-        savedTracks: savedTracks);
+        savedTracks: savedTracks,
+        likes: json['likes'] ?? 0);
   }
 
   /// Método que crea un Artist vacío
@@ -97,6 +102,7 @@ class Artist {
         nbFans: 0,
         radio: false,
         trackList: '',
-        savedTracks: 0);
+        savedTracks: 0,
+        likes: 0);
   }
 }

@@ -42,8 +42,8 @@ class _ProfileViewState extends State<ProfileView> {
 
   // Función que obtiene los datos del usuario de la api
   void _getUserProfile() async {
-    if (!mounted) return;
     UserProfile user = await getUserProfile(uid: _uid);
+    if (!mounted) return;
     setState(() {
       _userProfile = user;
     });

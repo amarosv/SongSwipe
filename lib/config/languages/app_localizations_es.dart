@@ -551,4 +551,19 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get about_songswipe_text =>
       'es una forma innovadora de descubrir música hecha a tu medida. Explora nuevas canciones deslizando entre ellas, escucha una breve muestra y decide si quieres guardarlas o descartarlas. Cada canción que te gusta se guarda en tu colección personal para que puedas volver a ella cuando quieras.\n\nAdemás, puedes conectarte con tus amigos, ver qué están escuchando y compartir tus descubrimientos musicales. Cuando encuentres una canción que te encante, tendrás la opción de transferirla fácilmente a tu servicio de música habitual.\nDescubre, conecta y disfruta la música como nunca antes.';
+
+  @override
+  String get most_liked_tracks => 'canciones con más me gustas';
+
+  @override
+  String get most_liked_albums => 'albumes con más me gustas';
+
+  @override
+  String get see_top_tracks => 'ver canciones top';
+
+  @override
+  String get see_all_albums => 'ver todos los albumes';
+
+  @override
+  String get related_artists => 'artistas similares';
 }

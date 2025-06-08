@@ -104,7 +104,13 @@ class _LanguageViewState extends State<LanguageView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused &&
+    // Para evitar llamadas a la API cada vez que se cambia un ajuste,
+    // comprobamos el último valor al salir de la pantalla y ese es el que se
+    // envía, llamándo así a la API una sola vez
+    if ((state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached ||
+        state == AppLifecycleState.hidden) &&
         _userSettingsComparator != _userSettings) {
       updateUserSettings(uid: _uid, settings: _userSettings);
       _userSettingsComparator = _userSettings.copy();

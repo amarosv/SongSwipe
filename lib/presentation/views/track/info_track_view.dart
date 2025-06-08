@@ -61,6 +61,9 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
   // Variable que almacena las canciones relacionadas
   late List<Track> _relatedTracks = List.empty();
 
+  // Variable que almacena si la canción esta en la biblioteca del usuario
+  bool _isInLibrary = false;
+
   // Variable que almacena si se esta cargando la canción
   bool _isLoading = true;
 
@@ -101,7 +104,8 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
       final results = await Future.wait([
         getTrackById(idTrack: widget.idTrack),
         isTrackLiked(uid: _uid, idTrack: widget.idTrack),
-        getTrackStats(idTrack: widget.idTrack)
+        getTrackStats(idTrack: widget.idTrack),
+        areTrackInDatabase(uid: _uid, tracksIds: [widget.idTrack])
       ]);
 
       if (!mounted) return;
@@ -125,6 +129,8 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
         _isFavorite = results[1] as bool;
         _track.lyrics = resultsByTrack[0] as String;
         _stats = results[2] as Stats;
+        List ids = results[3] as List;
+        _isInLibrary = !ids.contains(widget.idTrack);
         _album = resultsByTrack[1] as Album;
         _albumStats = resultsByTrack[2] as Stats;
         _relatedTracks = resultsByTrack[3] as List<Track>;
@@ -133,7 +139,7 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading user data: $e');
+      print('Error loading track data: $e');
     }
   }
 
@@ -171,6 +177,7 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
     _disposeAudioPlayer();
     _scrollController.removeListener(_updateTextOpacity);
     _scrollController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -285,13 +292,14 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                 ),
                 SliverToBoxAdapter(
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        // Título de la canción
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          child: LayoutBuilder(builder: (context, constraints) {
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+
+                          // Título de la canción
+                          LayoutBuilder(builder: (context, constraints) {
                             Widget resultText;
 
                             final text = _track.title;
@@ -346,71 +354,67 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
 
                             return resultText;
                           }),
-                        ),
 
-                        const SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
-                        // Artistas
-                        SizedBox(
-                          height: 120,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Row(
-                              children: _artists.map((artist) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _isPlaying = false;
-                                    });
-                                    _audioPlayer.pause();
-                                    context.push('/artist?id=${artist.id}');
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        // Imagen del artista
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                width: 2),
+                          // Artistas
+                          SizedBox(
+                            height: 120,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: _artists.map((artist) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _isPlaying = false;
+                                      });
+                                      _audioPlayer.pause();
+                                      context.push('/artist?id=${artist.id}');
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          // Imagen del artista
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                  width: 2),
+                                            ),
+                                            child: CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                  artist.pictureBig),
+                                              radius: 40,
+                                            ),
                                           ),
-                                          child: CircleAvatar(
-                                            backgroundImage:
-                                                NetworkImage(artist.pictureBig),
-                                            radius: 40,
+                                          SizedBox(height: 4),
+                                          // Nombre del artista
+                                          Text(
+                                            artist.name,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        ),
-                                        SizedBox(height: 4),
-                                        // Nombre del artista
-                                        Text(
-                                          artist.name,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }).toList(),
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           ),
-                        ),
 
-                        const SizedBox(
-                          height: 20,
-                        ),
+                          const SizedBox(
+                            height: 20,
+                          ),
 
-                        // Información
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Align(
+                          // Información
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
                               capitalizeFirstLetter(text: localization.info),
@@ -418,12 +422,9 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                                   fontWeight: FontWeight.bold, fontSize: 20),
                             ),
                           ),
-                        ),
 
-                        // Container con la información
-                        Padding(
-                          padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
-                          child: CustomContainer(
+                          // Container con la información
+                          CustomContainer(
                             child: Padding(
                               padding: const EdgeInsets.all(10),
                               child: Column(
@@ -477,81 +478,64 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                               ),
                             ),
                           ),
-                        ),
 
-                        const SizedBox(height: 20),
-
-                        // Letras
-                        _track.lyrics.isNotEmpty
-                            ? Column(
-                                children: [
-                                  // Letras
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        capitalizeFirstLetter(
-                                            text: localization.lyrics),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      ),
-                                    ),
+                          // Letras
+                          if (_track.lyrics.isNotEmpty)
+                            Column(
+                              children: [
+                                const SizedBox(height: 20),
+                                // Letras
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    capitalizeFirstLetter(
+                                        text: localization.lyrics),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
                                   ),
+                                ),
 
-                                  // Container con las letras
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: GestureDetector(
-                                      onTap: () => context.push(
-                                          '/lyrics?lyrics=${_track.lyrics}&title=${_track.title}&artists=${_track.buildArtistsText()}&cover=${_track.md5Image}'),
-                                      child: CustomContainer(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  _track
-                                                      .getFirstFourLyricsLines(),
-                                                  style: TextStyle(
-                                                      fontStyle:
-                                                          FontStyle.italic,
-                                                      wordSpacing: 2,
-                                                      height: 1.8),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Text(
-                                                  capitalizeFirstLetter(
-                                                      text: localization
-                                                          .see_more),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                  textAlign: TextAlign.start,
-                                                ),
-                                              )
-                                            ],
+                                // Container con las letras
+                                GestureDetector(
+                                  onTap: () => context.push(
+                                      '/lyrics?lyrics=${_track.lyrics}&title=${_track.title}&artists=${_track.buildArtistsText()}&cover=${_track.md5Image}'),
+                                  child: CustomContainer(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              _track.getFirstFourLyricsLines(),
+                                              style: TextStyle(
+                                                  fontStyle: FontStyle.italic,
+                                                  wordSpacing: 2,
+                                                  height: 1.8),
+                                            ),
                                           ),
-                                        ),
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              capitalizeFirstLetter(
+                                                  text: localization.see_more),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
-                                ],
-                              )
-                            : Container(),
+                                ),
+                                const SizedBox(height: 20),
+                              ],
+                            ),
 
-                        // Album
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Align(
+                          // Album
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
                               capitalizeFirstLetter(text: _album.recordType),
@@ -559,12 +543,9 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                                   fontWeight: FontWeight.bold, fontSize: 20),
                             ),
                           ),
-                        ),
 
-                        // Container con los datos del album
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: GestureDetector(
+                          // Container con los datos del album
+                          GestureDetector(
                               onTap: () {
                                 setState(() {
                                   _isPlaying = false;
@@ -576,14 +557,11 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                                 album: _album,
                                 stats: _albumStats,
                               )),
-                        ),
 
-                        const SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
-                        // Stats
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Align(
+                          // Stats
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
                               capitalizeFirstLetter(text: localization.stats),
@@ -591,62 +569,14 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                                   fontWeight: FontWeight.bold, fontSize: 20),
                             ),
                           ),
-                        ),
 
-                        // Container con las stats
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: CustomContainer(
-                              child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // Likes
-                                Column(
-                                  children: [
-                                    Icon(
-                                      Icons.thumb_up,
-                                      size: 32,
-                                    ),
-                                    Text(
-                                        '${humanReadbleNumber(_stats.likes)} likes')
-                                  ],
-                                ),
-                                // Dislikes
-                                Column(
-                                  children: [
-                                    Icon(
-                                      Icons.thumb_down,
-                                      size: 32,
-                                    ),
-                                    Text(
-                                        '${humanReadbleNumber(_stats.dislikes)} dislikes')
-                                  ],
-                                ),
-                                // Swipes
-                                Column(
-                                  children: [
-                                    Icon(
-                                      Icons.swipe_outlined,
-                                      size: 32,
-                                    ),
-                                    Text(
-                                        '${humanReadbleNumber(_stats.swipes)} swipes')
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )),
-                        ),
+                          // Container con las stats
+                          CustomStatsWidget(stats: _stats),
 
-                        const SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
-                        // Canciones relacionadas
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Align(
+                          // Canciones relacionadas
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
                               capitalizeFirstLetter(
@@ -655,12 +585,9 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                                   fontWeight: FontWeight.bold, fontSize: 20),
                             ),
                           ),
-                        ),
 
-                        // Container con las canciones relacionadas
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: SizedBox(
+                          // Container con las canciones relacionadas
+                          SizedBox(
                             width: double.infinity,
                             child: CustomContainer(
                               child: SingleChildScrollView(
@@ -715,18 +642,18 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                               ),
                             ),
                           ),
-                        ),
 
-                        const SizedBox(
-                          height: 20,
-                        ),
+                          const SizedBox(
+                            height: 20,
+                          ),
 
-                        CustomAdvertisimentWidget(),
+                          CustomAdvertisimentWidget(),
 
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      ],
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 )
@@ -741,10 +668,7 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
         GestureDetector(
           onTap: () async {
             // Actualizamos el Swipe para cambiar la canción de me gusta a no me gusta y viceversa.
-            // Primero comprobamos si existe en la libreria del usuario
-            List<dynamic> tracks =
-                await areTrackInDatabase(uid: _uid, tracksIds: [_track.id]);
-            if (!tracks.contains(_track.id)) {
+            if (_isInLibrary) {
               // La canción esta en la biblioteca
               await updateSwipe(
                   uid: _uid, idTrack: _track.id, newLike: _isFavorite ? 0 : 1);
@@ -762,13 +686,25 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
 
             // Actualizamos las stats
             if (_isFavorite) {
-              _stats.likes--;
-              _albumStats.likes--;
+              if (_stats.likes > 0) {
+                _stats.likes--;
+              }
+
+              if (_albumStats.likes > 0) {
+                _albumStats.likes--;
+              }
+
               _stats.dislikes++;
               _albumStats.dislikes++;
             } else {
-              _stats.dislikes--;
-              _albumStats.dislikes--;
+              if (_stats.dislikes > 0) {
+                _stats.dislikes--;
+              }
+
+              if (_albumStats.dislikes > 0) {
+                _albumStats.dislikes--;
+              }
+
               _stats.likes++;
               _albumStats.likes++;
             }

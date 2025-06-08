@@ -16,6 +16,7 @@ export 'custom_request.dart';
 export 'custom_row_widget.dart';
 export 'custom_search_widget.dart';
 export 'custom_social_button_widget.dart';
+export 'custom_stats_widget.dart';
 export 'custom_switch_container_widget.dart';
 export 'custom_textfield_widget.dart';
 export 'custom_theme_select.dart';

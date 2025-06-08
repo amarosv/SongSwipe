@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
@@ -20,6 +21,12 @@ class SelectGenresView extends StatefulWidget {
 }
 
 class _SelectGenresViewState extends State<SelectGenresView> {
+  // Obtenemos el usuario actual
+  final User _user = FirebaseAuth.instance.currentUser!;
+
+  // Variable que almacena el uid del usuario actual
+  late String _uid;
+
   // Controlador de la barra de búsqueda
   late TextEditingController _textController;
 
@@ -41,6 +48,7 @@ class _SelectGenresViewState extends State<SelectGenresView> {
   @override
   void initState() {
     super.initState();
+    _uid = _user.uid;
     _textController = TextEditingController();
     _textController.addListener(_onGenreNameChanged);
     _getgenres();
@@ -114,8 +122,7 @@ class _SelectGenresViewState extends State<SelectGenresView> {
 
           // Barra de búsqueda
           CustomSearch(
-            placeholder:
-                capitalizeFirstLetter(text: localization.search_genre),
+            placeholder: capitalizeFirstLetter(text: localization.search_genre),
             suffixIcon: Icon(Icons.search),
             textEditingController: _textController,
           ),
@@ -171,17 +178,18 @@ class _SelectGenresViewState extends State<SelectGenresView> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
             child: CustomButton(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                onPressed: () async {
-                  // Obtenemos el número de géneros guardados
-                  int numGenresSaved = await addGenreToFavorites(genres: selectedGenresIdsList);
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              onPressed: () async {
+                // Obtenemos el número de géneros guardados
+                int numGenresSaved =
+                    await addGenreToFavorites(uid: _uid, genres: selectedGenresIdsList);
 
-                  if (numGenresSaved > 0) {
-                    context.go('/home/4');
-                  }
-                },
-                text: localization.done.toUpperCase(),
-                disabled: selectedGenresIdsList.length < 3,
+                if (numGenresSaved > 0) {
+                  context.go('/home/4');
+                }
+              },
+              text: localization.done.toUpperCase(),
+              disabled: selectedGenresIdsList.length < 3,
             ),
           )
         ],

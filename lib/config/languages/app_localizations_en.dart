@@ -544,4 +544,19 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get about_songswipe_text =>
       'is an innovative way to discover music that suits your style. Swipe through tracks, listen to a short preview, and decide whether to save or skip them. Every song you like is stored in your personal collection for easy access anytime.\n\nYou can also connect with friends, explore the music they’ve saved, and share your discoveries with them. When you find a track you love, you’ll have the option to transfer it to your usual music service.\nDiscover, connect, and enjoy music like never before.';
+
+  @override
+  String get most_liked_tracks => 'most liked tracks';
+
+  @override
+  String get most_liked_albums => 'most liked albums';
+
+  @override
+  String get see_top_tracks => 'see top tracks';
+
+  @override
+  String get see_all_albums => 'see all albums';
+
+  @override
+  String get related_artists => 'related artists';
 }

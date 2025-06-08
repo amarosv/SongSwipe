@@ -80,18 +80,22 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
 
       // Colocamos el tema si difiere con el local
       switch (_userSettings.theme) {
-        case 0: {
-          ref.read(themeNotifierProvider.notifier).changeColorIndex(0);
-        }
-        case 1: {
-          ref.read(themeNotifierProvider.notifier).changeColorIndex(1);
-        }
-        case 2: {
-          ref.read(themeNotifierProvider.notifier).changeColorIndex(2);
-        }
-        case 3: {
-          ref.read(themeNotifierProvider.notifier).changeColorIndex(3);
-        }
+        case 0:
+          {
+            ref.read(themeNotifierProvider.notifier).changeColorIndex(0);
+          }
+        case 1:
+          {
+            ref.read(themeNotifierProvider.notifier).changeColorIndex(1);
+          }
+        case 2:
+          {
+            ref.read(themeNotifierProvider.notifier).changeColorIndex(2);
+          }
+        case 3:
+          {
+            ref.read(themeNotifierProvider.notifier).changeColorIndex(3);
+          }
       }
     }
   }
@@ -107,7 +111,13 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused &&
+    // Para evitar llamadas a la API cada vez que se cambia un ajuste,
+    // comprobamos el último valor al salir de la pantalla y ese es el que se
+    // envía, llamándo así a la API una sola vez
+    if ((state == AppLifecycleState.paused ||
+            state == AppLifecycleState.inactive ||
+            state == AppLifecycleState.detached ||
+            state == AppLifecycleState.hidden) &&
         _userSettingsComparator != _userSettings) {
       updateUserSettings(uid: _uid, settings: _userSettings);
       _userSettingsComparator = _userSettings.copy();
@@ -158,7 +168,8 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                           _userSettings.mode = 1;
                         });
 
-                        await updateUserSettings(uid: _uid, settings: _userSettings);
+                        await updateUserSettings(
+                            uid: _uid, settings: _userSettings);
 
                         // Colocamos que no estamos usando el modo del sistema
                         ref
@@ -198,7 +209,8 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                           _userSettings.mode = 2;
                         });
 
-                        await updateUserSettings(uid: _uid, settings: _userSettings);
+                        await updateUserSettings(
+                            uid: _uid, settings: _userSettings);
 
                         // Colocamos que no estamos usando el modo del sistema
                         ref
@@ -238,7 +250,8 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                           _userSettings.mode = 3;
                         });
 
-                        await updateUserSettings(uid: _uid, settings: _userSettings);
+                        await updateUserSettings(
+                            uid: _uid, settings: _userSettings);
 
                         // Llamamos al notifier para cambiar de modo
                         ref
@@ -351,7 +364,9 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                 },
               ),
 
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
 
               // Cartas
               Align(
@@ -363,53 +378,56 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
               ),
 
               CustomSwitchContainer(
-                title: capitalizeFirstLetter(text: localization.animated_cover),
-                switchValue: _userSettings.cardAnimatedCover,
-                function: (bool newValue) {
-                  setState(() {
-                    _userSettings.cardAnimatedCover = newValue;
-                  });
-                }
-              ),
+                  title:
+                      capitalizeFirstLetter(text: localization.animated_cover),
+                  switchValue: _userSettings.cardAnimatedCover,
+                  function: (bool newValue) {
+                    setState(() {
+                      _userSettings.cardAnimatedCover = newValue;
+                    });
+                  }),
 
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
 
               // Saltar canciones
               CustomSwitchContainer(
-                title: capitalizeFirstLetter(text: localization.skip_songs),
-                switchValue: _userSettings.cardSkipSongs,
-                function: (bool newValue) {
-                  setState(() {
-                    _userSettings.cardSkipSongs = newValue;
-                  });
-                }
-              ),
+                  title: capitalizeFirstLetter(text: localization.skip_songs),
+                  switchValue: _userSettings.cardSkipSongs,
+                  function: (bool newValue) {
+                    setState(() {
+                      _userSettings.cardSkipSongs = newValue;
+                    });
+                  }),
 
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
 
               // Mostrar tutorial
               CustomSwitchContainer(
-                title: capitalizeFirstLetter(text: localization.show_tutorial),
-                switchValue: _userSettings.showTutorial,
-                function: (bool newValue) {
-                  setState(() {
-                    _userSettings.showTutorial = newValue;
-                  });
-                }
-              ),
+                  title:
+                      capitalizeFirstLetter(text: localization.show_tutorial),
+                  switchValue: _userSettings.showTutorial,
+                  function: (bool newValue) {
+                    setState(() {
+                      _userSettings.showTutorial = newValue;
+                    });
+                  }),
 
               const SizedBox(height: 20),
 
               // Fondo con portada difuminada
               CustomSwitchContainer(
-                title: capitalizeFirstLetter(text: localization.blurred_as_background),
-                switchValue: _userSettings.cardBlurredCoverAsBackground,
-                function: (bool newValue) {
-                  setState(() {
-                    _userSettings.cardBlurredCoverAsBackground = newValue;
-                  });
-                }
-              ),
+                  title: capitalizeFirstLetter(
+                      text: localization.blurred_as_background),
+                  switchValue: _userSettings.cardBlurredCoverAsBackground,
+                  function: (bool newValue) {
+                    setState(() {
+                      _userSettings.cardBlurredCoverAsBackground = newValue;
+                    });
+                  }),
 
               const SizedBox(height: 10),
 
@@ -423,7 +441,9 @@ class _AppearanceViewState extends ConsumerState<AppearanceView>
                 ),
               ),
 
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),

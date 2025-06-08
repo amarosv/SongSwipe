@@ -193,6 +193,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           : SingleChildScrollView(
               child: Column(
                 children: [
+                  const SizedBox(height: 20),
                   // Imagen
                   GestureDetector(
                     onTap: _pickImage,

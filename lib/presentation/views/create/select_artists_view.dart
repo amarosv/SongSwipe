@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
@@ -20,6 +21,12 @@ class SelectArtistsView extends StatefulWidget {
 }
 
 class _SelectArtistsViewState extends State<SelectArtistsView> {
+  // Obtenemos el usuario actual
+  final User _user = FirebaseAuth.instance.currentUser!;
+  
+  // Variable que almacena el uid del usuario actual
+  late String _uid;
+
   // Controlador de la barra de búsqueda
   late TextEditingController _textController;
 
@@ -41,6 +48,7 @@ class _SelectArtistsViewState extends State<SelectArtistsView> {
   @override
   void initState() {
     super.initState();
+    _uid = _user.uid;
     _textController = TextEditingController();
     _textController.addListener(_onArtistNameChanged);
     _getArtists();
@@ -170,7 +178,7 @@ class _SelectArtistsViewState extends State<SelectArtistsView> {
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 onPressed: () async {
                   // Obtenemos el número de artistas guardados
-                  int numArtistsSaved = await addArtistToFavorites(artists: selectedArtistsIdsList);
+                  int numArtistsSaved = await addArtistToFavorites(uid: _uid, artists: selectedArtistsIdsList);
 
                   if (numArtistsSaved > 0) {
                     context.go('/select-genres');

@@ -107,7 +107,8 @@ Future<List<Genre>> searchGenre(String query) async {
 /// @param uid UID del usuario <br>
 /// @param swipesNotUpload Lista de ids que se han reaccionado pero aún no se han subido <br>
 /// @returns Lista de canciones
-Future<List<Track>> getDiscoverTracks({required String uid, required List<int> swipesNotUpload}) async {
+Future<List<Track>> getDiscoverTracks(
+    {required String uid, required List<int> swipesNotUpload}) async {
   List<Track> tracks = [];
   Random random = Random();
 
@@ -137,7 +138,11 @@ Future<List<Track>> getDiscoverTracks({required String uid, required List<int> s
     for (int index in artistIndices) {
       int randomIndex =
           random.nextInt(290); // Índice aleatorio para cada solicitud
-      artistFutures.add(getTracksByArtist(uid: uid, artistId: artists[index], index: randomIndex, swipesNotUpload: swipesNotUpload));
+      artistFutures.add(getTracksByArtist(
+          uid: uid,
+          artistId: artists[index],
+          index: randomIndex,
+          swipesNotUpload: swipesNotUpload));
     }
 
     // Seleccionar un género aleatorio
@@ -169,10 +174,12 @@ Future<List<Track>> getDiscoverTracks({required String uid, required List<int> s
     }
 
     // Comprobamos cuales de esas canciones el usuario ya ha reaccionado
-    List<dynamic> idsNotSaved = await areTrackInDatabase(uid: uid, tracksIds: tracksIds);
+    List<dynamic> idsNotSaved =
+        await areTrackInDatabase(uid: uid, tracksIds: tracksIds);
 
     // Eliminamos las canciones a las que el usuario ya ha reaccionado
-    tracks.removeWhere((track) => !idsNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));
+    tracks.removeWhere((track) =>
+        !idsNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));
 
     // Mezclar la lista de pistas
     tracks.shuffle();
@@ -190,12 +197,15 @@ Future<List<Track>> getDiscoverTracks({required String uid, required List<int> s
 /// @param index Indice de la canción a obtener <br>
 /// @param swipesNotUpload Lista de ids que se han reaccionado pero aún no se han subido <br>
 /// @returns Lista de canciones
-Future<List<Track>> getTracksByArtist({required String uid, required int artistId, required int index, required List<int> swipesNotUpload}) async {
+Future<List<Track>> getTracksByArtist(
+    {required String uid,
+    required int artistId,
+    required int index,
+    required List<int> swipesNotUpload}) async {
   List<Track> tracks = [];
 
   // Primero obtenemos los detalles del artista
-  Artist artistDetails =
-      await getArtistDetails(artistID: artistId, savedTracks: 0);
+  Artist artistDetails = await getArtistByID(artistID: artistId);
 
   final url =
       '${Environment.apiUrlDeezer}artist/$artistId/top?limit=10&index=$index';
@@ -213,10 +223,12 @@ Future<List<Track>> getTracksByArtist({required String uid, required int artistI
     }
 
     // Comprobamos cuales de esas canciones el usuario ya ha reaccionado
-    List<dynamic> idsNotSaved = await areTrackInDatabase(uid: uid, tracksIds: tracksIds);
+    List<dynamic> idsNotSaved =
+        await areTrackInDatabase(uid: uid, tracksIds: tracksIds);
 
     // Eliminamos las canciones a las que el usuario ya ha reaccionado
-    tracks.removeWhere((track) => !idsNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));
+    tracks.removeWhere((track) =>
+        !idsNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));
 
     // Mezclar la lista de pistas
     tracks.shuffle();
@@ -229,11 +241,9 @@ Future<List<Track>> getTracksByArtist({required String uid, required int artistI
 }
 
 /// Función que obtiene los detalles del artista <br>
-/// @param savedTracks Número de canciones guardadas del artista <br>
 /// @param artistID ID del artista <br>
 /// @returns Artista
-Future<Artist> getArtistDetails(
-    {required savedTracks, required int artistID}) async {
+Future<Artist> getArtistByID({required int artistID}) async {
   Artist artist = Artist.empty();
   final url = 'https://api.deezer.com/artist/$artistID';
 
@@ -243,7 +253,7 @@ Future<Artist> getArtistDetails(
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      artist = Artist.fromJson(data, savedTracks);
+      artist = Artist.fromJson(data, 0);
     } else {
       print('Error: ${response.statusCode}');
     }
@@ -300,7 +310,10 @@ Future<List<Track>> getTracks(
 /// @param swipesNotUpload Lista de ids que se han reaccionado pero aún no se han subido <br>
 /// @returns Lista de canciones
 Future<List<Track>> getRecommendedTracks(
-    {required String uid, required int artistID, required int limit, required List<int> swipesNotUpload}) async {
+    {required String uid,
+    required int artistID,
+    required int limit,
+    required List<int> swipesNotUpload}) async {
   List<Track> tracks = [];
   List<int> tracksIds = [];
   List<dynamic> tracksNotSaved = [];
@@ -326,7 +339,9 @@ Future<List<Track>> getRecommendedTracks(
       tracksNotSaved = await areTrackInDatabase(uid: uid, tracksIds: tracksIds);
 
       // Eliminamos las canciones a las que el usuario ya ha reaccionado
-      filteredTracks.removeWhere((track) => !tracksNotSaved.contains(track.id) || swipesNotUpload.contains(track.id));
+      filteredTracks.removeWhere((track) =>
+          !tracksNotSaved.contains(track.id) ||
+          swipesNotUpload.contains(track.id));
 
       filteredTracks.shuffle();
       return filteredTracks;
@@ -363,7 +378,8 @@ Future<Track> getTrackById({required int idTrack}) async {
 /// Función que obtiene las canciones recomendadas de un artista <br>
 /// @param artistID ID del artista <br>
 /// @returns Lista de canciones
-Future<List<Track>> getRecommendedTracksByArtist({required int artistID}) async {
+Future<List<Track>> getRecommendedTracksByArtist(
+    {required int artistID}) async {
   List<Track> tracks = [];
   final url = 'https://api.deezer.com/artist/$artistID/radio?limit=10';
 
@@ -421,4 +437,27 @@ Future<Genre> getGenreById({required int genreID}) async {
   }
 
   return genre;
+}
+
+/// Esta función recibe el ID de un artista y devuelve una lista de artistas similares <br>
+/// @param idArtist ID del artista <br>
+/// @returns Lista de artistas
+Future<List<Artist>> getRelatedArtists({required int idArtist}) async {
+  List<Artist> artists = List.empty();
+
+  Uri url = Uri.parse('${Environment.apiUrlDeezer}artist/$idArtist/related');
+
+  // Llamada a la API para obtener los artistas similares
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    artists = (data['data'] as List).map((artists) => Artist.fromJson(artists, 0)).toList();
+  }
+  
+  return artists;
 }

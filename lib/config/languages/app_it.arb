@@ -174,5 +174,10 @@
     "reset_picture": "reimpostare la foto",
     "update": "aggiorna",
     "genre": "genere",
-    "about_songswipe_text": "è un modo innovativo per scoprire musica adatta ai tuoi gusti. Scorri tra i brani, ascolta una breve anteprima e decidi se salvarli o ignorarli. Ogni canzone che ti piace viene salvata nella tua collezione personale, pronta per essere riascoltata in qualsiasi momento.\n\nPuoi anche connetterti con gli amici, esplorare la loro musica salvata e condividere con loro le tue scoperte. Quando trovi un brano che ti piace davvero, puoi facilmente trasferirlo al tuo servizio musicale preferito.\nScopri, connettiti e vivi la musica come mai prima."
+    "about_songswipe_text": "è un modo innovativo per scoprire musica adatta ai tuoi gusti. Scorri tra i brani, ascolta una breve anteprima e decidi se salvarli o ignorarli. Ogni canzone che ti piace viene salvata nella tua collezione personale, pronta per essere riascoltata in qualsiasi momento.\n\nPuoi anche connetterti con gli amici, esplorare la loro musica salvata e condividere con loro le tue scoperte. Quando trovi un brano che ti piace davvero, puoi facilmente trasferirlo al tuo servizio musicale preferito.\nScopri, connettiti e vivi la musica come mai prima.",
+    "most_liked_tracks": "canzoni più popolari",
+    "most_liked_albums": "album più popolari",
+    "see_top_tracks": "vedi i canzoni migliori",
+    "see_all_albums": "vedi tutti gli album",
+    "related_artists": "artisti affini"
 }

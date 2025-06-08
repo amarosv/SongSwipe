@@ -88,6 +88,9 @@ class Album {
   /// Lista de canciones del album
   final List<Track> tracks;
 
+  /// Número de likes del album
+  int likes;
+
   /// Constructor del album
   Album({
     required this.id,
@@ -118,6 +121,7 @@ class Album {
     required this.artist,
     required this.type,
     required this.tracks,
+    this.likes = 0
   });
 
   /// Método que parsea un JSON en Album
@@ -164,6 +168,7 @@ class Album {
                 ?.map((item) => Track.fromJson(item as Map<String, dynamic>))
                 .toList() ??
             [],
+        likes: json['likes'] ?? 0
       );
 
   /// Método que crea un album vacío
@@ -196,6 +201,7 @@ class Album {
         contributors: [],
         artist: Artist.empty(),
         type: '',
-        tracks: []);
+        tracks: [],
+        likes: 0);
   }
 }

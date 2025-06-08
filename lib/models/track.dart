@@ -86,7 +86,10 @@ class Track {
   final bool like;
 
   /// Letras de la canción
-  late String lyrics;
+  String lyrics;
+
+  /// Número de likes de la canción
+  int likes;
 
   /// Constructor de la canción
   Track(
@@ -117,7 +120,8 @@ class Track {
       required this.album,
       required this.type,
       this.like = false,
-      this.lyrics = ''});
+      this.lyrics = '',
+      this.likes = 0});
 
   /// Método que parsea un JSON en Canción
   factory Track.fromJson(Map<String, dynamic> json) => Track(
@@ -165,7 +169,8 @@ class Track {
           json['album'] != null ? Album.fromJson(json['album']) : Album.empty(),
       type: json["type"] ?? '',
       like: json["like"] ?? false,
-      lyrics: json["lyrics"] ?? '');
+      lyrics: json["lyrics"] ?? '',
+      likes: json['likes'] ?? 0);
 
   /// Método que crea una canción vacía
   factory Track.empty() {
@@ -197,7 +202,8 @@ class Track {
         album: Album.empty(),
         type: '',
         like: false,
-        lyrics: '');
+        lyrics: '',
+        likes: 0);
   }
 
   /// Función que construye la cadena de artistas y contribuidores de la canción <br>

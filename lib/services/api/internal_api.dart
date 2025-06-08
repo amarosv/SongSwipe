@@ -76,15 +76,13 @@ Future<bool> registerUserInDatabase(
 
 /// Función que recibe una lista de ids de artistas y los guarda en la base de datos
 /// como favoritos <br>
-/// @param artists Lista de ids de artistas
+/// @param artists Lista de ids de artistas <br>
 /// @returns Número de artistas que se han guardado como favoritos
-Future<int> addArtistToFavorites({required List<int> artists}) async {
+Future<int> addArtistToFavorites({required String uid, required List<int> artists}) async {
   // Variable que almacena el número de artistas guardados como favoritos
   int numArtistas = 0;
 
-  // Obtenemos el UID del usuario
-  User user = FirebaseAuth.instance.currentUser!;
-  String uid = user.uid;
+  print('añadido');
 
   // Formamos la url del endpoint
   Uri url = Uri.parse('$apiUser/$uid/artists');
@@ -110,13 +108,9 @@ Future<int> addArtistToFavorites({required List<int> artists}) async {
 /// como favoritos <br>
 /// @param artists Lista de ids de géneros
 /// @returns Número de géneros que se han guardado como favoritos
-Future<int> addGenreToFavorites({required List<int> genres}) async {
+Future<int> addGenreToFavorites({required String uid, required List<int> genres}) async {
   // Variable que almacena el número de géneros guardados como favoritos
   int numGeneros = 0;
-
-  // Obtenemos el UID del usuario
-  User user = FirebaseAuth.instance.currentUser!;
-  String uid = user.uid;
 
   // Formamos la url del endpoint
   Uri url = Uri.parse('$apiUser/$uid/genres');
@@ -239,6 +233,8 @@ Future<bool> updateUserSettings(
     {required String uid, required UserSettings settings}) async {
   Uri url = Uri.parse('$apiUser/$uid/settings');
 
+  print('Updating...');
+
   // Llamada a la API para guardar los ajustes
   final response = await http.put(
     url,
@@ -331,6 +327,7 @@ Future<List<dynamic>> areTrackInDatabase(
 /// @returns Número de filas afectadas
 Future<int> saveSwipes(
     {required String uid, required List<Swipe> swipes}) async {
+      print('adding...');
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
 
@@ -725,6 +722,8 @@ Future<bool> updateSwipe(
     {required String uid, required int idTrack, required int newLike}) async {
   Uri url = Uri.parse('$apiUser/$uid/update_swipe');
 
+  print('updating...');
+
   // Llamada a la API para guardar los ajustes
   final response = await http.put(
     url,
@@ -880,4 +879,118 @@ Future<bool> updateUser({required UserApp user}) async {
   }
 
   return updated;
+}
+
+/// Esta función recibe el ID de un artista y obtiene el número de canciones guardadas (tanto como me gusta como no me gusta) <br>
+/// @param idArtist ID del artista <br>
+/// @returns Número de canciones guardadas
+Future<int> getSavedSongsByArtist({required int idArtist}) async {
+  int total = 0;
+
+  Uri url = Uri.parse('$apiArtist/$idArtist/saved_tracks');
+
+  // Llamada a la API para obtener el número de canciones guardadas
+  final response = await http.get(url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      });
+
+  if (response.statusCode == 200) {
+    total = jsonDecode(response.body);
+  }
+
+  return total;
+}
+
+/// Esta función recibe el UID de un usuario y un ID de artista y devuelve si el usuario lo
+/// ha marcado como favorito <br>
+/// @param uid UID del usuario <br>
+/// @param idArtist ID del artista <br>
+/// @returns Bool que indica si ha marcado al artista como favorio
+Future<bool> isArtistFavorite({required String uid, required int idArtist}) async {
+  bool exists = false;
+
+  Uri url = Uri.parse('$apiUser/$uid/is_artist_favorite/$idArtist');
+
+  // Llamada a la API para obtener si se ha marcado el artista como favorito
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    exists = json.decode(response.body);
+  }
+
+  return exists;
+}
+
+/// Esta función recibe el ID de un artista y devuelve el top 3 de sus canciones con más me gustas <br>
+/// @param idArtist ID del artista <br>
+/// @returns Lista de canciones
+Future<List<Track>> getTopTracksByArtist({required int idArtist}) async {
+  List<Track> tracks = List<Track>.empty();
+
+  Uri url = Uri.parse('$apiArtist/$idArtist/top_tracks');
+
+  // Llamada a la API para obtener el top 3 canciones
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    tracks = (data as List).map((track) => Track.fromJson(track)).toList();
+  }
+
+  return tracks;
+}
+
+/// Esta función recibe el ID de un artista y devuelve el top 3 de sus albumes con más me gustas <br>
+/// @param idArtist ID del artista <br>
+/// @returns Lista de albumes
+Future<List<Album>> getTopAlbumsByArtist({required int idArtist}) async {
+  List<Album> albums = List<Album>.empty();
+
+  Uri url = Uri.parse('$apiArtist/$idArtist/top_albums');
+
+  // Llamada a la API para obtener el top 3 albumes
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    albums = (data as List).map((album) => Album.fromJson(album)).toList();
+  }
+
+  return albums;
+}
+
+/// Esta función recibe el UID de un usuario y el ID del artista y lo elimina de sus favoritos <br>
+/// @param uid UID del usuario <br>
+/// @param idArtist ID del artista a eliminar <br>
+/// @returns Bool que indica si se ha eliminado el artista
+Future<bool> deleteArtistFromFavorites({required String uid, required int idArtist}) async {
+  bool deleted = false;
+
+  print('borrando');
+
+  Uri url = Uri.parse('$apiUser/$uid/artist/$idArtist');
+
+  // Llamada a la API para eliminar al artista
+  final response = await http.delete(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    deleted = jsonDecode(response.body) > 0;
+  }
+
+  return deleted;
 }

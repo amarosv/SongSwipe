@@ -88,7 +88,7 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading user data: $e');
+      print('Error loading album data: $e');
     }
   }
 
@@ -205,7 +205,8 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                   ),
                   actions: [
                     GestureDetector(
-                      onTap: () => context.push('/swipes'), // TODO: Añadir las canciones
+                      onTap: () =>
+                          context.push('/swipes'), // TODO: Añadir las canciones
                       child: Padding(
                         padding: const EdgeInsets.all(5),
                         child: AnimatedOpacity(
@@ -242,15 +243,16 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                   ],
                 ),
                 SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      // Título del album
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        child: LayoutBuilder(builder: (context, constraints) {
-                          Widget resultText;
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 10),
 
+                        // Título del album
+                        LayoutBuilder(builder: (context, constraints) {
+                          Widget resultText;
+                                            
                           final text = _album.title;
                           final textPainter = TextPainter(
                               text: TextSpan(
@@ -263,9 +265,9 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                               maxLines: 1,
                               textDirection: TextDirection.ltr)
                             ..layout(maxWidth: double.infinity);
-
+                                            
                           final textWidth = textPainter.size.width;
-
+                                            
                           if (textWidth > constraints.maxWidth) {
                             resultText = SizedBox(
                               height: 30,
@@ -300,70 +302,66 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                               ),
                             );
                           }
-
+                                            
                           return resultText;
                         }),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // Artistas
-                      SizedBox(
-                        height: 120,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            children: _artists.map((artist) {
-                              return GestureDetector(
-                                onTap: () {
-                                  context.push('/artist?id=${artist.id}');
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      // Imagen del artista
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                              width: 2),
+                    
+                        const SizedBox(height: 20),
+                    
+                        // Artistas
+                        SizedBox(
+                          height: 120,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: _artists.map((artist) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    context.push('/artist?id=${artist.id}');
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        // Imagen del artista
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                                width: 2),
+                                          ),
+                                          child: CircleAvatar(
+                                            backgroundImage:
+                                                NetworkImage(artist.pictureBig),
+                                            radius: 40,
+                                          ),
                                         ),
-                                        child: CircleAvatar(
-                                          backgroundImage:
-                                              NetworkImage(artist.pictureBig),
-                                          radius: 40,
+                                        SizedBox(height: 4),
+                                        // Nombre del artista
+                                        Text(
+                                          artist.name,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      // Nombre del artista
-                                      Text(
-                                        artist.name,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            }).toList(),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
-                      ),
-
-                      const SizedBox(
-                        height: 20,
-                      ),
-
-                      // Información
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Align(
+                    
+                        const SizedBox(
+                          height: 20,
+                        ),
+                    
+                        // Información
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             capitalizeFirstLetter(text: localization.info),
@@ -371,12 +369,9 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
-                      ),
-
-                      // Container con la información
-                      Padding(
-                        padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
-                        child: CustomContainer(
+                    
+                        // Container con la información
+                        CustomContainer(
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: Column(
@@ -410,8 +405,8 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                 CustomRow(
                                   title: capitalizeFirstLetter(
                                       text: localization.genre),
-                                  value: capitalizeFirstLetter(
-                                      text: _genre.name),
+                                  value:
+                                      capitalizeFirstLetter(text: _genre.name),
                                 ),
                                 const SizedBox(height: 20),
                                 CustomRow(
@@ -435,14 +430,11 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                             ),
                           ),
                         ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // Stats
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Align(
+                    
+                        const SizedBox(height: 20),
+                    
+                        // Stats
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             capitalizeFirstLetter(text: localization.stats),
@@ -450,64 +442,16 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
-                      ),
-
-                      // Container con las stats
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: CustomContainer(
-                            child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Likes
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.thumb_up,
-                                    size: 32,
-                                  ),
-                                  Text(
-                                      '${humanReadbleNumber(_stats.likes)} likes')
-                                ],
-                              ),
-                              // Dislikes
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.thumb_down,
-                                    size: 32,
-                                  ),
-                                  Text(
-                                      '${humanReadbleNumber(_stats.dislikes)} dislikes')
-                                ],
-                              ),
-                              // Swipes
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.swipe_outlined,
-                                    size: 32,
-                                  ),
-                                  Text(
-                                      '${humanReadbleNumber(_stats.swipes)} swipes')
-                                ],
-                              ),
-                            ],
-                          ),
-                        )),
-                      ),
-
-                      const SizedBox(
-                        height: 20,
-                      ),
-
-                      // Tracklist
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Align(
+                    
+                        // Container con las stats
+                        CustomStatsWidget(stats: _stats),
+                    
+                        const SizedBox(
+                          height: 20,
+                        ),
+                    
+                        // Tracklist
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             capitalizeFirstLetter(text: localization.tracks),
@@ -515,19 +459,15 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
-                      ),
-
-                      // Container con las canciones
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: CustomContainer(
+                    
+                        // Container con las canciones
+                        CustomContainer(
                           child: Column(
                             children:
                                 _album.tracks.asMap().entries.map((entry) {
                               int index = entry.key;
                               Track track = entry.value;
-
+                                            
                               return InkWell(
                                 onTap: () =>
                                     context.push('/track?id=${track.id}'),
@@ -550,9 +490,9 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                               width: 80,
                                             ),
                                           ),
-
+                                            
                                           const SizedBox(width: 20),
-
+                                            
                                           Expanded(
                                             child: Stack(
                                               children: [
@@ -564,7 +504,7 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                     LayoutBuilder(builder:
                                                         (context, constraints) {
                                                       Widget resultText;
-
+                                            
                                                       final text = track.title;
                                                       final textPainter =
                                                           TextPainter(
@@ -586,11 +526,11 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                             ..layout(
                                                                 maxWidth: double
                                                                     .infinity);
-
+                                            
                                                       final textWidth =
                                                           textPainter
                                                               .size.width;
-
+                                            
                                                       if (textWidth >
                                                           constraints
                                                               .maxWidth) {
@@ -651,7 +591,7 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                                       .ellipsis),
                                                         );
                                                       }
-
+                                            
                                                       return Padding(
                                                         padding: const EdgeInsets
                                                             .only(
@@ -660,14 +600,14 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                         child: resultText,
                                                       );
                                                     }),
-
+                                            
                                                     const SizedBox(height: 5),
-
+                                            
                                                     // Artistas
                                                     LayoutBuilder(builder:
                                                         (context, constraints) {
                                                       Widget resultText;
-
+                                            
                                                       final text = track
                                                           .buildArtistsText();
                                                       final textPainter =
@@ -690,11 +630,11 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                             ..layout(
                                                                 maxWidth: double
                                                                     .infinity);
-
+                                            
                                                       final textWidth =
                                                           textPainter
                                                               .size.width;
-
+                                            
                                                       if (textWidth >
                                                           constraints
                                                               .maxWidth) {
@@ -749,12 +689,12 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                                       .ellipsis),
                                                         );
                                                       }
-
+                                            
                                                       return resultText;
                                                     }),
-
+                                            
                                                     const SizedBox(height: 5),
-
+                                            
                                                     // Stats de la canción
                                                     Align(
                                                       alignment:
@@ -809,16 +749,16 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                             }).toList(),
                           ),
                         ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      CustomAdvertisimentWidget(),
-
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
+                    
+                        const SizedBox(height: 20),
+                    
+                        CustomAdvertisimentWidget(),
+                    
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],

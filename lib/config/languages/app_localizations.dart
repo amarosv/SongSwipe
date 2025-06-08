@@ -1149,6 +1149,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'is an innovative way to discover music that suits your style. Swipe through tracks, listen to a short preview, and decide whether to save or skip them. Every song you like is stored in your personal collection for easy access anytime.\n\nYou can also connect with friends, explore the music they’ve saved, and share your discoveries with them. When you find a track you love, you’ll have the option to transfer it to your usual music service.\nDiscover, connect, and enjoy music like never before.'**
   String get about_songswipe_text;
+
+  /// No description provided for @most_liked_tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'most liked tracks'**
+  String get most_liked_tracks;
+
+  /// No description provided for @most_liked_albums.
+  ///
+  /// In en, this message translates to:
+  /// **'most liked albums'**
+  String get most_liked_albums;
+
+  /// No description provided for @see_top_tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'see top tracks'**
+  String get see_top_tracks;
+
+  /// No description provided for @see_all_albums.
+  ///
+  /// In en, this message translates to:
+  /// **'see all albums'**
+  String get see_all_albums;
+
+  /// No description provided for @related_artists.
+  ///
+  /// In en, this message translates to:
+  /// **'related artists'**
+  String get related_artists;
 }
 
 class _AppLocalizationsDelegate
