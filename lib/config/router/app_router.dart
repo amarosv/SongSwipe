@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/screens/export_screens.dart';
 
 /// Clase que almacena las rutas de navegación de la app <br>
@@ -89,7 +90,9 @@ class AppRouter {
       GoRoute(
         path: '/language-settings',
         name: LanguageScreen.name,
-        builder: (context, state) => LanguageScreen(onChangeLanguage: onChangeLanguage,),
+        builder: (context, state) => LanguageScreen(
+          onChangeLanguage: onChangeLanguage,
+        ),
       ),
       GoRoute(
         path: '/appearance-settings',
@@ -126,7 +129,9 @@ class AppRouter {
         name: UserScreen.name,
         builder: (context, state) {
           final uid = state.uri.queryParameters['uid'];
-          return UserScreen(uidUser: uid!,);
+          return UserScreen(
+            uidUser: uid!,
+          );
         },
       ),
       GoRoute(
@@ -134,7 +139,9 @@ class AppRouter {
         name: InfoTrackScreen.name,
         builder: (context, state) {
           final idTrack = int.parse(state.uri.queryParameters['id']!);
-          return InfoTrackScreen(idTrack: idTrack,);
+          return InfoTrackScreen(
+            idTrack: idTrack,
+          );
         },
       ),
       GoRoute(
@@ -146,7 +153,12 @@ class AppRouter {
           final trackArtists = state.uri.queryParameters['artists']!;
           final trackCover = state.uri.queryParameters['cover']!;
 
-          return LyricsScreen(lyrics: lyrics, trackTitle: trackTitle, trackArtists: trackArtists, trackCover: trackCover,);
+          return LyricsScreen(
+            lyrics: lyrics,
+            trackTitle: trackTitle,
+            trackArtists: trackArtists,
+            trackCover: trackCover,
+          );
         },
       ),
       GoRoute(
@@ -154,7 +166,9 @@ class AppRouter {
         name: InfoAlbumScreen.name,
         builder: (context, state) {
           final idAlbum = int.parse(state.uri.queryParameters['id']!);
-          return InfoAlbumScreen(idAlbum: idAlbum,);
+          return InfoAlbumScreen(
+            idAlbum: idAlbum,
+          );
         },
       ),
       GoRoute(
@@ -162,13 +176,22 @@ class AppRouter {
         name: InfoArtistScreen.name,
         builder: (context, state) {
           final idArtist = int.parse(state.uri.queryParameters['id']!);
-          return InfoArtistScreen(idArtist: idArtist,);
+          return InfoArtistScreen(
+            idArtist: idArtist,
+          );
         },
       ),
       // TODO: /swipes 0 = dislike, 1 = liked, 2 = all
       // TODO: /followers
       // TODO: /following
-      // TODO: /export debe aceptar una lista de tracks
+      GoRoute(
+        path: '/export',
+        name: ExportTracksScreen.name,
+        builder: (context, state) {
+          final tracks = state.extra as Set<Track>;
+          return ExportTracksScreen(tracks: tracks);
+        },
+      ),
       GoRoute(
         path: '/home/:page',
         name: HomeScreen.name,

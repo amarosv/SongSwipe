@@ -7,6 +7,7 @@ export 'create/select_genres_view.dart';
 export 'create/signup_view.dart';
 export 'create/verify_email_view.dart';
 export 'edit_profile_view.dart';
+export 'export_tracks_view.dart';
 export 'home/discover_view.dart';
 export 'home/friends/requests_receive_view.dart';
 export 'home/friends/requests_sent_view.dart';

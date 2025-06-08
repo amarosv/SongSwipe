@@ -38,26 +38,29 @@ class LikedView extends ConsumerStatefulWidget {
 
 class _LikedViewState extends ConsumerState<LikedView>
     with AutomaticKeepAliveClientMixin {
-  // Variable que almacena el próximo enlace
-  String nextUrl = '';
-
   // Variable que almacena el límite de canciones a traer
-  int limit = 25;
+  final int _limit = 25;
+
+  // Variable que almacena el límite de canciones a exportar
+  final int _exportLimit = 100;
+
+  // Variable que almacena el próximo enlace
+  String _nextUrl = '';
 
   // Variable que almacena la lista con todas las canciones
-  List<Track> allTracks = [];
+  late List<Track> _allTracks = [];
 
   // Variable que indica si se están cargando más canciones
-  bool isLoadingMore = false;
+  bool _isLoadingMore = false;
 
   // Variable que indica el número total de canciones
-  int totalTracks = 0;
-  // Variable que almacena si s
-  //e están seleccionando canciones
-  bool selecting = false;
+  int _totalTracks = 0;
+  
+  // Variable que almacena si se están seleccionando canciones
+  bool _selecting = false;
 
   // Lista que almacena las canciones seleccionadas
-  Set<Track> selectedTracks = {};
+  late Set<Track> _selectedTracks = {};
 
   @override
   void initState() {
@@ -67,24 +70,22 @@ class _LikedViewState extends ConsumerState<LikedView>
 
   // Función que obtiene las canciones
   void _fetchTracks({bool reset = false}) async {
-    if (!isLoadingMore) {
+    if (!_isLoadingMore) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;
 
-        print('Cargando...');
-
-        setState(() => isLoadingMore = true);
+        setState(() => _isLoadingMore = true);
 
         if (reset) {
-          allTracks.clear();
-          nextUrl = '';
+          _allTracks.clear();
+          _nextUrl = '';
         }
 
         final data = await getLibraryUser(
           uid: widget.uid,
-          url: nextUrl,
+          url: _nextUrl,
           liked: true,
-          limit: limit,
+          limit: _limit,
         );
 
         if (!mounted) {
@@ -92,14 +93,14 @@ class _LikedViewState extends ConsumerState<LikedView>
         }
 
         setState(() {
-          allTracks.addAll(data.tracks);
-          nextUrl = data.linkNextPage;
-          isLoadingMore = false;
-          totalTracks = data.totalTracks;
+          _allTracks.addAll(data.tracks);
+          _nextUrl = data.linkNextPage;
+          _isLoadingMore = false;
+          _totalTracks = data.totalTracks;
         });
 
-        if (!selecting) {
-          widget.onTotalChanged((totalTracks, false));
+        if (!_selecting) {
+          widget.onTotalChanged((_totalTracks, false));
         }
       });
     }
@@ -123,11 +124,11 @@ class _LikedViewState extends ConsumerState<LikedView>
       }
     });
 
-    return allTracks.isEmpty && !isLoadingMore
+    return _allTracks.isEmpty && !_isLoadingMore
         ? Center(
             child: Text(capitalizeFirstLetter(text: localization.no_tracks)),
           )
-        : allTracks.isEmpty
+        : _allTracks.isEmpty
             ? Center(
                 child: CircularProgressIndicator(),
               )
@@ -135,8 +136,8 @@ class _LikedViewState extends ConsumerState<LikedView>
                 key: const Key('disliked-view'),
                 onVisibilityChanged: (info) {
                   widget.onTotalChanged((
-                    selecting ? selectedTracks.length : totalTracks,
-                    selecting
+                    _selecting ? _selectedTracks.length : _totalTracks,
+                    _selecting
                   ));
                 },
                 child: Scaffold(
@@ -146,23 +147,23 @@ class _LikedViewState extends ConsumerState<LikedView>
                               shrinkWrap: true,
                               // padding: EdgeInsets.zero,
                               // physics: NeverScrollableScrollPhysics(),
-                              itemCount: isLoadingMore
-                                  ? allTracks.length + 1
-                                  : allTracks.length,
+                              itemCount: _isLoadingMore
+                                  ? _allTracks.length + 1
+                                  : _allTracks.length,
                               itemBuilder: (context, index) {
                                 Widget result;
 
-                                if (index == allTracks.length) {
+                                if (index == _allTracks.length) {
                                   result = const Center(
                                     child: CircularProgressIndicator(),
                                   );
                                 } else {
-                                  Track track = allTracks[index];
+                                  Track track = _allTracks[index];
 
                                   String artists = track.buildArtistsText();
 
-                                  if (index == allTracks.length - 1 &&
-                                      nextUrl.isNotEmpty) {
+                                  if (index == _allTracks.length - 1 &&
+                                      _nextUrl.isNotEmpty) {
                                     _fetchTracks();
                                   }
 
@@ -170,21 +171,26 @@ class _LikedViewState extends ConsumerState<LikedView>
                                     child: CustomListTracks(
                                       track: track,
                                       artists: artists,
-                                      allTracksLength: allTracks.length,
+                                      allTracksLength: _allTracks.length,
                                       index: index,
-                                      isSelecting: selecting,
+                                      isSelecting: _selecting,
                                       isSelected:
-                                          selectedTracks.contains(track),
+                                          _selectedTracks.contains(track),
                                       onSelect: () {
                                         setState(() {
-                                          if (selectedTracks.contains(track)) {
-                                            selectedTracks.remove(track);
+                                          if (_selectedTracks.contains(track)) {
+                                            _selectedTracks.remove(track);
                                           } else {
-                                            selectedTracks.add(track);
+                                            if (_selectedTracks.length >= _exportLimit) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('No puedes seleccionar más de 100 canciones')),
+                                              );
+                                              return;
+                                            }
+                                            _selectedTracks.add(track);
                                           }
 
-                                          widget.onTotalChanged(
-                                              (selectedTracks.length, true));
+                                          widget.onTotalChanged((_selectedTracks.length, true));
                                         });
                                       },
                                     ),
@@ -200,23 +206,23 @@ class _LikedViewState extends ConsumerState<LikedView>
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
                                       mainAxisExtent: height * 0.36),
-                              itemCount: isLoadingMore
-                                  ? allTracks.length + 1
-                                  : allTracks.length,
+                              itemCount: _isLoadingMore
+                                  ? _allTracks.length + 1
+                                  : _allTracks.length,
                               itemBuilder: (context, index) {
                                 Widget result;
 
-                                if (index == allTracks.length) {
+                                if (index == _allTracks.length) {
                                   result = const Center(
                                     child: CircularProgressIndicator(),
                                   );
                                 } else {
-                                  Track track = allTracks[index];
+                                  Track track = _allTracks[index];
 
                                   String artists = track.buildArtistsText();
 
-                                  if (index == allTracks.length - 1 &&
-                                      nextUrl.isNotEmpty) {
+                                  if (index == _allTracks.length - 1 &&
+                                      _nextUrl.isNotEmpty) {
                                     _fetchTracks();
                                   }
 
@@ -226,19 +232,24 @@ class _LikedViewState extends ConsumerState<LikedView>
                                       track: track,
                                       artists: artists,
                                       index: index,
-                                      isSelecting: selecting,
+                                      isSelecting: _selecting,
                                       isSelected:
-                                          selectedTracks.contains(track),
+                                          _selectedTracks.contains(track),
                                       onSelect: () {
                                         setState(() {
-                                          if (selectedTracks.contains(track)) {
-                                            selectedTracks.remove(track);
+                                          if (_selectedTracks.contains(track)) {
+                                            _selectedTracks.remove(track);
                                           } else {
-                                            selectedTracks.add(track);
+                                            if (_selectedTracks.length >= _exportLimit) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('No puedes seleccionar más de 100 canciones')),
+                                              );
+                                              return;
+                                            }
+                                            _selectedTracks.add(track);
                                           }
 
-                                          widget.onTotalChanged(
-                                              (selectedTracks.length, true));
+                                          widget.onTotalChanged((_selectedTracks.length, true));
                                         });
                                       },
                                     ),
@@ -248,30 +259,35 @@ class _LikedViewState extends ConsumerState<LikedView>
                                 return result;
                               }),
                         ),
-                  floatingActionButton: selecting
+                  floatingActionButton: _selecting
                       ? Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             FloatingActionButton(
+                              heroTag: 'export_fab',
                               onPressed: () => {
-                                // TODO: Enviar a la siguiente pantalla
+                                context.push(
+                                  '/export',
+                                  extra: _selectedTracks,
+                                )
                               },
                               shape: CircleBorder(),
                               child: Icon(Icons.outbond),
                             ),
                             const SizedBox(height: 10),
                             FloatingActionButton(
+                                heroTag: 'cancel_fab',
                                 shape: CircleBorder(),
                                 child: Icon(Icons.close),
                                 onPressed: () {
                                   setState(() {
-                                    selecting = !selecting;
-                                    selectedTracks.clear();
+                                    _selecting = !_selecting;
+                                    _selectedTracks.clear();
                                   });
 
-                                  if (!selecting) {
-                                    widget.onTotalChanged((totalTracks, false));
+                                  if (!_selecting) {
+                                    widget.onTotalChanged((_totalTracks, false));
                                   }
                                 })
                           ],
@@ -292,12 +308,12 @@ class _LikedViewState extends ConsumerState<LikedView>
                                     text: localization.export_tracks),
                                 onTap: () {
                                   setState(() {
-                                    selecting = !selecting;
-                                    selectedTracks.clear();
+                                    _selecting = !_selecting;
+                                    _selectedTracks.clear();
                                   });
 
-                                  if (!selecting) {
-                                    widget.onTotalChanged((totalTracks, false));
+                                  if (!_selecting) {
+                                    widget.onTotalChanged((_totalTracks, false));
                                   }
                                 })
                           ],

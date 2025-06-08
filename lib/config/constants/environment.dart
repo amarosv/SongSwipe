@@ -14,4 +14,8 @@ class Environment {
   static String apiKeyPublicImageKit = dotenv.env['API_KEY_IMAGEKIT_PUBLIC'] ?? 'No hay API key';
   /// Api key privada de imagekit
   static String apiKeyPrivateImageKit = dotenv.env['API_KEY_IMAGEKIT_PRIVATE'] ?? 'No hay API key';
+  /// Client ID de Spotify
+  static String spotifyClientID = dotenv.env['SPOTIFY_CLIENT_ID'] ?? '';
+  /// Secret de Spotify
+  static String spotifySecret = dotenv.env['SPOTIFY_SECRET'] ?? '';
 }
