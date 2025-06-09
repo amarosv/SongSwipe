@@ -8,11 +8,14 @@ class CustomContainer extends StatelessWidget {
   final Widget child;
   /// Color opcional del fondo del container
   final Color? color;
+  /// Color del borde
+  final Color? borderColor;
 
   const CustomContainer({
     super.key,
     required this.child,
     this.color = const Color.fromARGB(65, 136, 142, 147),
+    this.borderColor,
   });
 
   @override
@@ -20,6 +23,12 @@ class CustomContainer extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
+        border: borderColor != null
+          ? Border.all(
+            color: borderColor!,
+            width: 2
+          )
+        : null,
         color: color,
       ),
       child: child,

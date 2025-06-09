@@ -1179,6 +1179,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'related artists'**
   String get related_artists;
+
+  /// No description provided for @of_txt.
+  ///
+  /// In en, this message translates to:
+  /// **'of'**
+  String get of_txt;
+
+  /// No description provided for @tracks_exported.
+  ///
+  /// In en, this message translates to:
+  /// **'tracks exported'**
+  String get tracks_exported;
+
+  /// No description provided for @tracks_succes_export.
+  ///
+  /// In en, this message translates to:
+  /// **'tracks exported successfully'**
+  String get tracks_succes_export;
+
+  /// No description provided for @as.
+  ///
+  /// In en, this message translates to:
+  /// **'as'**
+  String get as;
+
+  /// No description provided for @export_to.
+  ///
+  /// In en, this message translates to:
+  /// **'export to'**
+  String get export_to;
+
+  /// No description provided for @cant_export.
+  ///
+  /// In en, this message translates to:
+  /// **'could not export'**
+  String get cant_export;
 }
 
 class _AppLocalizationsDelegate

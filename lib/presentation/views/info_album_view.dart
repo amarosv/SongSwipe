@@ -119,7 +119,6 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
   Widget build(BuildContext context) {
     // Constante que almacena la localización de la app
     final localization = AppLocalizations.of(context)!;
-
     final size = MediaQuery.of(context).size;
     final height = size.height;
 

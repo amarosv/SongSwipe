@@ -179,5 +179,11 @@
     "most_liked_albums": "albumes con más me gustas",
     "see_top_tracks": "ver canciones top",
     "see_all_albums": "ver todos los albumes",
-    "related_artists": "artistas similares"
+    "related_artists": "artistas similares",
+    "of_txt": "de",
+    "tracks_exported": "canciones exportadas",
+    "tracks_succes_export": "canciones exportadas correctamente",
+    "as": "como",
+    "export_to": "exportar a",
+    "cant_export": "no se pudieron exportar"
 }

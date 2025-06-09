@@ -564,4 +564,22 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get related_artists => 'artisti affini';
+
+  @override
+  String get of_txt => 'di';
+
+  @override
+  String get tracks_exported => 'canzoni esportati';
+
+  @override
+  String get tracks_succes_export => 'canzoni esportati con successo';
+
+  @override
+  String get as => 'come';
+
+  @override
+  String get export_to => 'esportare in';
+
+  @override
+  String get cant_export => 'impossibile esportare';
 }

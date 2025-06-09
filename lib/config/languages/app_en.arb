@@ -180,5 +180,11 @@
     "most_liked_albums": "most liked albums",
     "see_top_tracks": "see top tracks",
     "see_all_albums": "see all albums",
-    "related_artists": "related artists"
+    "related_artists": "related artists",
+    "of_txt": "of",
+    "tracks_exported": "tracks exported",
+    "tracks_succes_export": "tracks exported successfully",
+    "as": "as",
+    "export_to": "export to",
+    "cant_export": "could not export"
 }

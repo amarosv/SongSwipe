@@ -179,5 +179,11 @@
     "most_liked_albums": "album più popolari",
     "see_top_tracks": "vedi i canzoni migliori",
     "see_all_albums": "vedi tutti gli album",
-    "related_artists": "artisti affini"
+    "related_artists": "artisti affini",
+    "of_txt": "di",
+    "tracks_exported": "canzoni esportati",
+    "tracks_succes_export": "canzoni esportati con successo",
+    "as": "come",
+    "export_to": "esportare in",
+    "cant_export": "impossibile esportare"
 }
