@@ -582,4 +582,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get cant_export => 'impossibile esportare';
+
+  @override
+  String get playlist_description => 'Canzoni esportati da SongSwipe';
+
+  @override
+  String get cant_select => 'non puoi selezionare più di';
+
+  @override
+  String get plural_tracks => 'canzoni';
 }

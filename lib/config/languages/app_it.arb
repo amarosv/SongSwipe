@@ -185,5 +185,8 @@
     "tracks_succes_export": "canzoni esportati con successo",
     "as": "come",
     "export_to": "esportare in",
-    "cant_export": "impossibile esportare"
+    "cant_export": "impossibile esportare",
+    "playlist_description": "Canzoni esportati da SongSwipe",
+    "cant_select": "non puoi selezionare più di",
+    "plural_tracks": "canzoni"
 }

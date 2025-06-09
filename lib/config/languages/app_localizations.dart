@@ -1215,6 +1215,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'could not export'**
   String get cant_export;
+
+  /// No description provided for @playlist_description.
+  ///
+  /// In en, this message translates to:
+  /// **'tracks exported from SongSwipe'**
+  String get playlist_description;
+
+  /// No description provided for @cant_select.
+  ///
+  /// In en, this message translates to:
+  /// **'you cannot select more than'**
+  String get cant_select;
+
+  /// No description provided for @plural_tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'tracks'**
+  String get plural_tracks;
 }
 
 class _AppLocalizationsDelegate

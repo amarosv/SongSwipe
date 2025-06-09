@@ -55,7 +55,7 @@ class _LikedViewState extends ConsumerState<LikedView>
 
   // Variable que indica el número total de canciones
   int _totalTracks = 0;
-  
+
   // Variable que almacena si se están seleccionando canciones
   bool _selecting = false;
 
@@ -181,16 +181,23 @@ class _LikedViewState extends ConsumerState<LikedView>
                                           if (_selectedTracks.contains(track)) {
                                             _selectedTracks.remove(track);
                                           } else {
-                                            if (_selectedTracks.length >= _exportLimit) {
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text('No puedes seleccionar más de 100 canciones')),
+                                            if (_selectedTracks.length >=
+                                                _exportLimit) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        capitalizeFirstLetter(
+                                                            text:
+                                                                '${localization.cant_select} $_exportLimit ${localization.plural_tracks}'))),
                                               );
                                               return;
                                             }
                                             _selectedTracks.add(track);
                                           }
 
-                                          widget.onTotalChanged((_selectedTracks.length, true));
+                                          widget.onTotalChanged(
+                                              (_selectedTracks.length, true));
                                         });
                                       },
                                     ),
@@ -240,16 +247,23 @@ class _LikedViewState extends ConsumerState<LikedView>
                                           if (_selectedTracks.contains(track)) {
                                             _selectedTracks.remove(track);
                                           } else {
-                                            if (_selectedTracks.length >= _exportLimit) {
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text('No puedes seleccionar más de 100 canciones')),
+                                            if (_selectedTracks.length >=
+                                                _exportLimit) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        capitalizeFirstLetter(
+                                                            text:
+                                                                '${localization.cant_select} $_exportLimit ${localization.plural_tracks}'))),
                                               );
                                               return;
                                             }
                                             _selectedTracks.add(track);
                                           }
 
-                                          widget.onTotalChanged((_selectedTracks.length, true));
+                                          widget.onTotalChanged(
+                                              (_selectedTracks.length, true));
                                         });
                                       },
                                     ),
@@ -287,7 +301,8 @@ class _LikedViewState extends ConsumerState<LikedView>
                                   });
 
                                   if (!_selecting) {
-                                    widget.onTotalChanged((_totalTracks, false));
+                                    widget
+                                        .onTotalChanged((_totalTracks, false));
                                   }
                                 })
                           ],
@@ -313,7 +328,8 @@ class _LikedViewState extends ConsumerState<LikedView>
                                   });
 
                                   if (!_selecting) {
-                                    widget.onTotalChanged((_totalTracks, false));
+                                    widget
+                                        .onTotalChanged((_totalTracks, false));
                                   }
                                 })
                           ],

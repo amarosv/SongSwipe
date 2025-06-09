@@ -577,4 +577,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cant_export => 'could not export';
+
+  @override
+  String get playlist_description => 'tracks exported from SongSwipe';
+
+  @override
+  String get cant_select => 'you cannot select more than';
+
+  @override
+  String get plural_tracks => 'tracks';
 }

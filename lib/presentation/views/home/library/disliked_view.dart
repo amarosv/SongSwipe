@@ -41,7 +41,7 @@ class _DislikedViewState extends ConsumerState<DislikedView>
   final int _limit = 25;
 
   // Variable que almacena el límite de canciones a exportar
-  final int _exportLimit = 25;
+  final int _exportLimit = 100;
 
   // Variable que almacena el próximo enlace
   String _nextUrl = '';
@@ -54,7 +54,7 @@ class _DislikedViewState extends ConsumerState<DislikedView>
 
   // Variable que indica el número total de canciones
   int _totalTracks = 0;
-  
+
   // Variable que almacena si se están seleccionando canciones
   bool _selecting = false;
 
@@ -176,12 +176,15 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                                           if (_selectedTracks.contains(track)) {
                                             _selectedTracks.remove(track);
                                           } else {
-                                            if (_selectedTracks.length >= _exportLimit) {
+                                            if (_selectedTracks.length >=
+                                                _exportLimit) {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
                                                     content: Text(
-                                                        'No puedes seleccionar más de 100 canciones')),
+                                                        capitalizeFirstLetter(
+                                                            text:
+                                                                '${localization.cant_select} $_exportLimit ${localization.plural_tracks}'))),
                                               );
                                               return;
                                             }
@@ -240,12 +243,15 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                                           if (_selectedTracks.contains(track)) {
                                             _selectedTracks.remove(track);
                                           } else {
-                                            if (_selectedTracks.length >= _exportLimit) {
+                                            if (_selectedTracks.length >=
+                                                _exportLimit) {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
                                                     content: Text(
-                                                        'No puedes seleccionar más de 100 canciones')),
+                                                        capitalizeFirstLetter(
+                                                            text:
+                                                                '${localization.cant_select} $_exportLimit ${localization.plural_tracks}'))),
                                               );
                                               return;
                                             }
@@ -269,7 +275,7 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             FloatingActionButton(
-                              heroTag: 'export_fab',
+                              heroTag: 'export_fab_dis',
                               onPressed: () => {
                                 context.push(
                                   '/export',
@@ -281,7 +287,7 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                             ),
                             const SizedBox(height: 10),
                             FloatingActionButton(
-                                heroTag: 'cancel_fab',
+                                heroTag: 'cancel_fab_dis',
                                 shape: CircleBorder(),
                                 child: Icon(Icons.close),
                                 onPressed: () {
@@ -291,7 +297,8 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                                   });
 
                                   if (!_selecting) {
-                                    widget.onTotalChanged((_totalTracks, false));
+                                    widget
+                                        .onTotalChanged((_totalTracks, false));
                                   }
                                 })
                           ],
@@ -317,7 +324,8 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                                   });
 
                                   if (!_selecting) {
-                                    widget.onTotalChanged((_totalTracks, false));
+                                    widget
+                                        .onTotalChanged((_totalTracks, false));
                                   }
                                 })
                           ],

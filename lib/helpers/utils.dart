@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
@@ -256,4 +259,20 @@ String dateToYear({required String date}) {
   year = parts.first;
 
   return year;
+}
+
+/// Esta función genera un código verificador <br>
+/// @returns Código
+String generarCodeVerifier() {
+  final random = Random.secure();
+  final values = List<int>.generate(64, (_) => random.nextInt(256));
+  return base64UrlEncode(Uint8List.fromList(values)).replaceAll('=', '');
+}
+
+/// Esta función genera el Code Challenge <br>
+/// @returns Código
+String generarCodeChallenge(String codeVerifier) {
+  final bytes = utf8.encode(codeVerifier);
+  final digest = sha256.convert(bytes);
+  return base64UrlEncode(digest.bytes).replaceAll('=', '');
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:songswipe/config/constants/environment.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/services/api/externals_api.dart';
@@ -11,6 +12,7 @@ String apiUser = '${Environment.apiUrl}/user';
 String apiTrack = '${Environment.apiUrl}/track';
 String apiAlbum = '${Environment.apiUrl}/album';
 String apiArtist = '${Environment.apiUrl}/artist';
+String apiSpotify = '${Environment.apiUrl}/spotify';
 
 /// Función que recibe un objeto user, nombre, apellidos, nombre de usuario y una imagen (opcional) y registra
 /// al usuario en la base de datos <br>
@@ -993,4 +995,51 @@ Future<bool> deleteArtistFromFavorites({required String uid, required int idArti
   }
 
   return deleted;
+}
+
+/// Esta función envia una petición para renovar el token de Spotify <br>
+/// @returns Nuevo token
+Future<String?> renewToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  final refreshToken = prefs.getString('spotify_refresh_token');
+
+  if (refreshToken == null) return null;
+
+  final response = await http.post(
+    Uri.parse('$apiSpotify/refresh'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({'refreshToken': refreshToken}),
+  );
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    final newAccessToken = data['access_token'];
+    final newRefreshToken = data['refresh_token'];
+
+    await prefs.setString('spotify_refresh_token', newRefreshToken);
+    return newAccessToken;
+  } else {
+    print('Error renovando token desde backend: ${response.body}');
+    return null;
+  }
+}
+
+/// Esta función devuelve el client ID de la app de Spotify <br>
+/// @returns Client ID de la app en Spotify
+Future<String> getSpotifyClientID() async {
+  String clientId = '';
+
+  Uri url = Uri.parse('$apiSpotify/client_id');
+
+  // Llamada a la API para obtener el top 3 albumes
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    clientId = json.decode(response.body);
+  }
+
+  return clientId;
 }
