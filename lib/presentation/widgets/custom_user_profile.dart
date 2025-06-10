@@ -166,7 +166,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                     child: Column(
                       children: [
                         Text(
-                          userProfile.name,
+                          '${userProfile.name} ${userProfile.lastName}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                               fontSize: 24, overflow: TextOverflow.ellipsis),

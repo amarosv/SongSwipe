@@ -21,5 +21,7 @@ export 'swipes_screen.dart';
 export 'track/info_track_screen.dart';
 export 'track/lyrics_screen.dart';
 export 'user/edit_profile_screen.dart';
+export 'user/followers_screen.dart';
+export 'user/following_screen.dart';
 export 'user/stats_screen.dart';
 export 'user/user_screen.dart';

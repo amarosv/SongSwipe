@@ -203,5 +203,9 @@
     "top_swiped_artists_by": "top 10 artistas que más ha swipeado",
     "top_liked_albums_by": "top 10 albums que más le gustan",
     "top_disliked_albums_by": "top 10 albums que menos le gustan",
-    "top_swiped_albums_by": "top 10 albums que más ha swipeado"
+    "top_swiped_albums_by": "top 10 albums que más ha swipeado",
+    "my_followers": "mis seguidores",
+    "my_following": "mis seguidos",
+    "their_followers": "sus seguidores",
+    "their_following": "sus seguidos"
 }

@@ -143,7 +143,7 @@ class _UserViewState extends State<UserView> {
                   ),
                   Expanded(
                     child: Text(
-                      _userProfile.name,
+                      '${_userProfile.name} ${_userProfile.name}',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                           fontSize: 24, overflow: TextOverflow.ellipsis),

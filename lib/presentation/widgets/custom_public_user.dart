@@ -148,7 +148,7 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                         ),
                         Expanded(
                           child: Text(
-                            userProfile.name,
+                            '${userProfile.name} ${userProfile.lastName}',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 24, overflow: TextOverflow.ellipsis),

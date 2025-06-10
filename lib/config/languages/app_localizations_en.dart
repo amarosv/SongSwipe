@@ -631,4 +631,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get top_swiped_albums_by => 'top 10 swiped albums';
+
+  @override
+  String get my_followers => 'my followers';
+
+  @override
+  String get my_following => 'my following';
+
+  @override
+  String get their_followers => 'their followers';
+
+  @override
+  String get their_following => 'their following';
 }

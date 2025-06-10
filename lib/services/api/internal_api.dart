@@ -1246,3 +1246,47 @@ Future<List<Album>> getTopSwipedAlbumsByUser({required String uid}) async {
   
   return albums;
 }
+
+/// Esta función recibe el UID de un usuario y devuelve la lista de sus seguidores <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de usuarios
+Future<List<UserApp>> getFollowersByUser({required String uid}) async {
+  List<UserApp> users = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/followers');
+
+  // Llamada a la API para obtener los seguidores
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  });
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    users = (data as List).map((user) => UserApp.fromJson(user)).toList();
+  }
+  
+  return users;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve la lista de sus seguidos <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de usuarios
+Future<List<UserApp>> getFollowingByUser({required String uid}) async {
+  List<UserApp> users = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/following');
+
+  // Llamada a la API para obtener los seguidos
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  });
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    users = (data as List).map((user) => UserApp.fromJson(user)).toList();
+  }
+  
+  return users;
+}

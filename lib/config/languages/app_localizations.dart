@@ -1323,6 +1323,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'top 10 swiped albums'**
   String get top_swiped_albums_by;
+
+  /// No description provided for @my_followers.
+  ///
+  /// In en, this message translates to:
+  /// **'my followers'**
+  String get my_followers;
+
+  /// No description provided for @my_following.
+  ///
+  /// In en, this message translates to:
+  /// **'my following'**
+  String get my_following;
+
+  /// No description provided for @their_followers.
+  ///
+  /// In en, this message translates to:
+  /// **'their followers'**
+  String get their_followers;
+
+  /// No description provided for @their_following.
+  ///
+  /// In en, this message translates to:
+  /// **'their following'**
+  String get their_following;
 }
 
 class _AppLocalizationsDelegate

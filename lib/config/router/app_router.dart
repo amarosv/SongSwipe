@@ -207,8 +207,26 @@ class AppRouter {
           );
         },
       ),
-      // TODO: /followers
-      // TODO: /following
+      GoRoute(
+        path: '/followers',
+        name: FollowersScreen.name,
+        builder: (context, state) {
+          final uid = state.uri.queryParameters['uid']!;
+          return FollowersScreen(
+            uid: uid,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/following',
+        name: FollowingScreen.name,
+        builder: (context, state) {
+          final uid = state.uri.queryParameters['uid']!;
+          return FollowingScreen(
+            uid: uid,
+          );
+        },
+      ),
       GoRoute(
         path: '/export',
         name: ExportTracksScreen.name,
