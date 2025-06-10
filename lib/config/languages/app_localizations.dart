@@ -1239,6 +1239,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'there are no more songs to discover!'**
   String get no_more_tracks_discover;
+
+  /// No description provided for @my_stats.
+  ///
+  /// In en, this message translates to:
+  /// **'my stats'**
+  String get my_stats;
+
+  /// No description provided for @top_liked_artists.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 liked artists'**
+  String get top_liked_artists;
+
+  /// No description provided for @top_disliked_artists.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 disliked artists'**
+  String get top_disliked_artists;
+
+  /// No description provided for @top_swiped_artists.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 swiped artists'**
+  String get top_swiped_artists;
+
+  /// No description provided for @top_liked_albums.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 liked albums'**
+  String get top_liked_albums;
+
+  /// No description provided for @top_disliked_albums.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 disliked albums'**
+  String get top_disliked_albums;
+
+  /// No description provided for @top_swiped_albums.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 swiped albums'**
+  String get top_swiped_albums;
 }
 
 class _AppLocalizationsDelegate

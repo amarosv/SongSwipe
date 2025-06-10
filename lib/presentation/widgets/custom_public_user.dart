@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
+import 'package:songswipe/presentation/widgets/custom_last_swipes_widget%20copy.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/internal_api.dart';
 
@@ -273,7 +274,7 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                                   future: getLast5Swipes(uid: widget.uidUser),
                                   builder: (context, snapshot) {
                                     Widget result;
-                              
+
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
                                       result = Center(
@@ -281,8 +282,8 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                                       );
                                     } else if (snapshot.hasError) {
                                       result = Center(
-                                          child: Text(
-                                              'Error: ${snapshot.error}'));
+                                          child:
+                                              Text('Error: ${snapshot.error}'));
                                     } else if (!snapshot.hasData) {
                                       result = Center(
                                           child: Text(capitalizeFirstLetter(
@@ -291,132 +292,32 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                                     } else {
                                       List<Track> tracks =
                                           snapshot.data as List<Track>;
-                              
-                                      result = Column(
-                                        children: [
-                                          // Últimos 5 swipes
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              upperCaseAfterSpace(
-                                                  text: localization
-                                                      .last_swipes),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20),
-                                            ),
-                                          ),
-                                          
-                                          CustomContainer(
-                                            child: ListView.builder(
-                                              shrinkWrap: true,
-                                              padding: EdgeInsets.zero,
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              itemCount: tracks.length,
-                                              itemBuilder: (context, index) {
-                                                Track track = tracks[index];
-                                                                          
-                                                // Construye la cadena de artistas y contributors
-                                                String artists =
-                                                    track.buildArtistsText();
-                                                                          
-                                                return InkWell(
-                                                  onTap: () => context.push(
-                                                      '/track?id=${track.id}'),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 10),
-                                                    child: Column(
-                                                      children: [
-                                                        const SizedBox(
-                                                          height: 10,
-                                                        ),
-                                                        // Información de la canción
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          6),
-                                                              child: Image(
-                                                                image: NetworkImage(
-                                                                    track
-                                                                        .md5Image),
-                                                                width: 64,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            Expanded(
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Text(
-                                                                    track.title,
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            18,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis),
-                                                                  ),
-                                                                  Text(
-                                                                    artists,
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            14,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            track.like
-                                                                ? Icon(
-                                                                    Icons
-                                                                        .thumb_up,
-                                                                    color: Colors
-                                                                        .green,
-                                                                    size: 28,
-                                                                  )
-                                                                : Icon(
-                                                                    Icons
-                                                                        .thumb_down,
-                                                                    color: Colors
-                                                                        .red,
-                                                                    size: 28,
-                                                                  )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 10,
-                                                        ),
-                                                        index <
-                                                                tracks.length -
-                                                                    1
-                                                            ? Divider(
-                                                                color: Colors
-                                                                    .white)
-                                                            : Container()
-                                                      ],
-                                                    ),
+
+                                      result = tracks.isNotEmpty
+                                          ? Column(
+                                              children: [
+                                                // Últimos 5 swipes
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    upperCaseAfterSpace(
+                                                        text: localization
+                                                            .last_swipes),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20),
                                                   ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      );
+                                                ),
+
+                                                CustomLastSwipesWidget(
+                                                    tracks: tracks)
+                                              ],
+                                            )
+                                          : Container();
                                     }
-                              
+
                                     return result;
                                   }),
                               const SizedBox(

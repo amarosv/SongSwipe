@@ -197,6 +197,11 @@ class AppRouter {
           return SwipesLibraryScreen(tracks: tracks);
         },
       ),
+      GoRoute(
+        path: '/stats',
+        name: StatsScreen.name,
+        builder: (context, state) => StatsScreen(),
+      ),
       // TODO: /followers
       // TODO: /following
       GoRoute(

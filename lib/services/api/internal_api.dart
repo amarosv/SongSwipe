@@ -1114,3 +1114,135 @@ Future<List<int>> getSwipedTracksIds({required String uid}) async {
 
   return ids;
 }
+
+/// Esta función recibe el UID de un usuario y devuelve una lista de los 10 artistas con más me gustas del usuario <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de artistas
+Future<List<Artist>> getTopLikedArtistsByUser({required String uid}) async {
+  List<Artist> artists = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/top_liked_artists');
+
+  // Llamada a la API para obtener los 10 artistas con más likes del usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  });
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    artists = (data as List).map((artist) => Artist.fromJson(artist, 0)).toList();
+  }
+  
+  return artists;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve una lista de los 10 artistas con más no me gustas del usuario <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de artistas
+Future<List<Artist>> getTopDislikedArtistsByUser({required String uid}) async {
+  List<Artist> artists = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/top_disliked_artists');
+
+  // Llamada a la API para obtener los 10 artistas con más dislikes del usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  });
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    artists = (data as List).map((artist) => Artist.fromJson(artist, 0)).toList();
+  }
+  
+  return artists;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve una lista de los 10 artistas con más swipes del usuario <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de artistas
+Future<List<Artist>> getTopSwipedArtistsByUser({required String uid}) async {
+  List<Artist> artists = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/top_swipes_artists');
+
+  // Llamada a la API para obtener los 10 artistas con más likes del usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  });
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    artists = (data as List).map((artist) => Artist.fromJson(artist, 0)).toList();
+  }
+  
+  return artists;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve una lista de los 10 albumes con más me gustas del usuario <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de albumes
+Future<List<Album>> getTopLikedAlbumsByUser({required String uid}) async {
+  List<Album> albums = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/top_liked_albums');
+
+  // Llamada a la API para obtener los 10 albumes con más likes del usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  });
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    albums = (data as List).map((album) => Album.fromJson(album)).toList();
+  }
+  
+  return albums;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve una lista de los 10 albumes con más no me gustas del usuario <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de albumes
+Future<List<Album>> getTopDislikedAlbumsByUser({required String uid}) async {
+  List<Album> albums = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/top_disliked_albums');
+
+  // Llamada a la API para obtener los 10 albumes con más dislikes del usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  });
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    albums = (data as List).map((album) => Album.fromJson(album)).toList();
+  }
+  
+  return albums;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve una lista de los 10 albumes con más swipes del usuario <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de albumes
+Future<List<Album>> getTopSwipedAlbumsByUser({required String uid}) async {
+  List<Album> albums = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/top_swipes_albums');
+
+  // Llamada a la API para obtener los 10 albumes con más likes del usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  });
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    albums = (data as List).map((album) => Album.fromJson(album)).toList();
+  }
+  
+  return albums;
+}

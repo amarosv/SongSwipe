@@ -534,6 +534,7 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                             ),
 
                           const SizedBox(height: 20),
+                          
                           // Album
                           Align(
                             alignment: Alignment.centerLeft,

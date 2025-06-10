@@ -1,5 +1,7 @@
 export 'custom_advertisiment_widget.dart';
 export 'custom_album_widget.dart';
+export 'custom_albums_widget.dart';
+export 'custom_artists_widget.dart';
 export 'custom_bottom_home_navigation_widget.dart';
 export 'custom_button_widget.dart';
 export 'custom_column_widget.dart';

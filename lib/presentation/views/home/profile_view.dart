@@ -257,6 +257,7 @@ class _ProfileViewState extends State<ProfileView> {
                   capitalizeFirstLetter(text: localization.see_stats),
                   style: TextStyle(fontSize: 18),
                 ),
+                function: () => context.push('/stats'),
               ),
 
               const SizedBox(

@@ -596,4 +596,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get no_more_tracks_discover => '¡no hay más canciones por descubrir!';
+
+  @override
+  String get my_stats => 'my stats';
+
+  @override
+  String get top_liked_artists => 'top 10 artistas que más te gustan';
+
+  @override
+  String get top_disliked_artists => 'top 10 artistas que menos te gustan';
+
+  @override
+  String get top_swiped_artists => 'top 10 artistas que más has swipeado';
+
+  @override
+  String get top_liked_albums => 'top 10 albums que más te gustan';
+
+  @override
+  String get top_disliked_albums => 'top 10 albums que menos te gustan';
+
+  @override
+  String get top_swiped_albums => 'top 10 albums que más has swipeado';
 }

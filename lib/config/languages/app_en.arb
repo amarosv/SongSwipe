@@ -190,5 +190,13 @@
     "playlist_description": "tracks exported from SongSwipe",
     "cant_select": "you cannot select more than",
     "plural_tracks": "tracks",
-    "no_more_tracks_discover": "there are no more songs to discover!"
+    "no_more_tracks_discover": "there are no more songs to discover!",
+    "my_stats": "my stats",
+    "top_liked_artists": "top 10 liked artists",
+    "top_disliked_artists": "top 10 disliked artists",
+    "top_swiped_artists": "top 10 swiped artists",
+    "my_stats": "my stats",
+    "top_liked_albums": "top 10 liked albums",
+    "top_disliked_albums": "top 10 disliked albums",
+    "top_swiped_albums": "top 10 swiped albums"
 }
