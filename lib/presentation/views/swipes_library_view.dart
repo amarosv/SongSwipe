@@ -29,7 +29,7 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
   // Controlador del CardSwiper
   final CardSwiperController _swiperController = CardSwiperController();
 
-// Duración máxima del preview (Deezer usa 30s)
+  // Duración máxima del preview (Deezer usa 30s)
   final Duration _previewDuration = const Duration(seconds: 30);
 
   // Obtenemos el usuario actual
@@ -325,7 +325,6 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
 
     // _currentIndex = currentIndex;
 
-
     // Nueva verificación: borrar la lista cuando el usuario haya hecho swipe a la última carta
     if (_currentIndex == _cards.length - 1) {
       _audioPlayer.stop();
@@ -427,6 +426,7 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, _finalizeSwipes());
+
         return false;
       },
       child: Scaffold(

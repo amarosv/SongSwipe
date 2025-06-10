@@ -23,6 +23,10 @@ class _ProfileViewState extends State<ProfileView> {
 
   // Variable que almacena el uid del usuario
   late String _uid;
+
+  // Variable que almacena la lista con todos los ids de las canciones
+  late List<int> _allTracksIds = [];
+
   // Variable que almacena al userprofile con sus datos
   UserProfile _userProfile = UserProfile.empty();
 
@@ -34,10 +38,19 @@ class _ProfileViewState extends State<ProfileView> {
     super.initState();
     // Almacenamos el uid del usuario
     _uid = _user.uid;
+    print(_uid);
+    // Cargamos los IDs de todas las canciones
+    _loadAllTracks();
     // Obtenemos los datos del usuario
     _getUserProfile();
     // Obtenemos el código del idioma
     _getLanguageCode();
+  }
+
+  // Función que obtiene todos los IDs de las canciones
+  void _loadAllTracks() async {
+    _allTracksIds = await getSwipedTracksIds(uid: _uid);
+    setState(() {});
   }
 
   // Función que obtiene los datos del usuario de la api
@@ -118,7 +131,8 @@ class _ProfileViewState extends State<ProfileView> {
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
                           value: GestureDetector(
-                            onTap: () => context.push('/swipes?uid=$_uid&liked=2'),
+                            onTap: () => context.push('/swipes-library',
+                                extra: _allTracksIds),
                             child: Text(
                               humanReadbleNumber(_userProfile.swipes),
                               overflow: TextOverflow.ellipsis,

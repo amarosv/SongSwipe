@@ -335,8 +335,11 @@ class _LikedViewState extends ConsumerState<LikedView>
                                             print('waiting...');
                                             await result;
                                           }
-                                          _fetchTracks(reset: true);
-                                          if (mounted) {}
+
+                                          ref
+                                              .read(
+                                                  swipeChangedProvider.notifier)
+                                              .state = true;
                                         })
                                     : null),
                             SpeedDialChild(

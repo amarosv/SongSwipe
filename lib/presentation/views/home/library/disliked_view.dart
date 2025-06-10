@@ -330,9 +330,11 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                                           if (result is Future<void>) {
                                             await result;
                                           }
-                                          if (mounted) {
-                                            _fetchTracks(reset: true);
-                                          }
+
+                                          ref
+                                              .read(
+                                                  swipeChangedProvider.notifier)
+                                              .state = true;
                                         })
                                     : null),
                             SpeedDialChild(

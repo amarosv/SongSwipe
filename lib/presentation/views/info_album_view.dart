@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marquee/marquee.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/export_providers.dart';
 import 'package:songswipe/helpers/utils.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
@@ -11,17 +13,17 @@ import 'package:songswipe/services/api/internal_api.dart';
 /// Vista de información del album <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class InfoAlbumView extends StatefulWidget {
+class InfoAlbumView extends ConsumerStatefulWidget {
   /// ID del album
   final int idAlbum;
 
   const InfoAlbumView({super.key, required this.idAlbum});
 
   @override
-  State<InfoAlbumView> createState() => _InfoAlbumViewState();
+  ConsumerState<InfoAlbumView> createState() => _InfoAlbumViewState();
 }
 
-class _InfoAlbumViewState extends State<InfoAlbumView> {
+class _InfoAlbumViewState extends ConsumerState<InfoAlbumView> {
   // ScrollController
   final ScrollController _scrollController = ScrollController();
 
@@ -52,7 +54,6 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
   @override
   void initState() {
     super.initState();
-    print(widget.idAlbum);
     _loadData();
     _scrollController.addListener(_updateTextOpacity);
   }
@@ -204,8 +205,16 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                   ),
                   actions: [
                     GestureDetector(
-                      onTap: () =>
-                          context.push('/swipes'), // TODO: Añadir las canciones
+                      onTap: () => context
+                          .push('/swipes', extra: _album.tracks)
+                          .then((result) async {
+                        if (result is Future<void>) {
+                          print('waiting...');
+                          await result;
+                        }
+
+                        ref.read(swipeChangedProvider.notifier).state = true;
+                      }),
                       child: Padding(
                         padding: const EdgeInsets.all(5),
                         child: AnimatedOpacity(
@@ -251,7 +260,7 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                         // Título del album
                         LayoutBuilder(builder: (context, constraints) {
                           Widget resultText;
-                                            
+
                           final text = _album.title;
                           final textPainter = TextPainter(
                               text: TextSpan(
@@ -264,9 +273,9 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                               maxLines: 1,
                               textDirection: TextDirection.ltr)
                             ..layout(maxWidth: double.infinity);
-                                            
+
                           final textWidth = textPainter.size.width;
-                                            
+
                           if (textWidth > constraints.maxWidth) {
                             resultText = SizedBox(
                               height: 30,
@@ -301,12 +310,12 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                               ),
                             );
                           }
-                                            
+
                           return resultText;
                         }),
-                    
+
                         const SizedBox(height: 20),
-                    
+
                         // Artistas
                         SizedBox(
                           height: 120,
@@ -354,11 +363,11 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                             ),
                           ),
                         ),
-                    
+
                         const SizedBox(
                           height: 20,
                         ),
-                    
+
                         // Información
                         Align(
                           alignment: Alignment.centerLeft,
@@ -368,7 +377,7 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
-                    
+
                         // Container con la información
                         CustomContainer(
                           child: Padding(
@@ -429,9 +438,9 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                             ),
                           ),
                         ),
-                    
+
                         const SizedBox(height: 20),
-                    
+
                         // Stats
                         Align(
                           alignment: Alignment.centerLeft,
@@ -441,14 +450,14 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
-                    
+
                         // Container con las stats
                         CustomStatsWidget(stats: _stats),
-                    
+
                         const SizedBox(
                           height: 20,
                         ),
-                    
+
                         // Tracklist
                         Align(
                           alignment: Alignment.centerLeft,
@@ -458,7 +467,7 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
-                    
+
                         // Container con las canciones
                         CustomContainer(
                           child: Column(
@@ -466,7 +475,7 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                 _album.tracks.asMap().entries.map((entry) {
                               int index = entry.key;
                               Track track = entry.value;
-                                            
+
                               return InkWell(
                                 onTap: () =>
                                     context.push('/track?id=${track.id}'),
@@ -489,9 +498,9 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                               width: 80,
                                             ),
                                           ),
-                                            
+
                                           const SizedBox(width: 20),
-                                            
+
                                           Expanded(
                                             child: Stack(
                                               children: [
@@ -503,7 +512,7 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                     LayoutBuilder(builder:
                                                         (context, constraints) {
                                                       Widget resultText;
-                                            
+
                                                       final text = track.title;
                                                       final textPainter =
                                                           TextPainter(
@@ -525,11 +534,11 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                             ..layout(
                                                                 maxWidth: double
                                                                     .infinity);
-                                            
+
                                                       final textWidth =
                                                           textPainter
                                                               .size.width;
-                                            
+
                                                       if (textWidth >
                                                           constraints
                                                               .maxWidth) {
@@ -590,7 +599,7 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                                       .ellipsis),
                                                         );
                                                       }
-                                            
+
                                                       return Padding(
                                                         padding: const EdgeInsets
                                                             .only(
@@ -599,14 +608,14 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                         child: resultText,
                                                       );
                                                     }),
-                                            
+
                                                     const SizedBox(height: 5),
-                                            
+
                                                     // Artistas
                                                     LayoutBuilder(builder:
                                                         (context, constraints) {
                                                       Widget resultText;
-                                            
+
                                                       final text = track
                                                           .buildArtistsText();
                                                       final textPainter =
@@ -629,11 +638,11 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                             ..layout(
                                                                 maxWidth: double
                                                                     .infinity);
-                                            
+
                                                       final textWidth =
                                                           textPainter
                                                               .size.width;
-                                            
+
                                                       if (textWidth >
                                                           constraints
                                                               .maxWidth) {
@@ -688,12 +697,12 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                                                                       .ellipsis),
                                                         );
                                                       }
-                                            
+
                                                       return resultText;
                                                     }),
-                                            
+
                                                     const SizedBox(height: 5),
-                                            
+
                                                     // Stats de la canción
                                                     Align(
                                                       alignment:
@@ -748,11 +757,11 @@ class _InfoAlbumViewState extends State<InfoAlbumView> {
                             }).toList(),
                           ),
                         ),
-                    
+
                         const SizedBox(height: 20),
-                    
+
                         CustomAdvertisimentWidget(),
-                    
+
                         const SizedBox(
                           height: 20,
                         ),

@@ -331,9 +331,13 @@ Future<List<dynamic>> areTrackInDatabase(
 /// @returns Número de filas afectadas
 Future<int> saveSwipes(
     {required String uid, required List<Swipe> swipes}) async {
-  print('adding...');
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
+
+  print('ADDING...');
+  for (var swipe in swipes) {
+    print('${swipe.id} - ${swipe.idArtist} - ${swipe.idAlbum} - ${swipe.like}');
+  }
 
   Uri url = Uri.parse('$apiUser/$uid/save_swipes');
 
@@ -726,7 +730,8 @@ Future<bool> updateSwipe(
     {required String uid, required int idTrack, required int newLike}) async {
   Uri url = Uri.parse('$apiUser/$uid/update_swipe');
 
-  print('updating...');
+  print('UPDATING...');
+  print(idTrack);
 
   // Llamada a la API para guardar los ajustes
   final response = await http.put(

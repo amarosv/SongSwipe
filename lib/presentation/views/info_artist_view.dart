@@ -134,7 +134,7 @@ class _InfoArtistViewState extends State<InfoArtistView>
       } else {
         deleteArtistFromFavorites(uid: _uid, idArtist: widget.idArtist);
       }
-    
+
       bool finalFavorite = _isFavorite;
       _isFavoriteComparator = finalFavorite;
     }
@@ -670,10 +670,21 @@ class _InfoArtistViewState extends State<InfoArtistView>
                                             child: Column(
                                               children: [
                                                 // Imagen del artista
-                                                CircleAvatar(
-                                                  backgroundImage: NetworkImage(
-                                                      artist.pictureXL),
-                                                  radius: 36,
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .primary,
+                                                        width: 2),
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                            artist.pictureXL),
+                                                    radius: 36,
+                                                  ),
                                                 ),
 
                                                 const SizedBox(
