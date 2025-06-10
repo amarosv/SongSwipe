@@ -1246,6 +1246,12 @@ abstract class AppLocalizations {
   /// **'my stats'**
   String get my_stats;
 
+  /// No description provided for @their_stats.
+  ///
+  /// In en, this message translates to:
+  /// **'their stats'**
+  String get their_stats;
+
   /// No description provided for @top_liked_artists.
   ///
   /// In en, this message translates to:
@@ -1281,6 +1287,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'top 10 swiped albums'**
   String get top_swiped_albums;
+
+  /// No description provided for @top_liked_artists_by.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 liked artists'**
+  String get top_liked_artists_by;
+
+  /// No description provided for @top_disliked_artists_by.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 disliked artists'**
+  String get top_disliked_artists_by;
+
+  /// No description provided for @top_swiped_artists_by.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 swiped artists'**
+  String get top_swiped_artists_by;
+
+  /// No description provided for @top_liked_albums_by.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 liked albums'**
+  String get top_liked_albums_by;
+
+  /// No description provided for @top_disliked_albums_by.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 disliked albums'**
+  String get top_disliked_albums_by;
+
+  /// No description provided for @top_swiped_albums_by.
+  ///
+  /// In en, this message translates to:
+  /// **'top 10 swiped albums'**
+  String get top_swiped_albums_by;
 }
 
 class _AppLocalizationsDelegate

@@ -11,7 +11,10 @@ import 'package:songswipe/services/api/internal_api.dart';
 /// @author Amaro Suárez <br>
 /// @version 1.0
 class StatsView extends StatefulWidget {
-  const StatsView({super.key});
+  /// UID del usuario
+  final String uid;
+
+  const StatsView({super.key, required this.uid});
 
   @override
   State<StatsView> createState() => _StatsViewState();
@@ -54,6 +57,9 @@ class _StatsViewState extends State<StatsView> {
   // Variable que almacena el número total de swipes del usuario
   late int _swipes = 0;
 
+  // Variable que almacena si se están cargando los datos
+  bool _loading = true;
+
   @override
   void initState() {
     super.initState();
@@ -67,16 +73,16 @@ class _StatsViewState extends State<StatsView> {
 
     try {
       final results = await Future.wait([
-        getLast5Swipes(uid: _uid),
-        getTopLikedArtistsByUser(uid: _uid),
-        getTopDislikedArtistsByUser(uid: _uid),
-        getTopSwipedArtistsByUser(uid: _uid),
-        getTopLikedAlbumsByUser(uid: _uid),
-        getTopDislikedAlbumsByUser(uid: _uid),
-        getTopSwipedAlbumsByUser(uid: _uid),
-        getLikedTracksIds(uid: _uid),
-        getDislikedTracksIds(uid: _uid),
-        getSwipedTracksIds(uid: _uid)
+        getLast5Swipes(uid: widget.uid),
+        getTopLikedArtistsByUser(uid: widget.uid),
+        getTopDislikedArtistsByUser(uid: widget.uid),
+        getTopSwipedArtistsByUser(uid: widget.uid),
+        getTopLikedAlbumsByUser(uid: widget.uid),
+        getTopDislikedAlbumsByUser(uid: widget.uid),
+        getTopSwipedAlbumsByUser(uid: widget.uid),
+        getLikedTracksIds(uid: widget.uid),
+        getDislikedTracksIds(uid: widget.uid),
+        getSwipedTracksIds(uid: widget.uid)
       ]);
 
       setState(() {
@@ -93,6 +99,7 @@ class _StatsViewState extends State<StatsView> {
         _dislikes = dislikes.length;
         List<dynamic> swipes = results[9] as List<dynamic>;
         _swipes = swipes.length;
+        _loading = false;
       });
     } catch (e) {
       print(e);
@@ -106,12 +113,16 @@ class _StatsViewState extends State<StatsView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          localization.my_stats.toUpperCase(),
+          _uid == widget.uid
+            ? localization.my_stats.toUpperCase()
+            : localization.their_stats.toUpperCase(),
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body: _loading
+        ? Center(child: CircularProgressIndicator(),)
+        : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -161,7 +172,10 @@ class _StatsViewState extends State<StatsView> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             capitalizeFirstLetter(
-                                text: localization.top_liked_artists),
+                                text: _uid == widget.uid
+                                  ? localization.top_liked_artists
+                                  : localization.top_liked_artists_by
+                            ),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
@@ -183,7 +197,9 @@ class _StatsViewState extends State<StatsView> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             capitalizeFirstLetter(
-                                text: localization.top_disliked_artists),
+                                text: _uid == widget.uid
+                                  ? localization.top_disliked_artists
+                                  : localization.top_disliked_artists_by),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
@@ -205,7 +221,9 @@ class _StatsViewState extends State<StatsView> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             capitalizeFirstLetter(
-                                text: localization.top_swiped_artists),
+                                text: _uid == widget.uid
+                                  ? localization.top_swiped_artists
+                                  : localization.top_swiped_artists_by),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
@@ -227,7 +245,9 @@ class _StatsViewState extends State<StatsView> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             capitalizeFirstLetter(
-                                text: localization.top_liked_albums),
+                                text: _uid == widget.uid
+                                  ? localization.top_liked_albums
+                                  : localization.top_liked_albums_by),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
@@ -249,7 +269,9 @@ class _StatsViewState extends State<StatsView> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             capitalizeFirstLetter(
-                                text: localization.top_disliked_albums),
+                                text: _uid == widget.uid
+                                  ? localization.top_disliked_albums
+                                  : localization.top_disliked_albums_by),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
@@ -271,7 +293,9 @@ class _StatsViewState extends State<StatsView> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             capitalizeFirstLetter(
-                                text: localization.top_swiped_albums),
+                                text: _uid == widget.uid
+                                  ? localization.top_swiped_albums
+                                  : localization.top_swiped_albums_by),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),

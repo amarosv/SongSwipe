@@ -27,6 +27,9 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
   // Variable que almacena el uid del usuario actual
   late String uid;
 
+  // Variable que almacena la lista con todos los ids de las canciones
+  late List<int> _allTracksIds = [];
+
   // Variable que almacena al userprofile con sus datos
   UserProfile userProfile = UserProfile.empty();
 
@@ -55,7 +58,8 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
         getUserProfile(uid: widget.uidUser),
         checkIfIsMyFriend(uid: uid, uidFriend: widget.uidUser),
         checkIfIsFollowed(uid: uid, uidFriend: widget.uidUser),
-        getUserSettings(uid: widget.uidUser)
+        getUserSettings(uid: widget.uidUser),
+        getSwipedTracksIds(uid: widget.uidUser)
       ]);
 
       if (!mounted) return;
@@ -65,6 +69,7 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
         isFriend = results[1] as bool;
         followed = results[2] as bool;
         userSettings = results[3] as UserSettings;
+        _allTracksIds = results[4] as List<int>;
         loading = false;
       });
 
@@ -110,8 +115,6 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                       }
 
                       loadData();
-
-                      print(isFriend);
 
                       if (isFriend) {
                         context.pushReplacement('/user?uid=${widget.uidUser}');
@@ -168,11 +171,12 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                               child: CustomColumn(
                                 title: capitalizeFirstLetter(
                                     text: localization.swipes),
-                                value: GestureDetector(
+                                value: InkWell(
                                   onTap: () => (isFriend ||
                                           userSettings.privacyVisSavedSongs ==
                                               0)
-                                      ? context.push('/swipes?uid=$uid&liked=2')
+                                      ? context.push('/swipes-library',
+                                          extra: _allTracksIds)
                                       : null,
                                   child: Text(
                                     humanReadbleNumber(userProfile.swipes),
@@ -189,7 +193,7 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                               child: CustomColumn(
                                   title: upperCaseAfterSpace(
                                       text: localization.followers),
-                                  value: GestureDetector(
+                                  value: InkWell(
                                     onTap: () => (isFriend ||
                                             userSettings.privacyVisFol == 0)
                                         ? context.push('/followers?uid=$uid')
@@ -208,7 +212,7 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                               child: CustomColumn(
                                 title: upperCaseAfterSpace(
                                     text: localization.following),
-                                value: GestureDetector(
+                                value: InkWell(
                                   onTap: () => (isFriend ||
                                           userSettings.privacyVisFol == 0)
                                       ? context.push('/following?uid=$uid')
@@ -259,6 +263,8 @@ class _CustomPublicUserState extends State<CustomPublicUser> {
                                       text: localization.see_their_stats),
                                   style: TextStyle(fontSize: 18),
                                 ),
+                                function: () => context
+                                    .push('/stats?uid=${widget.uidUser}'),
                               ),
                             ],
                           )

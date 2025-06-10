@@ -27,6 +27,9 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
   // Variable que almacena el uid del usuario actual
   late String uid;
 
+  // Variable que almacena la lista con todos los ids de las canciones
+  late List<int> _allTracksIds = [];
+
   // Variable que almacena al userprofile con sus datos
   UserProfile userProfile = UserProfile.empty();
 
@@ -54,7 +57,8 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
         getUserProfile(uid: widget.uidUser),
         checkIfIsMyFriend(uid: uid, uidFriend: widget.uidUser),
         checkIfIsFollowed(uid: uid, uidFriend: widget.uidUser),
-        getUserSettings(uid: widget.uidUser)
+        getUserSettings(uid: widget.uidUser),
+        getSwipedTracksIds(uid: widget.uidUser)
       ]);
 
       if (!mounted) return;
@@ -64,6 +68,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
         isFriend = results[1] as bool;
         followed = results[2] as bool;
         userSettings = results[3] as UserSettings;
+        _allTracksIds = results[4] as List<int>;
         _loadingFriendStatus = false;
       });
 
@@ -195,9 +200,9 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                         child: CustomColumn(
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
-                          value: GestureDetector(
-                            onTap: () => context
-                                .push('/swipes?uid=${widget.uidUser}&liked=2'),
+                          value: InkWell(
+                            onTap: () => context.push('/swipes-library',
+                                extra: _allTracksIds),
                             child: Text(
                               humanReadbleNumber(userProfile.swipes),
                               overflow: TextOverflow.ellipsis,
@@ -212,7 +217,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.followers),
-                          value: GestureDetector(
+                          value: InkWell(
                             onTap: () => context
                                 .push('/followers?uid=${widget.uidUser}'),
                             child: Text(
@@ -229,7 +234,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.following),
-                          value: GestureDetector(
+                          value: InkWell(
                             onTap: () => context
                                 .push('/following?uid=${widget.uidUser}'),
                             child: Text(
@@ -279,6 +284,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                                 text: localization.see_their_stats),
                             style: TextStyle(fontSize: 18),
                           ),
+                          function: () => context.push('/stats?uid=${widget.uidUser}'),
                         ),
                       ],
                     )

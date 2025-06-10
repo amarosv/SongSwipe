@@ -191,11 +191,17 @@
     "plural_tracks": "canzoni",
     "no_more_tracks_discover": "non ci sono più canzoni da scoprire!",
     "my_stats": "le mie statistiche",
+    "their_stats": "le loro statistiche",
     "top_liked_artists": "i 10 artisti più apprezzati",
     "top_disliked_artists": "i 10 artisti più antipatici",
     "top_swiped_artists": "i 10 artisti più swipes",
-    "my_stats": "my stats",
     "top_liked_albums": "i 10 albums più apprezzati",
     "top_disliked_albums": "i 10 albums più antipatici",
-    "top_swiped_albums": "i 10 albums più swipes"
+    "top_swiped_albums": "i 10 albums più swipes",
+    "top_liked_artists_by": "i 10 artisti più apprezzati",
+    "top_disliked_artists_by": "i 10 artisti più antipatici",
+    "top_swiped_artists_by": "i 10 artisti più swipes",
+    "top_liked_albums_by": "i 10 albums più apprezzati",
+    "top_disliked_albums_by": "i 10 albums più antipatici",
+    "top_swiped_albums_by": "i 10 albums più swipes"
 }

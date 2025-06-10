@@ -200,7 +200,12 @@ class AppRouter {
       GoRoute(
         path: '/stats',
         name: StatsScreen.name,
-        builder: (context, state) => StatsScreen(),
+        builder: (context, state) {
+          final uid = state.uri.queryParameters['uid']!;
+          return StatsScreen(
+            uid: uid,
+          );
+        },
       ),
       // TODO: /followers
       // TODO: /following

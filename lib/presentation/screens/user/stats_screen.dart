@@ -7,11 +7,14 @@ import 'package:songswipe/presentation/views/export_views.dart';
 class StatsScreen extends StatelessWidget {
   /// Nombre de la ruta
   static const name = 'stats-screen';
+
+  /// UID del usuario
+  final String uid;
   
-  const StatsScreen({super.key});
+  const StatsScreen({super.key, required this.uid});
 
   @override
   Widget build(BuildContext context) {
-    return StatsView();
+    return StatsView(uid: uid);
   }
 }

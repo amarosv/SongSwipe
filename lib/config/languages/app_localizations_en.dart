@@ -594,6 +594,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get my_stats => 'my stats';
 
   @override
+  String get their_stats => 'their stats';
+
+  @override
   String get top_liked_artists => 'top 10 liked artists';
 
   @override
@@ -610,4 +613,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get top_swiped_albums => 'top 10 swiped albums';
+
+  @override
+  String get top_liked_artists_by => 'top 10 liked artists';
+
+  @override
+  String get top_disliked_artists_by => 'top 10 disliked artists';
+
+  @override
+  String get top_swiped_artists_by => 'top 10 swiped artists';
+
+  @override
+  String get top_liked_albums_by => 'top 10 liked albums';
+
+  @override
+  String get top_disliked_albums_by => 'top 10 disliked albums';
+
+  @override
+  String get top_swiped_albums_by => 'top 10 swiped albums';
 }
