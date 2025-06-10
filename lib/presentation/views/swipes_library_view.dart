@@ -383,13 +383,19 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     }
   }
 
-  Future<void> _finalizeSwipes() async {
+  Future<bool> _finalizeSwipes() async {
+    bool changes = false;
+
     if (swipes.isNotEmpty) {
       final List<Future<void>> updates = swipes.map((swipe) {
         return updateSwipe(idTrack: swipe.id, newLike: swipe.like, uid: _uid);
       }).toList();
       await Future.wait(updates);
+
+      changes = true;
     }
+
+    return changes;
   }
 
   @override
@@ -425,7 +431,8 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     final borderColor = isDark ? Colors.white : Colors.black;
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(context, _finalizeSwipes());
+        final hasChanges = await _finalizeSwipes();
+        Navigator.pop(context, hasChanges);
 
         return false;
       },

@@ -56,6 +56,9 @@ class _SwipesViewState extends State<SwipesView>
   // Variable que almacena el uid del usuario
   late String _uid;
 
+  // Booleano que indica si se están cargando las canciones
+  bool _isLoading = true;
+
   // Variable que indica el índice actual
   int _currentIndex = 0;
 
@@ -184,6 +187,7 @@ class _SwipesViewState extends State<SwipesView>
         if (mounted) {
           setState(() {
             _cards.addAll(newCards);
+            _isLoading = false;
 
             if (_cards.isNotEmpty &&
                 _currentIndex < _cards.length &&
@@ -349,7 +353,8 @@ class _SwipesViewState extends State<SwipesView>
     }
   }
 
-  Future<void> _finalizeSwipes() async {
+  Future<bool> _finalizeSwipes() async {
+    bool changes = false;
     if (swipes.isNotEmpty) {
       List<Swipe> swipesToAdd = [];
       List<Swipe> swipesToUpdate = [];
@@ -371,8 +376,13 @@ class _SwipesViewState extends State<SwipesView>
         return updateSwipe(idTrack: swipe.id, newLike: swipe.like, uid: _uid);
       }).toList();
 
-      await Future.wait([...updates, saveSwipes(uid: _uid, swipes: swipesToAdd)]);
+      await Future.wait(
+          [...updates, saveSwipes(uid: _uid, swipes: swipesToAdd)]);
+
+      changes = true;
     }
+
+    return changes;
   }
 
   @override
@@ -408,7 +418,8 @@ class _SwipesViewState extends State<SwipesView>
     final borderColor = isDark ? Colors.white : Colors.black;
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(context, _finalizeSwipes());
+        bool hasChanges = await _finalizeSwipes();
+        Navigator.pop(context, hasChanges);
 
         return false;
       },
@@ -436,12 +447,15 @@ class _SwipesViewState extends State<SwipesView>
       return Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
-          child: Center(
-            child: Text(
-              capitalizeFirstLetter(text: localization.no_more_tracks_discover),
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Center(
+                  child: Text(
+                    capitalizeFirstLetter(
+                        text: localization.no_more_tracks_discover),
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
         ),
       );
     }
@@ -509,7 +523,7 @@ class _SwipesViewState extends State<SwipesView>
                           : null,
                     ),
                   SafeArea(
-                    child: _cards.isEmpty
+                    child: _cards.isEmpty && !_isLoading
                         ? Center(
                             child: Text(
                               capitalizeFirstLetter(

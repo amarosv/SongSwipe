@@ -38,7 +38,6 @@ class _ProfileViewState extends State<ProfileView> {
     super.initState();
     // Almacenamos el uid del usuario
     _uid = _user.uid;
-    print(_uid);
     // Cargamos los IDs de todas las canciones
     _loadAllTracks();
     // Obtenemos los datos del usuario

@@ -461,3 +461,26 @@ Future<List<Artist>> getRelatedArtists({required int idArtist}) async {
   
   return artists;
 }
+
+/// Esta función recibe el ID de un artista y devuelve sus top 100 canciones <br>
+/// @param idArtist ID del artista <br>
+/// @returns Lista de canciones
+Future<List<Track>> getTopDeezerTracksByArtist({required int idArtist}) async {
+  List<Track> tracks = List.empty();
+
+  Uri url = Uri.parse('${Environment.apiUrlDeezer}artist/$idArtist/top?limit=100');
+
+  // Llamada a la API para obtener los artistas similares
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    tracks = (data['data'] as List).map((artists) => Track.fromJson(artists)).toList();
+  }
+  
+  return tracks;
+}

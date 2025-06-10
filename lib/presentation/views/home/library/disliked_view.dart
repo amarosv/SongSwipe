@@ -326,15 +326,13 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                                     ? () => context
                                             .push('/swipes-library',
                                                 extra: _allTracksIds)
-                                            .then((result) async {
-                                          if (result is Future<void>) {
-                                            await result;
+                                            .then((result) {
+                                          if (result == true) {
+                                            ref
+                                                .read(swipeChangedProvider
+                                                    .notifier)
+                                                .state = true;
                                           }
-
-                                          ref
-                                              .read(
-                                                  swipeChangedProvider.notifier)
-                                              .state = true;
                                         })
                                     : null),
                             SpeedDialChild(

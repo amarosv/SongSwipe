@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marquee/marquee.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/export_providers.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
@@ -12,17 +14,17 @@ import 'package:songswipe/services/api/internal_api.dart';
 /// Vista de la información del artista <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class InfoArtistView extends StatefulWidget {
+class InfoArtistView extends ConsumerStatefulWidget {
   /// ID del artista
   final int idArtist;
 
   const InfoArtistView({super.key, required this.idArtist});
 
   @override
-  State<InfoArtistView> createState() => _InfoArtistViewState();
+  ConsumerState<InfoArtistView> createState() => _InfoArtistViewState();
 }
 
-class _InfoArtistViewState extends State<InfoArtistView>
+class _InfoArtistViewState extends ConsumerState<InfoArtistView>
     with WidgetsBindingObserver {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
@@ -38,6 +40,9 @@ class _InfoArtistViewState extends State<InfoArtistView>
 
   // Variable que almacena el top 3 canciones
   late List<Track> _topTracks = List.empty();
+
+  // Variable que almacena el top canciones de este artista en Deezer
+  late List<Track> _topTracksDeezer = List.empty();
 
   // Variable que almacena el top 3 albumes
   late List<Album> _topAlbums = List.empty();
@@ -82,7 +87,8 @@ class _InfoArtistViewState extends State<InfoArtistView>
         getTopTracksByArtist(idArtist: widget.idArtist),
         getTopAlbumsByArtist(idArtist: widget.idArtist),
         getArtistStats(idArtist: widget.idArtist),
-        getRelatedArtists(idArtist: widget.idArtist)
+        getRelatedArtists(idArtist: widget.idArtist),
+        getTopDeezerTracksByArtist(idArtist: widget.idArtist)
       ]);
 
       setState(() {
@@ -94,6 +100,7 @@ class _InfoArtistViewState extends State<InfoArtistView>
         _topAlbums = results[4] as List<Album>;
         _stats = results[5] as Stats;
         _relatedArtists = results[6] as List<Artist>;
+        _topTracksDeezer = results[7] as List<Track>;
         _isLoading = false;
       });
     } catch (e) {
@@ -291,42 +298,49 @@ class _InfoArtistViewState extends State<InfoArtistView>
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () => context
-                            .push('/swipes'), // TODO: Añadir las canciones
-                        child: Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: AnimatedOpacity(
-                            opacity: 1.0,
-                            duration: Duration(milliseconds: 300),
-                            child: AnimatedContainer(
+                      if (_topTracksDeezer.length > 1)
+                        GestureDetector(
+                          onTap: () => context
+                              .push('/swipes', extra: _topTracksDeezer)
+                              .then((result) {
+                            if (result == true) {
+                              ref.read(swipeChangedProvider.notifier).state =
+                                  true;
+                            }
+                          }),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: AnimatedOpacity(
+                              opacity: 1.0,
                               duration: Duration(milliseconds: 300),
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _textOpacity <= 0
-                                    ? Colors.black.withValues(alpha: 0.5)
-                                    : Colors.transparent,
-                              ),
-                              child: AnimatedSwitcher(
-                                duration: Duration(milliseconds: 200),
-                                transitionBuilder: (child, animation) =>
-                                    ScaleTransition(
-                                  scale: animation,
-                                  child: child,
-                                ),
-                                child: Icon(
-                                  Icons.swipe,
-                                  key: ValueKey<bool>(_textOpacity > 0),
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 300),
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
                                   color: _textOpacity <= 0
-                                      ? Colors.white
-                                      : Theme.of(context).colorScheme.primary,
+                                      ? Colors.black.withValues(alpha: 0.5)
+                                      : Colors.transparent,
+                                ),
+                                child: AnimatedSwitcher(
+                                  duration: Duration(milliseconds: 200),
+                                  transitionBuilder: (child, animation) =>
+                                      ScaleTransition(
+                                    scale: animation,
+                                    child: child,
+                                  ),
+                                  child: Icon(
+                                    Icons.swipe,
+                                    key: ValueKey<bool>(_textOpacity > 0),
+                                    color: _textOpacity <= 0
+                                        ? Colors.white
+                                        : Theme.of(context).colorScheme.primary,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                   SliverToBoxAdapter(
