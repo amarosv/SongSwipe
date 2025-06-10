@@ -108,8 +108,6 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
         areTrackInDatabase(uid: _uid, tracksIds: [widget.idTrack])
       ]);
 
-      if (!mounted) return;
-
       _track = results[0] as Track;
 
       final resultsByTrack = await Future.wait([
@@ -119,6 +117,7 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
         getRecommendedTracksByArtist(artistID: _track.artist.id)
       ]);
 
+      if (!mounted) return;
       setState(() {
         _artists = {_track.artist, ..._track.contributors}
             .toList()
@@ -137,6 +136,7 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
         // Eliminamos si aparece la misma canción
         _relatedTracks.removeWhere((t) => t.id == _track.id);
         _isLoading = false;
+        print(_isLoading);
       });
     } catch (e) {
       print('Error loading track data: $e');

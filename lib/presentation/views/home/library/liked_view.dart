@@ -50,6 +50,9 @@ class _LikedViewState extends ConsumerState<LikedView>
   // Variable que almacena la lista con todas las canciones
   late List<Track> _allTracks = [];
 
+  // Variable que almacena la lista con todos los ids de las canciones
+  late List<int> _allTracksIds = [];
+
   // Variable que indica si se están cargando más canciones
   bool _isLoadingMore = false;
 
@@ -65,11 +68,19 @@ class _LikedViewState extends ConsumerState<LikedView>
   @override
   void initState() {
     super.initState();
+    _loadAllTracks();
     _fetchTracks();
+  }
+
+  // Función que obtiene todos los IDs de las canciones
+  void _loadAllTracks() async {
+    _allTracksIds = await getLikedTracksIds(uid: widget.uid);
+    setState(() {});
   }
 
   // Función que obtiene las canciones
   void _fetchTracks({bool reset = false}) async {
+    print('aaa');
     if (!_isLoadingMore) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;
@@ -97,6 +108,7 @@ class _LikedViewState extends ConsumerState<LikedView>
           _nextUrl = data.linkNextPage;
           _isLoadingMore = false;
           _totalTracks = data.totalTracks;
+          _loadAllTracks();
         });
 
         if (!_selecting) {
@@ -314,8 +326,19 @@ class _LikedViewState extends ConsumerState<LikedView>
                                 shape: CircleBorder(),
                                 child: Icon(Icons.swipe),
                                 label: 'Swipe',
-                                onTap: () => context
-                                    .push('/swipe?uid=${widget.uid}&liked=1')),
+                                onTap: _allTracksIds.length > 1
+                                    ? () => context
+                                            .push('/swipes-library',
+                                                extra: _allTracksIds)
+                                            .then((result) async {
+                                          if (result is Future<void>) {
+                                            print('waiting...');
+                                            await result;
+                                          }
+                                          _fetchTracks(reset: true);
+                                          if (mounted) {}
+                                        })
+                                    : null),
                             SpeedDialChild(
                                 shape: CircleBorder(),
                                 child: Icon(Icons.outbond),

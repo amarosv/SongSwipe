@@ -103,15 +103,18 @@ Future<String> getLyrics({required String artistName, required String trackTitle
 
   Uri url = Uri.parse('https://api.lyrics.ovh/v1/$artistName/$trackTitle');
 
-  // Llamada a la API para obtener las letras de la canción
-  final response = await http.get(url, headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  });
+  try {
+    final response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }).timeout(const Duration(seconds: 2));
 
-  // Si la respuesta es 200, parseamos el json
-  if (response.statusCode == 200) {
-    lyrics = json.decode(response.body)['lyrics'];
+    if (response.statusCode == 200) {
+      lyrics = json.decode(response.body)['lyrics'];
+    }
+  } catch (_) {
+    // En caso de timeout o cualquier excepción, devolveremos ''
+    lyrics = '';
   }
 
   return lyrics;

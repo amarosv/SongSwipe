@@ -181,7 +181,22 @@ class AppRouter {
           );
         },
       ),
-      // TODO: /swipes 0 = dislike, 1 = liked, 2 = all
+      GoRoute(
+        path: '/swipes',
+        name: SwipesScreen.name,
+        builder: (context, state) {
+          final tracks = state.extra as List<Track>;
+          return SwipesScreen(tracks: tracks);
+        },
+      ),
+      GoRoute(
+        path: '/swipes-library',
+        name: SwipesLibraryScreen.name,
+        builder: (context, state) {
+          final tracks = state.extra as List<int>;
+          return SwipesLibraryScreen(tracks: tracks);
+        },
+      ),
       // TODO: /followers
       // TODO: /following
       GoRoute(

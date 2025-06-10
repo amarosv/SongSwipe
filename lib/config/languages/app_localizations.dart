@@ -1233,6 +1233,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'tracks'**
   String get plural_tracks;
+
+  /// No description provided for @no_more_tracks_discover.
+  ///
+  /// In en, this message translates to:
+  /// **'there are no more songs to discover!'**
+  String get no_more_tracks_discover;
 }
 
 class _AppLocalizationsDelegate

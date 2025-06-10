@@ -49,6 +49,9 @@ class _DislikedViewState extends ConsumerState<DislikedView>
   // Variable que almacena la lista con todas las canciones
   late List<Track> _allTracks = [];
 
+  // Variable que almacena la lista con todos los ids de las canciones
+  late List<int> _allTracksIds = [];
+
   // Variable que indica si se están cargando más canciones
   bool _isLoadingMore = false;
 
@@ -64,7 +67,15 @@ class _DislikedViewState extends ConsumerState<DislikedView>
   @override
   void initState() {
     super.initState();
+    _loadAllTracks();
+
     _fetchTracks();
+  }
+
+  // Función que obtiene todos los IDs de las canciones
+  void _loadAllTracks() async {
+    _allTracksIds = await getDislikedTracksIds(uid: widget.uid);
+    setState(() {});
   }
 
   // Función que obtiene las canciones
@@ -92,6 +103,7 @@ class _DislikedViewState extends ConsumerState<DislikedView>
           _nextUrl = data.linkNextPage;
           _isLoadingMore = false;
           _totalTracks = data.totalTracks;
+          _loadAllTracks();
         });
 
         if (!_selecting) {
@@ -310,8 +322,19 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                                 shape: CircleBorder(),
                                 child: Icon(Icons.swipe),
                                 label: 'Swipe',
-                                onTap: () => context
-                                    .push('/swipe?uid=${widget.uid}&liked=1')),
+                                onTap: _allTracksIds.length > 1
+                                    ? () => context
+                                            .push('/swipes-library',
+                                                extra: _allTracksIds)
+                                            .then((result) async {
+                                          if (result is Future<void>) {
+                                            await result;
+                                          }
+                                          if (mounted) {
+                                            _fetchTracks(reset: true);
+                                          }
+                                        })
+                                    : null),
                             SpeedDialChild(
                                 shape: CircleBorder(),
                                 child: Icon(Icons.outbond),

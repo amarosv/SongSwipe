@@ -80,7 +80,8 @@ Future<bool> registerUserInDatabase(
 /// como favoritos <br>
 /// @param artists Lista de ids de artistas <br>
 /// @returns Número de artistas que se han guardado como favoritos
-Future<int> addArtistToFavorites({required String uid, required List<int> artists}) async {
+Future<int> addArtistToFavorites(
+    {required String uid, required List<int> artists}) async {
   // Variable que almacena el número de artistas guardados como favoritos
   int numArtistas = 0;
 
@@ -110,7 +111,8 @@ Future<int> addArtistToFavorites({required String uid, required List<int> artist
 /// como favoritos <br>
 /// @param artists Lista de ids de géneros
 /// @returns Número de géneros que se han guardado como favoritos
-Future<int> addGenreToFavorites({required String uid, required List<int> genres}) async {
+Future<int> addGenreToFavorites(
+    {required String uid, required List<int> genres}) async {
   // Variable que almacena el número de géneros guardados como favoritos
   int numGeneros = 0;
 
@@ -329,7 +331,7 @@ Future<List<dynamic>> areTrackInDatabase(
 /// @returns Número de filas afectadas
 Future<int> saveSwipes(
     {required String uid, required List<Swipe> swipes}) async {
-      print('adding...');
+  print('adding...');
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
 
@@ -892,11 +894,10 @@ Future<int> getSavedSongsByArtist({required int idArtist}) async {
   Uri url = Uri.parse('$apiArtist/$idArtist/saved_tracks');
 
   // Llamada a la API para obtener el número de canciones guardadas
-  final response = await http.get(url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      });
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
 
   if (response.statusCode == 200) {
     total = jsonDecode(response.body);
@@ -910,7 +911,8 @@ Future<int> getSavedSongsByArtist({required int idArtist}) async {
 /// @param uid UID del usuario <br>
 /// @param idArtist ID del artista <br>
 /// @returns Bool que indica si ha marcado al artista como favorio
-Future<bool> isArtistFavorite({required String uid, required int idArtist}) async {
+Future<bool> isArtistFavorite(
+    {required String uid, required int idArtist}) async {
   bool exists = false;
 
   Uri url = Uri.parse('$apiUser/$uid/is_artist_favorite/$idArtist');
@@ -977,7 +979,8 @@ Future<List<Album>> getTopAlbumsByArtist({required int idArtist}) async {
 /// @param uid UID del usuario <br>
 /// @param idArtist ID del artista a eliminar <br>
 /// @returns Bool que indica si se ha eliminado el artista
-Future<bool> deleteArtistFromFavorites({required String uid, required int idArtist}) async {
+Future<bool> deleteArtistFromFavorites(
+    {required String uid, required int idArtist}) async {
   bool deleted = false;
 
   print('borrando');
@@ -1031,7 +1034,7 @@ Future<String> getSpotifyClientID() async {
 
   Uri url = Uri.parse('$apiSpotify/client_id');
 
-  // Llamada a la API para obtener el top 3 albumes
+  // Llamada a la API para obtener el client ID
   final response = await http.get(url, headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -1042,4 +1045,67 @@ Future<String> getSpotifyClientID() async {
   }
 
   return clientId;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve un listado de IDs de canciones que le han gustado <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de IDs
+Future<List<int>> getLikedTracksIds({required String uid}) async {
+  List<int> ids = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/liked_ids');
+
+  // Llamada a la API para obtener los ids de las canciones que le han gustado
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    ids = List<int>.from(json.decode(response.body));
+  }
+
+  return ids;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve un listado de IDs de canciones que no le han gustado <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de IDs
+Future<List<int>> getDislikedTracksIds({required String uid}) async {
+  List<int> ids = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/disliked_ids');
+
+  // Llamada a la API para obtener los ids de las canciones que no le han gustado
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    ids = List<int>.from(json.decode(response.body));
+  }
+
+  return ids;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve un listado de IDs de canciones ha swipeado <br>
+/// @param uid UID del usuario <br>
+/// @returns Lista de IDs
+Future<List<int>> getSwipedTracksIds({required String uid}) async {
+  List<int> ids = [];
+
+  Uri url = Uri.parse('$apiUser/$uid/swiped_ids');
+
+  // Llamada a la API para obtener los ids de las canciones que ha swipeado
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    ids = List<int>.from(json.decode(response.body));
+  }
+
+  return ids;
 }

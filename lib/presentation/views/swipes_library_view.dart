@@ -4,36 +4,36 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/card_track_widget.dart';
-import 'package:songswipe/services/api/deezer_api.dart';
-import 'package:songswipe/services/api/internal_api.dart';
+import 'package:songswipe/services/api/export_apis.dart';
 
-/// Vista para la pantalla de descubrimiento <br>
+/// Vista para la pantalla de deslizar canciones específicas <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class DiscoverView extends StatefulWidget {
-  const DiscoverView({super.key});
+class SwipesLibraryView extends ConsumerStatefulWidget {
+  /// Lista de ids canciones
+  final List<int> tracks;
+
+  const SwipesLibraryView({super.key, required this.tracks});
 
   @override
-  State<DiscoverView> createState() => _DiscoverViewState();
+  ConsumerState<SwipesLibraryView> createState() => _SwipesLibraryViewState();
 }
 
-class _DiscoverViewState extends State<DiscoverView>
+class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   // Controlador del CardSwiper
   final CardSwiperController _swiperController = CardSwiperController();
 
-  // Duración máxima del preview (Deezer usa 30s)
+// Duración máxima del preview (Deezer usa 30s)
   final Duration _previewDuration = const Duration(seconds: 30);
 
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
-
-  // Variable que almacena el uid del usuario
-  late String _uid;
 
   // AudioPlayer para reproducir los previews de las canciones
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -53,6 +53,9 @@ class _DiscoverViewState extends State<DiscoverView>
 
   // Escala de la animación de fondo
   late final Animation<double> _backgroundScale;
+
+  // Variable que almacena el uid del usuario
+  late String _uid;
 
   // Booleano que indica si se están cargando las canciones
   bool _isLoading = false;
@@ -78,10 +81,12 @@ class _DiscoverViewState extends State<DiscoverView>
   // Lista donde se almacenarán los swipes
   List<Swipe> swipes = [];
 
+  // Variable que almacena hasta que índice sean cargados los datos de la canción
+  int _loadIndex = 0;
+
   @override
   void initState() {
     super.initState();
-    // Almacenamos el uid del usuario
     _uid = _user.uid;
 
     // Obtenemos los datos del usuario
@@ -156,13 +161,6 @@ class _DiscoverViewState extends State<DiscoverView>
     WidgetsBinding.instance.addObserver(this);
   }
 
-  // Este método será llamado desde HomeScreen para comprobar si hay cambios en los ajustes del usuario
-  void refresh() {
-    _getUserSettings();
-
-    _loadTracks();
-  }
-
   // Función que obtiene los datos del usuario de la api
   void _getUserSettings() async {
     UserSettings settings = await getUserSettings(uid: _uid);
@@ -174,7 +172,7 @@ class _DiscoverViewState extends State<DiscoverView>
   }
 
   void _loadTracks() async {
-    if (_isLoading) return;
+    if (_isLoading || _loadIndex >= widget.tracks.length) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -185,14 +183,13 @@ class _DiscoverViewState extends State<DiscoverView>
     });
 
     try {
-      List<Track> tracks = await getDiscoverTracks(
-          uid: _uid, swipesNotUpload: swipes.map((s) => s.id).toList());
-
-      // Filtrar duplicados antes de crear newCards
-      final swipedIds = swipes.map((s) => s.id).toSet();
-      final existingIds = _cards.map((c) => c.track.id).toSet();
-      tracks.removeWhere((track) =>
-          swipedIds.contains(track.id) || existingIds.contains(track.id));
+      print('Cargando 10 canciones...');
+      final maxIterations = (_loadIndex + 10).clamp(0, widget.tracks.length);
+      final idsToLoad = widget.tracks.sublist(_loadIndex, maxIterations);
+      final tracks = await Future.wait(
+        idsToLoad.map((id) => getTrackById(idTrack: id)),
+      );
+      _loadIndex = maxIterations;
 
       List<CardTrackWidget> newCards =
           await Future.wait(tracks.map((track) async {
@@ -327,6 +324,23 @@ class _DiscoverViewState extends State<DiscoverView>
     //     artistID: _cards[previousIndex].artista.id);
 
     // _currentIndex = currentIndex;
+
+
+    // Nueva verificación: borrar la lista cuando el usuario haya hecho swipe a la última carta
+    if (_currentIndex == _cards.length - 1) {
+      _audioPlayer.stop();
+      print(swipes.length);
+      print(swipes.last.like);
+      Future.microtask(() {
+        if (mounted) {
+          setState(() {
+            _cards.clear();
+          });
+        }
+      });
+      return true;
+    }
+
     _playPreview(_cards[currentIndex].track.preview,
         _cards[currentIndex].track.md5Image);
 
@@ -370,43 +384,17 @@ class _DiscoverViewState extends State<DiscoverView>
     } else {
       swipes.add(swipe);
     }
-    _loadRecommendedTracks(_cards[_currentIndex].track.artist.id);
   }
 
-  // Cargar recomendaciones basadas en una canción (trackId)
-  Future<void> _loadRecommendedTracks(int artistID) async {
-    var recommendedTracks = await getRecommendedTracks(
-        uid: _uid,
-        artistID: artistID,
-        limit: 5,
-        swipesNotUpload: swipes.map((s) => s.id).toList());
+  Future<void> _finalizeSwipes() async {
 
-    // Filtrar recommendedTracks para evitar duplicados antes de crear newCards
-    final swipedIds = swipes.map((s) => s.id).toSet();
-    final existingIds = _cards.map((c) => c.track.id).toSet();
-    recommendedTracks.removeWhere((track) =>
-        swipedIds.contains(track.id) || existingIds.contains(track.id));
-
-    List<CardTrackWidget> newCards =
-        await Future.wait(recommendedTracks.map((track) async {
-      final color = await extractDominantColor(imagePath: track.md5Image);
-      return CardTrackWidget(
-        track: track,
-        animatedCover: _userSettings.cardAnimatedCover,
-        cardBackground: color,
-        onlyAudio: _userSettings.audioOnlyAudio,
-      );
-    }));
-
-    // Actualizar el estado con las recomendaciones
-    if (mounted && newCards.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          setState(() {
-            _cards.addAll(newCards);
-          });
-        }
-      });
+      print(swipes.length);
+      print(swipes.last.like);
+    if (swipes.isNotEmpty) {
+      final List<Future<void>> updates = swipes.map((swipe) {
+        return updateSwipe(idTrack: swipe.id, newLike: swipe.like, uid: _uid);
+      }).toList();
+      await Future.wait(updates);
     }
   }
 
@@ -415,12 +403,8 @@ class _DiscoverViewState extends State<DiscoverView>
     _audioPlayer.dispose();
     _animationController.dispose();
     WidgetsBinding.instance.removeObserver(this);
-    if (swipes.isNotEmpty) {
-      Future(() async {
-        await saveSwipes(uid: _uid, swipes: swipes);
-      });
-    }
-    super.dispose();
+    // _finalizeSwipes();
+    super.dispose(); // siempre debe llamarse sin condición y sin delay
   }
 
   @override
@@ -431,11 +415,7 @@ class _DiscoverViewState extends State<DiscoverView>
         state == AppLifecycleState.hidden) {
       _audioPlayer.pause();
 
-      if (swipes.isNotEmpty) {
-        Future(() async {
-          await saveSwipes(uid: _uid, swipes: swipes);
-        });
-      }
+      _finalizeSwipes();
     } else if (state == AppLifecycleState.resumed) {
       _audioPlayer.resume();
     }
@@ -443,15 +423,53 @@ class _DiscoverViewState extends State<DiscoverView>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: _userSettings.showTutorial
-            ? _buildTutorialWithArrows()
-            : _content());
+    final Color backgroundColor = _cards.isNotEmpty
+        ? _cards[_currentIndex.clamp(0, _cards.length - 1)].cardBackground
+        : Theme.of(context).scaffoldBackgroundColor;
+    final isDark = ThemeData.estimateBrightnessForColor(backgroundColor) ==
+        Brightness.dark;
+    final borderColor = isDark ? Colors.white : Colors.black;
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, _finalizeSwipes());
+        return false;
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text(
+              'SWIPES',
+              style: TextStyle(fontWeight: FontWeight.bold, color: borderColor),
+            ),
+            foregroundColor: borderColor,
+            backgroundColor: Colors.transparent,
+          ),
+          body: _userSettings.showTutorial
+              ? _buildTutorialWithArrows()
+              : _content()),
+    );
   }
 
   Widget _content() {
     final localization = AppLocalizations.of(context)!;
 
+    // Si no hay cartas, usar un Container simple con fondo del scaffold.
+    if (_cards.isEmpty) {
+      return Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Center(
+                  child: Text(
+                    capitalizeFirstLetter(
+                        text: localization.no_more_tracks_discover),
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+        ),
+      );
+    }
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -595,7 +613,7 @@ class _DiscoverViewState extends State<DiscoverView>
                                               color: Colors.white),
                                           onPressed: () {
                                             // Acción para descartar canción
-                                            _dislikeTrack();
+                                            // _dislikeTrack();
                                             _swiperController.swipe(
                                                 CardSwiperDirection.left);
                                           },
@@ -677,7 +695,7 @@ class _DiscoverViewState extends State<DiscoverView>
                                           ),
                                           onPressed: () {
                                             // Acción para guardar canción
-                                            _likeTrack();
+                                            // _likeTrack();
                                             _swiperController.swipe(
                                                 CardSwiperDirection.right);
                                           },

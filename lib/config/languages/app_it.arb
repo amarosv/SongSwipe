@@ -188,5 +188,6 @@
     "cant_export": "impossibile esportare",
     "playlist_description": "Canzoni esportati da SongSwipe",
     "cant_select": "non puoi selezionare più di",
-    "plural_tracks": "canzoni"
+    "plural_tracks": "canzoni",
+    "no_more_tracks_discover": "non ci sono più canzoni da scoprire!"
 }

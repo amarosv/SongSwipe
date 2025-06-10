@@ -586,4 +586,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get plural_tracks => 'tracks';
+
+  @override
+  String get no_more_tracks_discover => 'there are no more songs to discover!';
 }
