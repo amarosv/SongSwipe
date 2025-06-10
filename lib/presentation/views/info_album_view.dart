@@ -204,50 +204,51 @@ class _InfoAlbumViewState extends ConsumerState<InfoAlbumView> {
                     ),
                   ),
                   actions: [
-                    GestureDetector(
-                      onTap: () => context
-                          .push('/swipes', extra: _album.tracks)
-                          .then((result) async {
-                        if (result is Future<void>) {
-                          print('waiting...');
-                          await result;
-                        }
+                    if (_album.tracks.length > 1)
+                      GestureDetector(
+                        onTap: () => context
+                            .push('/swipes', extra: _album.tracks)
+                            .then((result) async {
+                          if (result is Future<void>) {
+                            print('waiting...');
+                            await result;
+                          }
 
-                        ref.read(swipeChangedProvider.notifier).state = true;
-                      }),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: AnimatedOpacity(
-                          opacity: 1.0,
-                          duration: Duration(milliseconds: 300),
-                          child: AnimatedContainer(
+                          ref.read(swipeChangedProvider.notifier).state = true;
+                        }),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: AnimatedOpacity(
+                            opacity: 1.0,
                             duration: Duration(milliseconds: 300),
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _textOpacity <= 0
-                                  ? Colors.black.withValues(alpha: 0.5)
-                                  : Colors.transparent,
-                            ),
-                            child: AnimatedSwitcher(
-                              duration: Duration(milliseconds: 200),
-                              transitionBuilder: (child, animation) =>
-                                  ScaleTransition(
-                                scale: animation,
-                                child: child,
-                              ),
-                              child: Icon(
-                                Icons.swipe,
-                                key: ValueKey<bool>(_textOpacity > 0),
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 300),
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
                                 color: _textOpacity <= 0
-                                    ? Colors.white
-                                    : Theme.of(context).colorScheme.primary,
+                                    ? Colors.black.withValues(alpha: 0.5)
+                                    : Colors.transparent,
+                              ),
+                              child: AnimatedSwitcher(
+                                duration: Duration(milliseconds: 200),
+                                transitionBuilder: (child, animation) =>
+                                    ScaleTransition(
+                                  scale: animation,
+                                  child: child,
+                                ),
+                                child: Icon(
+                                  Icons.swipe,
+                                  key: ValueKey<bool>(_textOpacity > 0),
+                                  color: _textOpacity <= 0
+                                      ? Colors.white
+                                      : Theme.of(context).colorScheme.primary,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 ),
                 SliverToBoxAdapter(

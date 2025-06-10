@@ -165,9 +165,10 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                           final textPainter = TextPainter(
                             text: TextSpan(
                               text: text,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 22,
+                                color: borderColor
                               ),
                             ),
                             maxLines: 1,
@@ -180,8 +181,8 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                             return widget.onlyAudio
                                 ? Text(
                                     '-',
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: borderColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 22,
                                     ),
@@ -190,8 +191,8 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                                     height: 30,
                                     child: Marquee(
                                       text: text,
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style: TextStyle(
+                                        color: borderColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 22,
                                       ),
@@ -214,16 +215,16 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                             return widget.onlyAudio
                                 ? Text(
                                     '-',
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: borderColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 22,
                                     ),
                                   )
                                 : Text(
                                     text,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: borderColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 22,
                                     ),
@@ -247,7 +248,7 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                           final textPainter = TextPainter(
                             text: TextSpan(
                                 text: text,
-                                style: const TextStyle(fontSize: 16)),
+                                style: TextStyle(fontSize: 16, color: borderColor)),
                             maxLines: 1,
                             textDirection: TextDirection.ltr,
                           )..layout(maxWidth: double.infinity);
@@ -258,8 +259,8 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                             return widget.onlyAudio
                                 ? Text(
                                     '-',
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: borderColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 22,
                                     ),
@@ -268,8 +269,8 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                                     height: 30,
                                     child: Marquee(
                                       text: text,
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style: TextStyle(
+                                        color: borderColor,
                                         fontSize: 18,
                                       ),
                                       scrollAxis: Axis.horizontal,
@@ -291,16 +292,16 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                             return widget.onlyAudio
                                 ? Text(
                                     '-',
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: borderColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 22,
                                     ),
                                   )
                                 : Text(
                                     text,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: borderColor,
                                       fontSize: 18,
                                     ),
                                     overflow: TextOverflow.ellipsis,
@@ -321,19 +322,19 @@ class _CardTrackWidgetState extends State<CardTrackWidget>
                     Expanded(
                       child: Text(
                         widget.onlyAudio ? '-' : '#${formatWithThousandsSeparator(widget.track.rank)} ${localization.in_ranking}',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: borderColor,
                           fontSize: 18,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     if (!widget.onlyAudio && widget.track.explicitLyrics)
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(left: 10),
                         child: Icon(
                           Icons.explicit,
-                          color: Colors.white,
+                          color: borderColor,
                           size: 36,
                         ),
                       ),
