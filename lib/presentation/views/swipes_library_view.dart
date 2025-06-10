@@ -329,8 +329,6 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     // Nueva verificación: borrar la lista cuando el usuario haya hecho swipe a la última carta
     if (_currentIndex == _cards.length - 1) {
       _audioPlayer.stop();
-      print(swipes.length);
-      print(swipes.last.like);
       Future.microtask(() {
         if (mounted) {
           setState(() {
@@ -387,9 +385,6 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
   }
 
   Future<void> _finalizeSwipes() async {
-
-      print(swipes.length);
-      print(swipes.last.like);
     if (swipes.isNotEmpty) {
       final List<Future<void>> updates = swipes.map((swipe) {
         return updateSwipe(idTrack: swipe.id, newLike: swipe.like, uid: _uid);
@@ -404,7 +399,7 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     _animationController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     // _finalizeSwipes();
-    super.dispose(); // siempre debe llamarse sin condición y sin delay
+    super.dispose();
   }
 
   @override
