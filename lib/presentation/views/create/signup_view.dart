@@ -264,15 +264,16 @@ class _SignUpViewState extends State<SignUpView> {
                 child: Row(
                   spacing: 20,
                   children: [
-                    Expanded(
-                      child: CustomSocialButton(
-                        backgroundColor: Colors.white,
-                        onPressed: () {},
-                        text: 'Apple',
-                        borderColor: Colors.black,
-                        imagePath: 'assets/images/social/apple.png',
-                      ),
-                    ),
+                    // Necesita cuenta de pago de Apple Developer
+                    // Expanded(
+                    //   child: CustomSocialButton(
+                    //     backgroundColor: Colors.white,
+                    //     onPressed: () {},
+                    //     text: 'Apple',
+                    //     borderColor: Colors.black,
+                    //     imagePath: 'assets/images/social/apple.png',
+                    //   ),
+                    // ),
                     Expanded(
                       child: CustomSocialButton(
                         backgroundColor: Colors.black,

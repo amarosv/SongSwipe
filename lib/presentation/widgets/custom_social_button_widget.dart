@@ -49,22 +49,22 @@ class CustomSocialButton extends StatelessWidget {
           elevation: 0,
         ),
         onPressed: () => onPressed(),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: 20,
+        child: Stack(
+          alignment: Alignment.center,
           children: [
-            Container(
-              margin: EdgeInsets.only(left: 16),
+            Positioned(
+              left: 16,
               child: Image(
                 image: AssetImage(imagePath),
                 width: 24,
               ),
             ),
-            Text(
-              upperCaseAfterSpace(text: text),
-              style: textStyle ??
-                  TextStyle(color: borderColor, fontSize: 16),
+            Center(
+              child: Text(
+                upperCaseAfterSpace(text: text),
+                style: textStyle ??
+                    TextStyle(color: borderColor, fontSize: 16),
+              ),
             ),
           ],
         ),

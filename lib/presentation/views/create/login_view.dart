@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/helpers/auth_methods.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:toastification/toastification.dart';
@@ -186,8 +187,8 @@ class _LoginViewState extends State<LoginView> {
                         toastification.show(
                           context: context,
                           style: ToastificationStyle.flatColored,
-                          title: Text(capitalizeFirstLetter(
-                              text: localization.sent)),
+                          title: Text(
+                              capitalizeFirstLetter(text: localization.sent)),
                           description: RichText(
                               text: TextSpan(
                                   text: capitalizeFirstLetter(
@@ -300,19 +301,56 @@ class _LoginViewState extends State<LoginView> {
                 child: Row(
                   spacing: 20,
                   children: [
-                    Expanded(
-                      child: CustomSocialButton(
-                        backgroundColor: Colors.white,
-                        onPressed: () {},
-                        text: 'Apple',
-                        borderColor: Colors.black,
-                        imagePath: 'assets/images/social/apple.png',
-                      ),
-                    ),
+                    // Necesita cuenta de pago de Apple Developer
+                    // Expanded(
+                    //   child: CustomSocialButton(
+                    //     backgroundColor: Colors.white,
+                    //     onPressed: () async {
+                    //       if (!Platform.isIOS) return;
+
+                    //       try {
+                    //         final appleCredential = await SignInWithApple.getAppleIDCredential(
+                    //           scopes: [
+                    //             AppleIDAuthorizationScopes.email,
+                    //             AppleIDAuthorizationScopes.fullName,
+                    //           ],
+                    //         );
+
+                    //         final oauthCredential = OAuthProvider("apple.com").credential(
+                    //           idToken: appleCredential.identityToken,
+                    //           accessToken: appleCredential.authorizationCode,
+                    //         );
+
+                    //         final userCredential = await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+                    //         if (userCredential.user != null) {
+                    //           context.go('/home/4');
+                    //         }
+                    //       } catch (e) {
+                    //         print(e);
+                    //         showNotification(
+                    //           capitalizeFirstLetter(text: AppLocalizations.of(context)!.attention),
+                    //           capitalizeFirstLetter(text: AppLocalizations.of(context)!.error),
+                    //           context,
+                    //         );
+                    //       }
+                    //     },
+                    //     text: 'Apple',
+                    //     borderColor: Colors.black,
+                    //     imagePath: 'assets/images/social/apple.png',
+                    //   ),
+                    // ),
+                    
                     Expanded(
                       child: CustomSocialButton(
                         backgroundColor: Colors.black,
-                        onPressed: () {},
+                        onPressed: () async {
+                          User? user = await signInWithGoogle();
+
+                          if (user != null) {
+                            context.go('/home/4');
+                          }
+                        },
                         textStyle: TextStyle(fontSize: 16, color: Colors.white),
                         text: 'Google',
                         borderColor: Colors.black,
