@@ -1310,3 +1310,16 @@ Future<void> reactivateAccount({required String uid}) async {
     'Accept': 'application/json',
   });
 }
+
+/// Esta función recibe el UID de un usuario y acepta todas sus solicitudes de amistad entrantes <br>
+/// @param uid UID del usuario
+Future<void> acceptAllRequests({required String uid}) async {
+  print('entra');
+  Uri url = Uri.parse('$apiUser/$uid/accept_all_requests');
+
+  // Llamada a la API para reactivar la cuenta
+  await http.post(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+}

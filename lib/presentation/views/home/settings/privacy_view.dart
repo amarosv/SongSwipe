@@ -66,6 +66,10 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
   @override
   void dispose() {
     if (_userSettingsComparator != _userSettings) {
+      // Si la cuenta pasa a ser pública aceptamos las solicitudes de amistad
+      if ((_userSettingsComparator.privateAccount != _userSettings.privateAccount) && !_userSettings.privateAccount) {
+        acceptAllRequests(uid: _uid);
+      }
       updateUserSettings(uid: _uid, settings: _userSettings);
     }
     WidgetsBinding.instance.removeObserver(this);
@@ -82,6 +86,11 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
         state == AppLifecycleState.detached ||
         state == AppLifecycleState.hidden) &&
         _userSettingsComparator != _userSettings) {
+      // Si la cuenta pasa a ser pública aceptamos las solicitudes de amistad
+      if ((_userSettingsComparator.privateAccount != _userSettings.privateAccount) && !_userSettings.privateAccount) {
+        acceptAllRequests(uid: _uid);
+      }
+
       updateUserSettings(uid: _uid, settings: _userSettings);
       _userSettingsComparator = _userSettings.copy();
     }
