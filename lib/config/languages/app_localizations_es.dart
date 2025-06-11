@@ -653,4 +653,8 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get their_fav_tracks => 'sus canciones favoritas';
+
+  @override
+  String get email_reset_sent =>
+      'correo para restablecer la contraseña enviado';
 }

@@ -209,5 +209,6 @@
     "my_following": "my following",
     "their_followers": "their followers",
     "their_following": "their following",
-    "their_fav_tracks": "their favorite tracks"
+    "their_fav_tracks": "their favorite tracks",
+    "email_reset_sent": "password reset email sent"
 }

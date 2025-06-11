@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
+import 'package:toastification/toastification.dart';
 
 /// Vista para la pantalla de login <br>
 /// @author Amaro Suárez <br>
@@ -99,8 +100,11 @@ class _LoginViewState extends State<LoginView> {
                     capitalizeFirstLetter(text: localization.email_placeholder),
                 textEditingController: emailController,
                 icon: _showErrorEmail
-                  ? Icon(Icons.warning, color: Colors.red,)
-                  : null,
+                    ? Icon(
+                        Icons.warning,
+                        color: Colors.red,
+                      )
+                    : null,
               ),
 
               // Mensaje de error del email
@@ -145,15 +149,69 @@ class _LoginViewState extends State<LoginView> {
 
               const SizedBox(height: 10),
 
-              // Texto para recuperar contraseña
+              // Texto para recuperar contraseña (ahora InkWell)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SizedBox(
                   width: width,
-                  child: Text(
-                    capitalizeFirstLetter(text: localization.forgot_password),
-                    textAlign: TextAlign.end,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  child: InkWell(
+                    onTap: () async {
+                      final email = emailController.text.trim();
+
+                      if (email.isEmpty) {
+                        showNotification(
+                          capitalizeFirstLetter(text: localization.attention),
+                          capitalizeFirstLetter(
+                              text: localization.error_email_empty),
+                          context,
+                        );
+                        return;
+                      }
+
+                      final result =
+                          emailValidator(email: email, context: context);
+                      if (!result.keys.first) {
+                        showNotification(
+                          capitalizeFirstLetter(text: localization.attention),
+                          capitalizeFirstLetter(
+                              text: result.entries.first.value),
+                          context,
+                        );
+                        return;
+                      }
+
+                      try {
+                        await FirebaseAuth.instance
+                            .sendPasswordResetEmail(email: email);
+                        toastification.show(
+                          context: context,
+                          style: ToastificationStyle.flatColored,
+                          title: Text(capitalizeFirstLetter(
+                              text: localization.sent)),
+                          description: RichText(
+                              text: TextSpan(
+                                  text: capitalizeFirstLetter(
+                                      text: localization.email_reset_sent),
+                                  style: TextStyle(color: Colors.black))),
+                          autoCloseDuration: const Duration(seconds: 3),
+                        );
+                      } catch (e) {
+                        showNotification(
+                          capitalizeFirstLetter(text: localization.attention),
+                          capitalizeFirstLetter(text: localization.error),
+                          context,
+                        );
+                      }
+                    },
+                    child: Text(
+                      capitalizeFirstLetter(text: localization.forgot_password),
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
                   ),
                 ),
               ),

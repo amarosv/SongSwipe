@@ -1353,6 +1353,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'their favorite tracks'**
   String get their_fav_tracks;
+
+  /// No description provided for @email_reset_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'password reset email sent'**
+  String get email_reset_sent;
 }
 
 class _AppLocalizationsDelegate
