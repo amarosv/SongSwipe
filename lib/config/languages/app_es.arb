@@ -209,5 +209,7 @@
     "their_followers": "sus seguidores",
     "their_following": "sus seguidos",
     "their_fav_tracks": "sus canciones favoritas",
-    "email_reset_sent": "correo para restablecer la contraseña enviado"
+    "email_reset_sent": "correo para restablecer la contraseña enviado",
+    "login_abort": "inicio de sesión cancelado.",
+    "select_one_track": "selecciona al menos una canción"
 }

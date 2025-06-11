@@ -15,7 +15,10 @@ class HomeScreen extends StatefulWidget {
   /// Índice de la vista a mostrar inicialmente
   final int pageIndex;
 
-  const HomeScreen({super.key, required this.pageIndex});
+  // Función para cambiar el lenguaje
+  final Function(String) onChangeLanguage;
+
+  const HomeScreen({super.key, required this.pageIndex, required this.onChangeLanguage});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -79,10 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
         currentView = const LibraryView();
         break;
       case 4:
-        currentView = const ProfileView();
+        currentView = ProfileView(onChangeLanguage: widget.onChangeLanguage,);
         break;
       default:
-        currentView = const SettingsView();
+        currentView = const LibraryView();
     }
 
     return Scaffold(

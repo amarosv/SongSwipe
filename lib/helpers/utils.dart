@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:toastification/toastification.dart';
 
@@ -275,4 +276,10 @@ String generarCodeChallenge(String codeVerifier) {
   final bytes = utf8.encode(codeVerifier);
   final digest = sha256.convert(bytes);
   return base64UrlEncode(digest.bytes).replaceAll('=', '');
+}
+
+/// Esta función borra los datos relacionados a Spotify
+Future<void> clearSpotifyTokens() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('spotify_refresh_token');
 }

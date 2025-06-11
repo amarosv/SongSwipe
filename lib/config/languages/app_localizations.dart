@@ -1359,6 +1359,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'password reset email sent'**
   String get email_reset_sent;
+
+  /// No description provided for @login_abort.
+  ///
+  /// In en, this message translates to:
+  /// **'login canceled.'**
+  String get login_abort;
+
+  /// No description provided for @select_one_track.
+  ///
+  /// In en, this message translates to:
+  /// **'select at least one song'**
+  String get select_one_track;
 }
 
 class _AppLocalizationsDelegate

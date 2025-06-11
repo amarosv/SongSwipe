@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/config/providers/providers.dart';
+import 'package:songswipe/config/providers/theme_provider.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/user_profile.dart';
+import 'package:songswipe/models/user_settings.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/internal_api.dart';
 
@@ -13,7 +15,10 @@ import 'package:songswipe/services/api/internal_api.dart';
 /// @author Amaro Suárez <br>
 /// @version 1.0
 class ProfileView extends ConsumerStatefulWidget {
-  const ProfileView({super.key});
+  // Función para cambiar el lenguaje
+  final Function(String) onChangeLanguage;
+
+  const ProfileView({super.key, required this.onChangeLanguage});
 
   @override
   ConsumerState<ProfileView> createState() => _ProfileViewState();
@@ -41,11 +46,81 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
     // Almacenamos el uid del usuario
     _uid = _user.uid;
     // Cargamos los IDs de todas las canciones
-    _loadAllTracks();
-    // Obtenemos los datos del usuario
-    _getUserProfile();
-    // Obtenemos el código del idioma
-    _getLanguageCode();
+    // _loadAllTracks();
+    // // Obtenemos los datos del usuario
+    // _getUserProfile();
+    // // Obtenemos el código del idioma
+    // _getLanguageCode();
+    _getData();
+  }
+
+  // Carga todos los datos
+  void _getData() async {
+    try {
+      final results = await Future.wait([
+        getUserSettings(uid: _uid),
+        getSwipedTracksIds(uid: _uid),
+        getUserProfile(uid: _uid),
+        loadDataString(tag: 'language')
+      ]);
+
+      UserSettings userSettings = results[0] as UserSettings;
+
+      // Guardamos el código de idioma
+      widget.onChangeLanguage(userSettings.language);
+
+      setState(() {
+        _setAppearance(userSettings);
+        _allTracksIds = results[1] as List<int>;
+        _userProfile = results[2] as UserProfile;
+        _languageCode = results[3] as String;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _setAppearance(UserSettings _userSettings) {
+    // Colocamos que no estamos usando el modo del sistema
+    ref.read(themeNotifierProvider.notifier).setUseSystem(isUsingSystem: false);
+
+    // Colocamos el modo por si difiere con el local
+    switch (_userSettings.mode) {
+      case 1:
+        // Llamamos al notifier para cambiar de modo
+        ref.read(themeNotifierProvider.notifier).setDarkMode(isDarkMode: true);
+        break;
+      case 2:
+        // Llamamos al notifier para cambiar de modo
+        ref.read(themeNotifierProvider.notifier).setDarkMode(isDarkMode: false);
+        break;
+      case 3:
+        // Colocamos que no estamos usando el modo del sistema
+        ref
+            .read(themeNotifierProvider.notifier)
+            .setUseSystem(isUsingSystem: true);
+        break;
+    }
+
+    // Colocamos el tema si difiere con el local
+    switch (_userSettings.theme) {
+      case 0:
+        {
+          ref.read(themeNotifierProvider.notifier).changeColorIndex(0);
+        }
+      case 1:
+        {
+          ref.read(themeNotifierProvider.notifier).changeColorIndex(1);
+        }
+      case 2:
+        {
+          ref.read(themeNotifierProvider.notifier).changeColorIndex(2);
+        }
+      case 3:
+        {
+          ref.read(themeNotifierProvider.notifier).changeColorIndex(3);
+        }
+    }
   }
 
   // Función que obtiene todos los IDs de las canciones

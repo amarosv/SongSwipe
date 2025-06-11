@@ -110,19 +110,19 @@ class _SettingsViewState extends State<SettingsView> {
                 function: () => context.push('/audio-settings'),
               ),
               
-              const SizedBox(height: 30,),
+              // const SizedBox(height: 30,),
 
-              // Notificaciones
-              CustomNavigator(
-                title: Text(
-                  capitalizeFirstLetter(text: localization.notifications),
-                  style: TextStyle(fontSize: 20),
-                ),
-                icon: SongSwipe.circleNotifications,
-                iconSize: 32,
-                colorIcon: Theme.of(context).colorScheme.primary,
-                function: () => context.push('/notifications-settings'),
-              ),
+              // // Notificaciones
+              // CustomNavigator(
+              //   title: Text(
+              //     capitalizeFirstLetter(text: localization.notifications),
+              //     style: TextStyle(fontSize: 20),
+              //   ),
+              //   icon: SongSwipe.circleNotifications,
+              //   iconSize: 32,
+              //   colorIcon: Theme.of(context).colorScheme.primary,
+              //   function: () => context.push('/notifications-settings'),
+              // ),
               
               const SizedBox(height: 30,),
 
@@ -167,6 +167,7 @@ class _SettingsViewState extends State<SettingsView> {
 
                   if (shouldLogout == true) {
                     await FirebaseAuth.instance.signOut();
+                    await clearSpotifyTokens();
                     context.go('/login');
                   }
                 },

@@ -209,5 +209,7 @@
     "their_followers": "i loro follower",
     "their_following": "il loro seguito",
     "their_fav_tracks": "i loro canzoni preferiti",
-    "email_reset_sent": "e-mail di reimpostazione della password inviata"
+    "email_reset_sent": "e-mail di reimpostazione della password inviata",
+    "login_abort": "login annullato.",
+    "select_one_track": "seleziona almeno una canzone"
 }

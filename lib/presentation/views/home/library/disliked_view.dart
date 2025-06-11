@@ -289,10 +289,23 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                             FloatingActionButton(
                               heroTag: 'export_fab_dis',
                               onPressed: () => {
-                                context.push(
-                                  '/export',
-                                  extra: _selectedTracks,
-                                )
+                                if (_selectedTracks.isEmpty)
+                                  {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(capitalizeFirstLetter(
+                                              text:
+                                                  AppLocalizations.of(context)!
+                                                      .select_one_track))),
+                                    )
+                                  }
+                                else
+                                  {
+                                    context.push(
+                                      '/export',
+                                      extra: _selectedTracks,
+                                    )
+                                  }
                               },
                               shape: CircleBorder(),
                               child: Icon(Icons.outbond),

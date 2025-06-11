@@ -20,7 +20,7 @@ class ExportTracksView extends StatefulWidget {
 
 class _ExportTracksViewState extends State<ExportTracksView> {
   // Tupla con lista de canciones exportadas y lista de canciones fallidas
-  late (List<Map<String, String>> ids, List<Track> cancionesFallidas) pair;
+  late (List<Map<String, String>> ids, List<Track> cancionesFallidas)? pair;
 
   // Variable que almacena las canciones exportadas
   late List<Map<String, String>> _spotifyTrackDataFuture;
@@ -45,8 +45,18 @@ class _ExportTracksViewState extends State<ExportTracksView> {
         context: context,
       );
 
-      _spotifyTrackDataFuture = pair.$1;
-      _cancionesFallidas = pair.$2;
+      if (!mounted) return;
+
+      if (pair == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(capitalizeFirstLetter(text: AppLocalizations.of(context)!.login_abort))),
+        );
+        Navigator.pop(context);
+        return;
+      }
+
+      _spotifyTrackDataFuture = pair!.$1;
+      _cancionesFallidas = pair!.$2;
       _isLoading = false;
 
       setState(() {});

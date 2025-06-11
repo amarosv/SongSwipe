@@ -260,25 +260,25 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
               ),
             ),
 
-            const SizedBox(
-              height: 20,
-            ),
+            // const SizedBox(
+            //   height: 20,
+            // ),
 
-            // Dispositivos
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: CustomNavigator(
-                title: Text(
-                  capitalizeFirstLetter(text: localization.devices),
-                  style: TextStyle(fontSize: 20),
-                ),
-                icon: Icons.devices,
-                colorIcon: Theme.of(context).colorScheme.primary,
-                function: () {
-                  // TODO
-                },
-              ),
-            ),
+            // // Dispositivos
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 20),
+            //   child: CustomNavigator(
+            //     title: Text(
+            //       capitalizeFirstLetter(text: localization.devices),
+            //       style: TextStyle(fontSize: 20),
+            //     ),
+            //     icon: Icons.devices,
+            //     colorIcon: Theme.of(context).colorScheme.primary,
+            //     function: () {
+            //       // TODO
+            //     },
+            //   ),
+            // ),
 
             const SizedBox(height: 30),
 

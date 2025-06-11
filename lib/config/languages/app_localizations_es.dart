@@ -657,4 +657,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get email_reset_sent =>
       'correo para restablecer la contraseña enviado';
+
+  @override
+  String get login_abort => 'inicio de sesión cancelado.';
+
+  @override
+  String get select_one_track => 'selecciona al menos una canción';
 }

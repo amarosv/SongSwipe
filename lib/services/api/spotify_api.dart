@@ -17,13 +17,16 @@ final redirectUri = 'songswipe://callback';
 /// @param tracks Lista de canciones de Deezer a exportar <br>
 /// @param context BuildContext de la app <br>
 /// @returns Tupla con lista de canciones de Spotify exportadas y lista de canciones fallidas
-Future<(List<Map<String, String>>, List<Track>)>
+Future<(List<Map<String, String>>, List<Track>)?>
     authenticateAndSearchTracks({
   required List<Track> tracks,
   required BuildContext context,
 }) async {
   final appLocalizations = AppLocalizations.of(context)!;
   final accessToken = await authenticateWithSpotify();
+  
+  if (accessToken == null) return null;
+
   List<Track> cancionesFallidas = [];
   final ids = <Map<String, String>>[];
   for (final track in tracks) {
@@ -76,7 +79,7 @@ Future<(List<Map<String, String>>, List<Track>)>
 
 /// Esta función autentica al usuario con Spotify <br>
 /// @returns Access Token de Spotify
-Future<String> authenticateWithSpotify() async {
+Future<String?> authenticateWithSpotify() async {
   final prefs = await SharedPreferences.getInstance();
   final savedRefreshToken = prefs.getString('spotify_refresh_token');
   final clientID = await getSpotifyClientID();
@@ -100,10 +103,18 @@ Future<String> authenticateWithSpotify() async {
     'code_challenge': codeChallenge,
   });
 
-  final result = await FlutterWebAuth2.authenticate(
-    url: authUrl.toString(),
-    callbackUrlScheme: 'songswipe',
-  );
+  String? result;
+  try {
+    result = await FlutterWebAuth2.authenticate(
+      url: authUrl.toString(),
+      callbackUrlScheme: 'songswipe',
+    );
+  } on PlatformException catch (e) {
+    if (e.code == 'CANCELED') {
+      return null; // usuario canceló login
+    }
+    rethrow;
+  }
 
   final code = Uri.parse(result).queryParameters['code'];
 
