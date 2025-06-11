@@ -250,7 +250,7 @@ class AppRouter {
         builder: (context, state) {
           final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
 
-          return HomeScreen(pageIndex: pageIndex, onChangeLanguage: onChangeLanguage,);
+          return HomeScreen(pageIndex: pageIndex, onChangeLanguage: onChangeLanguage);
         },
       ),
     ],

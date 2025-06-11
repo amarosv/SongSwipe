@@ -18,7 +18,8 @@ class ProfileView extends ConsumerStatefulWidget {
   // Función para cambiar el lenguaje
   final Function(String) onChangeLanguage;
 
-  const ProfileView({super.key, required this.onChangeLanguage});
+  const ProfileView(
+      {super.key, required this.onChangeLanguage});
 
   @override
   ConsumerState<ProfileView> createState() => _ProfileViewState();
@@ -72,8 +73,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
       setState(() {
         _setAppearance(userSettings);
         _allTracksIds = results[1] as List<int>;
-        _userProfile = results[2] as UserProfile;
-        _languageCode = results[3] as String;
+          _userProfile = results[2] as UserProfile;
+        _languageCode =
+            results[3] as String;
       });
     } catch (e) {
       print(e);

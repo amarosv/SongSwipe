@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/config/export_config.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
@@ -15,8 +16,8 @@ import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/services/api/internal_api.dart';
 
 Future<void> main() async {
-  // Esperamos a que se haya inicializado el widget
-  WidgetsFlutterBinding.ensureInitialized();
+  final WidgetsBinding binding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: binding);
 
   // Bloqueamos la orientación a portrait
   await SystemChrome.setPreferredOrientations([
@@ -33,9 +34,7 @@ Future<void> main() async {
   await dotenv.load(fileName: '.env');
 
   // Corremos la aplicación
-  runApp(
-      // Coloco el ProviderScope para que no de error con FlutterProvider
-      const ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -53,10 +52,22 @@ class _MyAppState extends ConsumerState<MyApp> {
   Locale _locale = WidgetsBinding.instance.platformDispatcher.locale;
 
   // Inicializa el router
-  late final AppRouter _router;
+  AppRouter? _router;
 
-  // Función que obtiene el lenguaje por defecto
-  void _getDefaultLanguage() async {
+  @override
+  void initState() {
+    super.initState();
+
+    // Cargamos los datos
+    _loadData();
+
+    // Cargamos el lenguaje por defecto
+    // _getDefaultLanguage();
+
+    // _getUserProfile();
+  }
+
+  void _loadData() async {
     String languageCode = 'en';
 
     // Obtenemos el usuario actual
@@ -64,15 +75,21 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     // Variable que almacena el uid del usuario
     late String uid;
-    
+
     Locale locale;
 
     if (user != null) {
       uid = user.uid;
 
-      UserSettings settings = await getUserSettings(uid: uid);
+      try {
+        final results = await Future.wait(
+            [getUserSettings(uid: uid)]);
+        UserSettings settings = results[0];
 
-      languageCode = settings.language;
+        languageCode = settings.language;
+      } catch (e) {
+        print(e);
+      }
     } else {
       // Cargamos el lenguaje guardado en SharedPreferences
       languageCode = await loadDataString(tag: 'language');
@@ -91,20 +108,15 @@ class _MyAppState extends ConsumerState<MyApp> {
     locale = Locale(languageCode);
 
     // Cambiamos el locale
-    setState(() {
-      _locale = locale;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Cargamos el lenguaje por defecto
-    _getDefaultLanguage();
+    _locale = locale;
 
     // Cargamos el AppRouter
-    _router = AppRouter(onChangeLanguage: changeLanguage);
+    _router =
+        AppRouter(onChangeLanguage: changeLanguage);
+
+    setState(() {
+      FlutterNativeSplash.remove();
+    });
   }
 
   // Función que cambia el lenguage y es llamada por SignUpView, LoginView y el apartado en ajustes
@@ -120,6 +132,15 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    if (_router == null) {
+      return const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
+
     // Obtenemos si se está usando el tema del dispositivo
     final system = ref.watch(themeNotifierProvider).isUsingSystem;
 
@@ -161,7 +182,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         Locale('es'), // Spanish
         Locale('it'), // Italian
       ],
-      routerConfig: _router.router,
+      routerConfig: _router!.router,
     );
   }
 }
