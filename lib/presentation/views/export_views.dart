@@ -1,3 +1,4 @@
+export 'artist/info_artist_view.dart';
 export 'change_theme_view.dart';
 export 'create/complete_profile_simple_view.dart';
 export 'create/complete_profile_view.dart';
@@ -24,7 +25,6 @@ export 'home/settings/notifications_view.dart';
 export 'home/settings/privacy_view.dart';
 export 'home/settings_view.dart';
 export 'info_album_view.dart';
-export 'info_artist_view.dart';
 export 'swipes_library_view.dart';
 export 'swipes_view.dart';
 export 'track/info_track_view.dart';
