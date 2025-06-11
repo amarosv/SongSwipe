@@ -237,8 +237,6 @@ Future<bool> updateUserSettings(
     {required String uid, required UserSettings settings}) async {
   Uri url = Uri.parse('$apiUser/$uid/settings');
 
-  print('Updating...');
-
   // Llamada a la API para guardar los ajustes
   final response = await http.put(
     url,
@@ -732,6 +730,7 @@ Future<bool> updateSwipe(
 
   print('UPDATING...');
   print(idTrack);
+  print(newLike);
 
   // Llamada a la API para guardar los ajustes
   final response = await http.put(

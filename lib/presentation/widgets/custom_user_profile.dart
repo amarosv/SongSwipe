@@ -28,7 +28,7 @@ class _CustomUserProfileState extends ConsumerState<CustomUserProfile> {
 
   // Variable que almacena el uid del usuario actual
   late String uid;
-  
+
   // Variable que almacena la lista con todos los ids de las canciones
   late List<int> _allTracksIds = [];
 
@@ -136,7 +136,7 @@ class _CustomUserProfileState extends ConsumerState<CustomUserProfile> {
 
                   followed = numFilasAfectadas > 0;
                 }
-                
+
                 ref.read(followingChangedProvider.notifier).state++;
 
                 loadData();
@@ -210,8 +210,17 @@ class _CustomUserProfileState extends ConsumerState<CustomUserProfile> {
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
                           value: InkWell(
-                            onTap: () => context.push('/swipes-library',
-                                extra: _allTracksIds),
+                            onTap: () => context
+                                .push('/swipes-library', extra: _allTracksIds)
+                                .then((result) async {
+                              if (result is Future<void>) {
+                                print('waiting...');
+                                await result;
+                              }
+
+                              ref.read(swipeChangedProvider.notifier).state =
+                                  true;
+                            }),
                             child: Text(
                               humanReadbleNumber(userProfile.swipes),
                               overflow: TextOverflow.ellipsis,
@@ -275,8 +284,9 @@ class _CustomUserProfileState extends ConsumerState<CustomUserProfile> {
                                 text: localization.see_fav_tracks),
                             style: TextStyle(fontSize: 18),
                           ),
-                          function: () => context.push('/fav-tracks?uid=${widget.uidUser}',
-                                extra: _favTracksIds),
+                          function: () => context.push(
+                              '/fav-tracks?uid=${widget.uidUser}',
+                              extra: _favTracksIds),
                         ),
                       ],
                     )
@@ -295,7 +305,8 @@ class _CustomUserProfileState extends ConsumerState<CustomUserProfile> {
                                 text: localization.see_their_stats),
                             style: TextStyle(fontSize: 18),
                           ),
-                          function: () => context.push('/stats?uid=${widget.uidUser}'),
+                          function: () =>
+                              context.push('/stats?uid=${widget.uidUser}'),
                         ),
                       ],
                     )

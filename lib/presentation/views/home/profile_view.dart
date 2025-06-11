@@ -83,6 +83,13 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
       }
     });
 
+    ref.listen<bool>(swipeChangedProvider, (prev, next) {
+      if (next == true && mounted) {
+        _getUserProfile();
+        ref.read(swipeChangedProvider.notifier).state = false;
+      }
+    });
+
     return Scaffold(
         body: SafeArea(
       child: SingleChildScrollView(

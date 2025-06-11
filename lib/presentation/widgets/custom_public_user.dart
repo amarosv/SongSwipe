@@ -184,8 +184,20 @@ class _CustomPublicUserState extends ConsumerState<CustomPublicUser> {
                                   onTap: () => (isFriend ||
                                           userSettings.privacyVisSavedSongs ==
                                               0)
-                                      ? context.push('/swipes-library',
-                                          extra: _allTracksIds)
+                                      ? context
+                                          .push('/swipes-library',
+                                              extra: _allTracksIds)
+                                          .then((result) async {
+                                          if (result is Future<void>) {
+                                            print('waiting...');
+                                            await result;
+                                          }
+
+                                          ref
+                                              .read(
+                                                  swipeChangedProvider.notifier)
+                                              .state = true;
+                                        })
                                       : null,
                                   child: Text(
                                     humanReadbleNumber(userProfile.swipes),

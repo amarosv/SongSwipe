@@ -89,10 +89,6 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     super.initState();
     _uid = _user.uid;
 
-    for (var i in widget.tracks) {
-      print(i);
-    }
-
     // Obtenemos los datos del usuario
     _getUserSettings();
 
@@ -389,12 +385,29 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
 
   Future<bool> _finalizeSwipes() async {
     bool changes = false;
-
     if (swipes.isNotEmpty) {
-      final List<Future<void>> updates = swipes.map((swipe) {
+      List<Swipe> swipesToAdd = [];
+      List<Swipe> swipesToUpdate = [];
+
+      List<int> ids = swipes.map((s) => s.id).toList();
+
+      List<dynamic> newSwipesIds =
+          await areTrackInDatabase(uid: _uid, tracksIds: ids);
+
+      for (var swipe in swipes) {
+        if (newSwipesIds.contains(swipe.id)) {
+          swipesToAdd.add(swipe);
+        } else {
+          swipesToUpdate.add(swipe);
+        }
+      }
+
+      final List<Future<void>> updates = swipesToUpdate.map((swipe) {
         return updateSwipe(idTrack: swipe.id, newLike: swipe.like, uid: _uid);
       }).toList();
-      await Future.wait(updates);
+
+      await Future.wait(
+          [...updates, saveSwipes(uid: _uid, swipes: swipesToAdd)]);
 
       changes = true;
     }
