@@ -669,4 +669,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get all_albums => 'todos los albumes';
+
+  @override
+  String get confirm_delete_account_warning =>
+      '¿Seguro que quieres eliminar tu cuenta?';
+
+  @override
+  String get delete_account_irreversible =>
+      'esta acción eliminará permanentemente tu cuenta y todos tus datos. ¿Deseas continuar?';
+
+  @override
+  String get account_deleted_success =>
+      'su cuenta ha sido eliminada exitosamente';
+
+  @override
+  String get warning => '¡¡¡peligro!!!';
+
+  @override
+  String get cancel => 'cancelar';
+
+  @override
+  String get reactivated_account => 'cuenta reactivada';
 }

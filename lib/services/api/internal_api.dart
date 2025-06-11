@@ -1121,9 +1121,10 @@ Future<List<Artist>> getTopLikedArtistsByUser({required String uid}) async {
 
   if (response.statusCode == 200) {
     final data = json.decode(response.body);
-    artists = (data as List).map((artist) => Artist.fromJson(artist, 0)).toList();
+    artists =
+        (data as List).map((artist) => Artist.fromJson(artist, 0)).toList();
   }
-  
+
   return artists;
 }
 
@@ -1143,9 +1144,10 @@ Future<List<Artist>> getTopDislikedArtistsByUser({required String uid}) async {
 
   if (response.statusCode == 200) {
     final data = json.decode(response.body);
-    artists = (data as List).map((artist) => Artist.fromJson(artist, 0)).toList();
+    artists =
+        (data as List).map((artist) => Artist.fromJson(artist, 0)).toList();
   }
-  
+
   return artists;
 }
 
@@ -1165,9 +1167,10 @@ Future<List<Artist>> getTopSwipedArtistsByUser({required String uid}) async {
 
   if (response.statusCode == 200) {
     final data = json.decode(response.body);
-    artists = (data as List).map((artist) => Artist.fromJson(artist, 0)).toList();
+    artists =
+        (data as List).map((artist) => Artist.fromJson(artist, 0)).toList();
   }
-  
+
   return artists;
 }
 
@@ -1189,7 +1192,7 @@ Future<List<Album>> getTopLikedAlbumsByUser({required String uid}) async {
     final data = json.decode(response.body);
     albums = (data as List).map((album) => Album.fromJson(album)).toList();
   }
-  
+
   return albums;
 }
 
@@ -1211,7 +1214,7 @@ Future<List<Album>> getTopDislikedAlbumsByUser({required String uid}) async {
     final data = json.decode(response.body);
     albums = (data as List).map((album) => Album.fromJson(album)).toList();
   }
-  
+
   return albums;
 }
 
@@ -1233,7 +1236,7 @@ Future<List<Album>> getTopSwipedAlbumsByUser({required String uid}) async {
     final data = json.decode(response.body);
     albums = (data as List).map((album) => Album.fromJson(album)).toList();
   }
-  
+
   return albums;
 }
 
@@ -1255,7 +1258,7 @@ Future<List<UserApp>> getFollowersByUser({required String uid}) async {
     final data = json.decode(response.body);
     users = (data as List).map((user) => UserApp.fromJson(user)).toList();
   }
-  
+
   return users;
 }
 
@@ -1277,6 +1280,33 @@ Future<List<UserApp>> getFollowingByUser({required String uid}) async {
     final data = json.decode(response.body);
     users = (data as List).map((user) => UserApp.fromJson(user)).toList();
   }
-  
+
   return users;
+}
+
+/// Esta función recibe el UID de un usuario y lo elimina de la base de datos <br>
+/// @param uid UID del usuario <br>
+/// @returns Bool
+Future<bool> deleteUser({required String uid}) async {
+  Uri url = Uri.parse('$apiUser/$uid');
+
+  // Llamada a la API para eliminar al usuario
+  final response = await http.delete(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  return response.statusCode == 200;
+}
+
+/// Esta función recibe el UID de un usuario y reactiva su cuenta <br>
+/// @param uid UID del usuario
+Future<void> reactivateAccount({required String uid}) async {
+  Uri url = Uri.parse('$apiUser/$uid/reactivate_account');
+
+  // Llamada a la API para reactivar la cuenta
+  await http.put(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
 }

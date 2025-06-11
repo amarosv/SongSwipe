@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/auth_methods.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
+import 'package:songswipe/models/user_app.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/internal_api.dart';
 import 'package:toastification/toastification.dart';
@@ -217,12 +218,51 @@ class _SignUpViewState extends State<SignUpView> {
                                       text: localization.error_password_weak),
                                   context);
                             } else if (e.code == 'email-already-in-use') {
-                              showNotification(
-                                  capitalizeFirstLetter(
-                                      text: localization.attention),
-                                  capitalizeFirstLetter(
-                                      text: localization.error_account),
-                                  context);
+                              final credential = await FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                      email: emailController.text,
+                                      password: password);
+                              UserApp userApp =
+                                  await getUserByUID(uid: credential.user!.uid);
+
+                              // Si el UID está vacío es porque esta eliminada
+                              if (userApp.uid.isEmpty) {
+                                await reactivateAccount(
+                                    uid: credential.user!.uid);
+
+                                toastification.show(
+                                  type: ToastificationType.success,
+                                  context: context,
+                                  style: ToastificationStyle.flatColored,
+                                  title: Text(capitalizeFirstLetter(
+                                      text: localization.attention)),
+                                  description: RichText(
+                                      text: TextSpan(
+                                          text: capitalizeFirstLetter(
+                                              text: localization
+                                                  .reactivated_account),
+                                          style:
+                                              TextStyle(color: Colors.black))),
+                                  autoCloseDuration: const Duration(seconds: 3),
+                                );
+                                context.go('/home/4');
+                              } else {
+                                // Mostramos la notificación
+                                toastification.show(
+                                  type: ToastificationType.error,
+                                  context: context,
+                                  style: ToastificationStyle.flatColored,
+                                  title: Text(capitalizeFirstLetter(
+                                      text: localization.attention)),
+                                  description: RichText(
+                                      text: TextSpan(
+                                          text: capitalizeFirstLetter(
+                                              text: localization.error_account),
+                                          style:
+                                              TextStyle(color: Colors.black))),
+                                  autoCloseDuration: const Duration(seconds: 3),
+                                );
+                              }
                             }
                           } catch (e) {
                             print('Error ${e.toString()}');
@@ -281,29 +321,53 @@ class _SignUpViewState extends State<SignUpView> {
                           User? userCredential = await signInWithGoogle();
 
                           if (userCredential != null) {
-                            print('${userCredential.email!} aa');
                             bool emailExists =
                                 await checkIfEmailExists(userCredential.email!);
 
-                            print(emailExists);
                             if (!emailExists) {
                               context.go(
                                   '/complete-profile-simple?supplier=Google');
                             } else {
-                              // Mostramos la notificación
-                              toastification.show(
-                                type: ToastificationType.error,
-                                context: context,
-                                style: ToastificationStyle.flatColored,
-                                title: Text(capitalizeFirstLetter(
-                                    text: localization.attention)),
-                                description: RichText(
-                                    text: TextSpan(
-                                        text: capitalizeFirstLetter(
-                                            text: localization.error_account),
-                                        style: TextStyle(color: Colors.black))),
-                                autoCloseDuration: const Duration(seconds: 3),
-                              );
+                              UserApp userApp =
+                                  await getUserByUID(uid: userCredential.uid);
+
+                              // Si el uid esta vacío es porque está eliminado
+                              if (userApp.uid.isEmpty) {
+                                await reactivateAccount(
+                                    uid: userCredential.uid);
+                                toastification.show(
+                                  type: ToastificationType.success,
+                                  context: context,
+                                  style: ToastificationStyle.flatColored,
+                                  title: Text(capitalizeFirstLetter(
+                                      text: localization.attention)),
+                                  description: RichText(
+                                      text: TextSpan(
+                                          text: capitalizeFirstLetter(
+                                              text: localization
+                                                  .reactivated_account),
+                                          style:
+                                              TextStyle(color: Colors.black))),
+                                  autoCloseDuration: const Duration(seconds: 3),
+                                );
+                                context.go('/home/4');
+                              } else {
+                                // Mostramos la notificación
+                                toastification.show(
+                                  type: ToastificationType.error,
+                                  context: context,
+                                  style: ToastificationStyle.flatColored,
+                                  title: Text(capitalizeFirstLetter(
+                                      text: localization.attention)),
+                                  description: RichText(
+                                      text: TextSpan(
+                                          text: capitalizeFirstLetter(
+                                              text: localization.error_account),
+                                          style:
+                                              TextStyle(color: Colors.black))),
+                                  autoCloseDuration: const Duration(seconds: 3),
+                                );
+                              }
                             }
                           }
                         },

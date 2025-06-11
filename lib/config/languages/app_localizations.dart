@@ -1383,6 +1383,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'all albums'**
   String get all_albums;
+
+  /// No description provided for @confirm_delete_account_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'are you sure you want to delete your account?'**
+  String get confirm_delete_account_warning;
+
+  /// No description provided for @delete_account_irreversible.
+  ///
+  /// In en, this message translates to:
+  /// **'this action will permanently delete your account and all your data. Do you wish to continue?'**
+  String get delete_account_irreversible;
+
+  /// No description provided for @account_deleted_success.
+  ///
+  /// In en, this message translates to:
+  /// **'your account has been successfully deleted'**
+  String get account_deleted_success;
+
+  /// No description provided for @warning.
+  ///
+  /// In en, this message translates to:
+  /// **'warning!!!'**
+  String get warning;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'cancel'**
+  String get cancel;
+
+  /// No description provided for @reactivated_account.
+  ///
+  /// In en, this message translates to:
+  /// **'reactivated account'**
+  String get reactivated_account;
 }
 
 class _AppLocalizationsDelegate

@@ -214,5 +214,11 @@
     "login_abort": "login canceled.",
     "select_one_track": "select at least one song",
     "top_tracks": "top tracks",
-    "all_albums": "all albums"
+    "all_albums": "all albums",
+    "confirm_delete_account_warning": "are you sure you want to delete your account?",
+    "delete_account_irreversible": "this action will permanently delete your account and all your data. Do you wish to continue?",
+    "account_deleted_success": "your account has been successfully deleted",
+    "warning": "warning!!!",
+    "cancel": "cancel",
+    "reactivated_account": "reactivated account"
 }

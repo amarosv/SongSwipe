@@ -213,5 +213,11 @@
     "login_abort": "inicio de sesión cancelado.",
     "select_one_track": "selecciona al menos una canción",
     "top_tracks": "top canciones",
-    "all_albums": "todos los albumes"
+    "all_albums": "todos los albumes",
+    "confirm_delete_account_warning": "¿Seguro que quieres eliminar tu cuenta?",
+    "delete_account_irreversible": "esta acción eliminará permanentemente tu cuenta y todos tus datos. ¿Deseas continuar?",
+    "account_deleted_success": "su cuenta ha sido eliminada exitosamente",
+    "warning": "¡¡¡peligro!!!",
+    "cancel": "cancelar",
+    "reactivated_account": "cuenta reactivada"
 }

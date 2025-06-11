@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/auth_methods.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
+import 'package:songswipe/models/user_app.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
+import 'package:songswipe/services/api/export_apis.dart';
 import 'package:toastification/toastification.dart';
 
 /// Vista para la pantalla de login <br>
@@ -340,7 +342,7 @@ class _LoginViewState extends State<LoginView> {
                     //     imagePath: 'assets/images/social/apple.png',
                     //   ),
                     // ),
-                    
+
                     Expanded(
                       child: CustomSocialButton(
                         backgroundColor: Colors.black,
@@ -348,7 +350,20 @@ class _LoginViewState extends State<LoginView> {
                           User? user = await signInWithGoogle();
 
                           if (user != null) {
-                            context.go('/home/4');
+                            print(user.uid);
+                            UserApp userApp = await getUserByUID(uid: user.uid);
+
+                            // Si el uid está vacío es porque está eliminado
+                            if (userApp.uid.isNotEmpty) {
+                              context.go('/home/4');
+                            } else {
+                              showNotification(
+                                  capitalizeFirstLetter(
+                                      text: localization.attention),
+                                  capitalizeFirstLetter(
+                                      text: localization.error_account_not_exists),
+                                  context);
+                            }
                           }
                         },
                         textStyle: TextStyle(fontSize: 16, color: Colors.white),

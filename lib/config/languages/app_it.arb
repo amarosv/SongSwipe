@@ -213,5 +213,11 @@
     "login_abort": "login annullato.",
     "select_one_track": "seleziona almeno una canzone",
     "top_tracks": "top canzoni",
-    "all_albums": "tutti gli album"
+    "all_albums": "tutti gli album",
+    "confirm_delete_account_warning": "vuoi davvero eliminare il tuo account?",
+    "delete_account_irreversible": "questa azione eliminerà definitivamente il tuo account e tutti i tuoi dati. Vuoi continuare?",
+    "account_deleted_success": "il tuo account è stato eliminato con successo",
+    "warning": "pericolo!!!",
+    "cancel": "cancellare",
+    "reactivated_account": "account riattivata"
 }

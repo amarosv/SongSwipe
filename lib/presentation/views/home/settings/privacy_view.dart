@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/internal_api.dart';
+import 'package:toastification/toastification.dart';
 
 /// Vista para la pantalla de ajustes de privacidad<br>
 /// @author Amaro Suárez <br>
@@ -287,7 +289,76 @@ class _PrivacyViewState extends State<PrivacyView> with WidgetsBindingObserver {
               child: CustomButton(
                 backgroundColor: const Color.fromARGB(255, 177, 12, 1),
                 onPressed: () async {
-                  // TODO
+                  final localization = AppLocalizations.of(context)!;
+
+                  final firstConfirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog.adaptive(
+                      title: Text(capitalizeFirstLetter(text: localization.attention)),
+                      content: Text(upperCaseAfterDot(text: localization.confirm_delete_account_warning)),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text(
+                            capitalizeFirstLetter(text: localization.no),
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text(capitalizeFirstLetter(text: localization.yes)),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (firstConfirm != true) return;
+
+                  final finalConfirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog.adaptive(
+                      title: Text(
+                        localization.warning.toUpperCase(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      content: Text(upperCaseAfterDot(text: localization.delete_account_irreversible)),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text(
+                            localization.cancel.toUpperCase(),
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text(capitalizeFirstLetter(text: localization.continue_s)),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (finalConfirm != true) return;
+
+                  bool deleted = await deleteUser(uid: _uid);
+                  if (deleted) {
+                    toastification.show(
+                        type: ToastificationType.success,
+                        context: context,
+                        style: ToastificationStyle.flatColored,
+                        title: Text(capitalizeFirstLetter(
+                            text: localization.attention)),
+                        description: RichText(
+                            text: TextSpan(
+                                text: capitalizeFirstLetter(
+                                    text: localization.account_deleted_success),
+                                style: TextStyle(color: Colors.black))),
+                        autoCloseDuration: const Duration(seconds: 3),
+                      );
+                    context.go('/login');
+                  }
                 },
                 text: upperCaseAfterSpace(text: localization.delete_account),
                 textSize: 24,
