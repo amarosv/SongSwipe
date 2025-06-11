@@ -80,13 +80,13 @@ class _SwipesViewState extends State<SwipesView>
   // Lista donde se almacenarán los swipes
   List<Swipe> swipes = [];
 
-  // Variable que almacena hasta que índice sean cargados los datos de la canción
-  int _loadIndex = 0;
-
   @override
   void initState() {
     super.initState();
     _uid = _user.uid;
+
+    // Hacemos shuffle de las canciones
+    widget.tracks.shuffle();
 
     // Obtenemos los datos del usuario
     _getUserSettings();
@@ -228,9 +228,6 @@ class _SwipesViewState extends State<SwipesView>
     int? currentIndex,
     CardSwiperDirection direction,
   ) {
-    // Variable donde se almacenará el swipe
-    Swipe swipe;
-
     // print(_cards[currentIndex!].track.id);
     if (currentIndex! >= _cards.length) {
       currentIndex = _cards.length - 1;
@@ -431,7 +428,9 @@ class _SwipesViewState extends State<SwipesView>
               style: TextStyle(fontWeight: FontWeight.bold, color: borderColor),
             ),
             foregroundColor: borderColor,
-            backgroundColor: Colors.transparent,
+            backgroundColor: _userSettings.cardBlurredCoverAsBackground
+                ? Colors.transparent
+                : backgroundColor,
           ),
           body: _userSettings.showTutorial
               ? _buildTutorialWithArrows()

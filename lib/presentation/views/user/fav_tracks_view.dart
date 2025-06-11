@@ -46,7 +46,6 @@ class _FavTracksViewState extends State<FavTracksView> {
 
   void _loadTracksIds() async {
     _idsTracks = await getLikedTracksIds(uid: widget.uid);
-    print(_idsTracks.first);
     setState(() {
       
     });

@@ -210,17 +210,20 @@ class _CustomUserProfileState extends ConsumerState<CustomUserProfile> {
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
                           value: InkWell(
-                            onTap: () => context
-                                .push('/swipes-library', extra: _allTracksIds)
-                                .then((result) async {
-                              if (result is Future<void>) {
-                                print('waiting...');
-                                await result;
-                              }
+                            onTap: () => userSettings.privacyVisSavedSongs == 2
+                                ? null
+                                : context
+                                    .push('/swipes-library',
+                                        extra: _allTracksIds)
+                                    .then((result) async {
+                                    if (result is Future<void>) {
+                                      await result;
+                                    }
 
-                              ref.read(swipeChangedProvider.notifier).state =
-                                  true;
-                            }),
+                                    ref
+                                        .read(swipeChangedProvider.notifier)
+                                        .state = true;
+                                  }),
                             child: Text(
                               humanReadbleNumber(userProfile.swipes),
                               overflow: TextOverflow.ellipsis,
@@ -236,8 +239,10 @@ class _CustomUserProfileState extends ConsumerState<CustomUserProfile> {
                           title:
                               upperCaseAfterSpace(text: localization.followers),
                           value: InkWell(
-                            onTap: () => context
-                                .push('/followers?uid=${widget.uidUser}'),
+                            onTap: () => userSettings.privacyVisFol == 2
+                                ? null
+                                : context
+                                    .push('/followers?uid=${widget.uidUser}'),
                             child: Text(
                               humanReadbleNumber(userProfile.followers),
                               overflow: TextOverflow.ellipsis,
@@ -253,8 +258,10 @@ class _CustomUserProfileState extends ConsumerState<CustomUserProfile> {
                           title:
                               upperCaseAfterSpace(text: localization.following),
                           value: InkWell(
-                            onTap: () => context
-                                .push('/following?uid=${widget.uidUser}'),
+                            onTap: () => userSettings.privacyVisFol == 2
+                                ? null
+                                : context
+                                    .push('/following?uid=${widget.uidUser}'),
                             child: Text(
                               humanReadbleNumber(userProfile.following),
                               overflow: TextOverflow.ellipsis,

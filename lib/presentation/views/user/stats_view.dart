@@ -72,33 +72,49 @@ class _StatsViewState extends State<StatsView> {
     if (!mounted) return;
 
     try {
-      final results = await Future.wait([
+      // Primer grupo
+      final result1 = await Future.wait([
         getLast5Swipes(uid: widget.uid),
+        getLikedTracksIds(uid: widget.uid),
+        getDislikedTracksIds(uid: widget.uid),
+        getSwipedTracksIds(uid: widget.uid),
+      ]);
+
+      await Future.delayed(Duration(milliseconds: 500));
+
+      // Segundo grupo
+      final result2 = await Future.wait([
         getTopLikedArtistsByUser(uid: widget.uid),
         getTopDislikedArtistsByUser(uid: widget.uid),
         getTopSwipedArtistsByUser(uid: widget.uid),
+      ]);
+
+      await Future.delayed(Duration(milliseconds: 500));
+
+      // Tercer grupo
+      final result3 = await Future.wait([
         getTopLikedAlbumsByUser(uid: widget.uid),
         getTopDislikedAlbumsByUser(uid: widget.uid),
         getTopSwipedAlbumsByUser(uid: widget.uid),
-        getLikedTracksIds(uid: widget.uid),
-        getDislikedTracksIds(uid: widget.uid),
-        getSwipedTracksIds(uid: widget.uid)
       ]);
 
       setState(() {
-        _lastSwipes = results[0] as List<Track>;
-        _artistsLiked = results[1] as List<Artist>;
-        _artistsDisliked = results[2] as List<Artist>;
-        _artistsSwiped = results[3] as List<Artist>;
-        _albumsLiked = results[4] as List<Album>;
-        _albumsDisliked = results[5] as List<Album>;
-        _albumsSwiped = results[6] as List<Album>;
-        List<dynamic> likes = results[7] as List<dynamic>;
+        _lastSwipes = result1[0] as List<Track>;
+        List<dynamic> likes = result1[1] as List<dynamic>;
         _likes = likes.length;
-        List<dynamic> dislikes = results[8] as List<dynamic>;
+        List<dynamic> dislikes = result1[2] as List<dynamic>;
         _dislikes = dislikes.length;
-        List<dynamic> swipes = results[9] as List<dynamic>;
+        List<dynamic> swipes = result1[3] as List<dynamic>;
         _swipes = swipes.length;
+
+        _artistsLiked = result2[0];
+        _artistsDisliked = result2[1];
+        _artistsSwiped = result2[2];
+
+        _albumsLiked = result3[0];
+        _albumsDisliked = result3[1];
+        _albumsSwiped = result3[2];
+
         _loading = false;
       });
     } catch (e) {
@@ -277,7 +293,7 @@ class _StatsViewState extends State<StatsView> {
                           ),
                         ),
                         CustomAlbumsWidget(
-                          albums: _albumsLiked,
+                          albums: _albumsDisliked,
                           text: 'dislikes',
                         )
                       ],
@@ -301,7 +317,7 @@ class _StatsViewState extends State<StatsView> {
                           ),
                         ),
                         CustomAlbumsWidget(
-                          albums: _albumsLiked,
+                          albums: _albumsSwiped,
                           text: 'swipes',
                         )
                       ],

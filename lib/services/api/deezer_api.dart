@@ -456,9 +456,11 @@ Future<List<Artist>> getRelatedArtists({required int idArtist}) async {
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
 
-    artists = (data['data'] as List).map((artists) => Artist.fromJson(artists, 0)).toList();
+    artists = (data['data'] as List)
+        .map((artists) => Artist.fromJson(artists, 0))
+        .toList();
   }
-  
+
   return artists;
 }
 
@@ -468,7 +470,8 @@ Future<List<Artist>> getRelatedArtists({required int idArtist}) async {
 Future<List<Track>> getTopDeezerTracksByArtist({required int idArtist}) async {
   List<Track> tracks = List.empty();
 
-  Uri url = Uri.parse('${Environment.apiUrlDeezer}artist/$idArtist/top?limit=100');
+  Uri url =
+      Uri.parse('${Environment.apiUrlDeezer}artist/$idArtist/top?limit=100');
 
   // Llamada a la API para obtener los artistas similares
   final response = await http.get(url, headers: {
@@ -479,8 +482,64 @@ Future<List<Track>> getTopDeezerTracksByArtist({required int idArtist}) async {
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
 
-    tracks = (data['data'] as List).map((artists) => Track.fromJson(artists)).toList();
+    tracks = (data['data'] as List)
+        .map((track) => Track.fromJson(track))
+        .toList();
   }
-  
+
   return tracks;
+}
+
+/// Esta función recibe el ID de un artista y devuelve si tiene al menos un album <br>
+/// @param idArtist ID del artista <br>
+/// @returns Bool
+Future<bool> hasArtistAnAlbum(
+    {required int idArtist}) async {
+  bool hasAlbum = false;
+
+  Uri uri = Uri.parse('${Environment.apiUrlDeezer}artist/$idArtist/albums');
+
+  // Llamada a la API para obtener los artistas similares
+  final response = await http.get(uri, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    hasAlbum = (data['data'] as List)
+        .map((album) => Album.fromJson(album))
+        .toList().isNotEmpty;
+  }
+
+  return hasAlbum;
+}
+
+/// Esta función recibe el ID de un artista y devuelve una lista de sus albumes paginados <br>
+/// @param idArtist ID del artista <br>
+/// @returns Lista de albumes paginado
+Future<PaginatedAlbum> getArtistsAlbums(
+    {required int idArtist, String url = '', int limit = 10}) async {
+  PaginatedAlbum paginatedAlbum = PaginatedAlbum.empty();
+
+  if (url.isEmpty) {
+    url = '${Environment.apiUrlDeezer}artist/$idArtist/albums';
+  }
+
+  Uri uri = Uri.parse(url);
+
+  // Llamada a la API para obtener los artistas similares
+  final response = await http.get(uri, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    paginatedAlbum = PaginatedAlbum.fromJson(data);
+  }
+
+  return paginatedAlbum;
 }

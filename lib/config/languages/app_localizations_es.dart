@@ -663,4 +663,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get select_one_track => 'selecciona al menos una canción';
+
+  @override
+  String get top_tracks => 'top canciones';
+
+  @override
+  String get all_albums => 'todos los albumes';
 }

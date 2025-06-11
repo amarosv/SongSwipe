@@ -88,6 +88,9 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
   void initState() {
     super.initState();
     _uid = _user.uid;
+    
+    // Hacemos shuffle a las canciones
+    widget.tracks.shuffle();
 
     // Obtenemos los datos del usuario
     _getUserSettings();
@@ -258,9 +261,6 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     int? currentIndex,
     CardSwiperDirection direction,
   ) {
-    // Variable donde se almacenará el swipe
-    Swipe swipe;
-
     // print(_cards[currentIndex!].track.id);
     if (currentIndex! >= _cards.length) {
       currentIndex = _cards.length - 1;
@@ -461,7 +461,9 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
               style: TextStyle(fontWeight: FontWeight.bold, color: borderColor),
             ),
             foregroundColor: borderColor,
-            backgroundColor: Colors.transparent,
+            backgroundColor: _userSettings.cardBlurredCoverAsBackground
+                ? Colors.transparent
+                : backgroundColor,
           ),
           body: _userSettings.showTutorial
               ? _buildTutorialWithArrows()

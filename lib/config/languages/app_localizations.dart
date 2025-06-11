@@ -1371,6 +1371,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'select at least one song'**
   String get select_one_track;
+
+  /// No description provided for @top_tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'top tracks'**
+  String get top_tracks;
+
+  /// No description provided for @all_albums.
+  ///
+  /// In en, this message translates to:
+  /// **'all albums'**
+  String get all_albums;
 }
 
 class _AppLocalizationsDelegate

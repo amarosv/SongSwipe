@@ -237,6 +237,23 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: '/top-tracks',
+        name: TopTracksArtistScreen.name,
+        builder: (context, state) {
+          final tracks = state.extra as List<Track>;
+          return TopTracksArtistScreen(tracks: tracks);
+        },
+      ),
+      GoRoute(
+        path: '/albums-artist',
+        name: AlbumsArtistScreen.name,
+        builder: (context, state) {
+          final idArtist = int.parse(state.uri.queryParameters['id']!);
+          final nameArtist = state.uri.queryParameters['name']!;
+          return AlbumsArtistScreen(idArtist: idArtist, nameArtist: nameArtist,);
+        },
+      ),
+      GoRoute(
         path: '/export',
         name: ExportTracksScreen.name,
         builder: (context, state) {

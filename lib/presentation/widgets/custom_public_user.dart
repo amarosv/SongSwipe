@@ -181,15 +181,13 @@ class _CustomPublicUserState extends ConsumerState<CustomPublicUser> {
                                 title: capitalizeFirstLetter(
                                     text: localization.swipes),
                                 value: InkWell(
-                                  onTap: () => (isFriend ||
-                                          userSettings.privacyVisSavedSongs ==
+                                  onTap: () => (userSettings.privacyVisSavedSongs ==
                                               0)
                                       ? context
                                           .push('/swipes-library',
                                               extra: _allTracksIds)
                                           .then((result) async {
                                           if (result is Future<void>) {
-                                            print('waiting...');
                                             await result;
                                           }
 
@@ -215,8 +213,7 @@ class _CustomPublicUserState extends ConsumerState<CustomPublicUser> {
                                   title: upperCaseAfterSpace(
                                       text: localization.followers),
                                   value: InkWell(
-                                    onTap: () => (isFriend ||
-                                            userSettings.privacyVisFol == 0)
+                                    onTap: () => (userSettings.privacyVisFol == 0)
                                         ? context.push('/followers?uid=$uid')
                                         : null,
                                     child: Text(
@@ -234,8 +231,7 @@ class _CustomPublicUserState extends ConsumerState<CustomPublicUser> {
                                 title: upperCaseAfterSpace(
                                     text: localization.following),
                                 value: InkWell(
-                                  onTap: () => (isFriend ||
-                                          userSettings.privacyVisFol == 0)
+                                  onTap: () => (userSettings.privacyVisFol == 0)
                                       ? context.push('/following?uid=$uid')
                                       : null,
                                   child: Text(

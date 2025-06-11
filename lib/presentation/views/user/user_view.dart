@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
@@ -165,14 +164,11 @@ class _UserViewState extends State<UserView> {
                         child: CustomColumn(
                           title:
                               capitalizeFirstLetter(text: localization.swipes),
-                          value: GestureDetector(
-                            onTap: () => context.push('/swipes?uid=$_uid'),
-                            child: Text(
-                              humanReadbleNumber(_userProfile.swipes),
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(fontSize: 28),
-                            ),
+                          value: Text(
+                            humanReadbleNumber(_userProfile.swipes),
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontSize: 28),
                           ),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
                         ),
@@ -181,14 +177,11 @@ class _UserViewState extends State<UserView> {
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.followers),
-                          value: GestureDetector(
-                            onTap: () => context.push('/followers?uid=$_uid'),
-                            child: Text(
-                              humanReadbleNumber(_userProfile.followers),
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(fontSize: 28),
-                            ),
+                          value: Text(
+                            humanReadbleNumber(_userProfile.followers),
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontSize: 28),
                           ),
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
                         ),
@@ -197,14 +190,11 @@ class _UserViewState extends State<UserView> {
                         child: CustomColumn(
                           title:
                               upperCaseAfterSpace(text: localization.following),
-                          value: GestureDetector(
-                            onTap: () => context.push('/following?uid=$_uid'),
-                            child: Text(
-                              humanReadbleNumber(_userProfile.following),
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(fontSize: 28),
-                            ),
+                          value: Text(
+                            humanReadbleNumber(_userProfile.following),
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontSize: 28),
                           ),
                           hasDivider: false,
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),

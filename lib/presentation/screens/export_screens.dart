@@ -1,4 +1,6 @@
+export 'artist/albums_artist_screen.dart';
 export 'artist/info_artist_screen.dart';
+export 'artist/top_tracks_artist_screen.dart';
 export 'change_theme_screen.dart';
 export 'create/complete_profile_screen.dart';
 export 'create/complete_profile_simple_screen.dart';

@@ -211,5 +211,7 @@
     "their_fav_tracks": "i loro canzoni preferiti",
     "email_reset_sent": "e-mail di reimpostazione della password inviata",
     "login_abort": "login annullato.",
-    "select_one_track": "seleziona almeno una canzone"
+    "select_one_track": "seleziona almeno una canzone",
+    "top_tracks": "top canzoni",
+    "all_albums": "tutti gli album"
 }

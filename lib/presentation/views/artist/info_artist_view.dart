@@ -53,6 +53,9 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
   // Variable que almacena los artistas similares
   late List<Artist> _relatedArtists = List.empty();
 
+  // Variable que almacena si tiene al menos un album
+  late bool _hasAlbums = false;
+
   // Variable que almacena si el usuario tiene el artista guardado como favorito
   bool _isFavorite = false;
 
@@ -88,7 +91,8 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
         getTopAlbumsByArtist(idArtist: widget.idArtist),
         getArtistStats(idArtist: widget.idArtist),
         getRelatedArtists(idArtist: widget.idArtist),
-        getTopDeezerTracksByArtist(idArtist: widget.idArtist)
+        getTopDeezerTracksByArtist(idArtist: widget.idArtist),
+        hasArtistAnAlbum(idArtist: widget.idArtist)
       ]);
 
       setState(() {
@@ -101,6 +105,7 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
         _stats = results[5] as Stats;
         _relatedArtists = results[6] as List<Artist>;
         _topTracksDeezer = results[7] as List<Track>;
+        _hasAlbums = results[8] as bool;
         _isLoading = false;
       });
     } catch (e) {
@@ -605,34 +610,43 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
                               ],
                             ),
 
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          if (_topTracksDeezer.isNotEmpty)
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
 
-                          // Ver top 100 canciones
-                          CustomNavigator(
-                            title: Text(
-                              capitalizeFirstLetter(
-                                  text: localization.see_top_tracks),
-                              style: TextStyle(fontSize: 18),
+                                // Ver top 100 canciones
+                                CustomNavigator(
+                                    title: Text(
+                                      capitalizeFirstLetter(
+                                          text: localization.see_top_tracks),
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    function: () => context.push('/top-tracks',
+                                        extra: _topTracksDeezer)),
+                              ],
                             ),
-                            function: null, // TODO: Que lleve a ver el top 100
-                          ),
 
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          if (_hasAlbums)
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
 
-                          // Ver todos los albums
-                          CustomNavigator(
-                            title: Text(
-                              capitalizeFirstLetter(
-                                  text: localization.see_all_albums),
-                              style: TextStyle(fontSize: 18),
+                                // Ver todos los albums
+                                CustomNavigator(
+                                  title: Text(
+                                    capitalizeFirstLetter(
+                                        text: localization.see_all_albums),
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  function: () => context.push('/albums-artist?id=${widget.idArtist}&name=${_artist.name}')
+                                ),
+                              ],
                             ),
-                            function:
-                                null, // TODO: Que lleve a ver todos los albums
-                          ),
 
                           const SizedBox(
                             height: 20,

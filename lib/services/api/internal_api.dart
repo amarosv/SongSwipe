@@ -85,8 +85,6 @@ Future<int> addArtistToFavorites(
   // Variable que almacena el número de artistas guardados como favoritos
   int numArtistas = 0;
 
-  print('añadido');
-
   // Formamos la url del endpoint
   Uri url = Uri.parse('$apiUser/$uid/artists');
 
@@ -331,11 +329,6 @@ Future<int> saveSwipes(
     {required String uid, required List<Swipe> swipes}) async {
   // Variable que almacenará el número de filas afectadas
   int numFilasAfectadas = 0;
-
-  print('ADDING...');
-  for (var swipe in swipes) {
-    print('${swipe.id} - ${swipe.idArtist} - ${swipe.idAlbum} - ${swipe.like}');
-  }
 
   Uri url = Uri.parse('$apiUser/$uid/save_swipes');
 
@@ -986,8 +979,6 @@ Future<List<Album>> getTopAlbumsByArtist({required int idArtist}) async {
 Future<bool> deleteArtistFromFavorites(
     {required String uid, required int idArtist}) async {
   bool deleted = false;
-
-  print('borrando');
 
   Uri url = Uri.parse('$apiUser/$uid/artist/$idArtist');
 

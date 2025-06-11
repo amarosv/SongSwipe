@@ -3,6 +3,7 @@ export 'artist.dart';
 export 'contributor.dart';
 export 'dominant_colors.dart';
 export 'genre.dart';
+export 'paginated_albums.dart';
 export 'paginated_tracks.dart';
 export 'stats.dart';
 export 'swipe.dart';

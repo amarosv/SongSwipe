@@ -212,5 +212,7 @@
     "their_fav_tracks": "their favorite tracks",
     "email_reset_sent": "password reset email sent",
     "login_abort": "login canceled.",
-    "select_one_track": "select at least one song"
+    "select_one_track": "select at least one song",
+    "top_tracks": "top tracks",
+    "all_albums": "all albums"
 }

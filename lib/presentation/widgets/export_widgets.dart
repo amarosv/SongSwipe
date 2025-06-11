@@ -10,6 +10,7 @@ export 'custom_dropdownbutton_widget.dart';
 export 'custom_grid_tracks.dart';
 export 'custom_language_select.dart';
 export 'custom_leading_widget.dart';
+export 'custom_list_album_widget.dart';
 export 'custom_list_tracks.dart';
 export 'custom_navigator_widget.dart';
 export 'custom_privacy_widget.dart';
