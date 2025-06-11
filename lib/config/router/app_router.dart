@@ -228,6 +228,15 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: '/fav-tracks',
+        name: FavTracksScreen.name,
+        builder: (context, state) {
+          final uid = state.uri.queryParameters['uid']!;
+          final tracks = state.extra as List<int>;
+          return FavTracksScreen(uid: uid, tracks: tracks);
+        },
+      ),
+      GoRoute(
         path: '/export',
         name: ExportTracksScreen.name,
         builder: (context, state) {

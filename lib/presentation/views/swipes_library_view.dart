@@ -89,6 +89,10 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     super.initState();
     _uid = _user.uid;
 
+    for (var i in widget.tracks) {
+      print(i);
+    }
+
     // Obtenemos los datos del usuario
     _getUserSettings();
 

@@ -207,5 +207,6 @@
     "my_followers": "mis seguidores",
     "my_following": "mis seguidos",
     "their_followers": "sus seguidores",
-    "their_following": "sus seguidos"
+    "their_following": "sus seguidos",
+    "their_fav_tracks": "sus canciones favoritas"
 }

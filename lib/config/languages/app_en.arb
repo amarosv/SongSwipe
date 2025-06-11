@@ -208,5 +208,6 @@
     "my_followers": "my followers",
     "my_following": "my following",
     "their_followers": "their followers",
-    "their_following": "their following"
+    "their_following": "their following",
+    "their_fav_tracks": "their favorite tracks"
 }

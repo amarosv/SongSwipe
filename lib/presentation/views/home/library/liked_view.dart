@@ -80,7 +80,6 @@ class _LikedViewState extends ConsumerState<LikedView>
 
   // Función que obtiene las canciones
   void _fetchTracks({bool reset = false}) async {
-    print('aaa');
     if (!_isLoadingMore) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;

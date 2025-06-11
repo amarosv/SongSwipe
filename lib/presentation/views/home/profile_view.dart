@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/providers.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/user_profile.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
@@ -10,14 +12,14 @@ import 'package:songswipe/services/api/internal_api.dart';
 /// Vista para la pantalla del perfil del usuario <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class ProfileView extends StatefulWidget {
+class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({super.key});
 
   @override
-  State<ProfileView> createState() => _ProfileViewState();
+  ConsumerState<ProfileView> createState() => _ProfileViewState();
 }
 
-class _ProfileViewState extends State<ProfileView> {
+class _ProfileViewState extends ConsumerState<ProfileView> {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
@@ -74,6 +76,12 @@ class _ProfileViewState extends State<ProfileView> {
   Widget build(BuildContext context) {
     // Constante que almacena la localización de la app
     final localization = AppLocalizations.of(context)!;
+
+    ref.listen<int>(followingChangedProvider, (prev, next) {
+      if (mounted && prev != next) {
+        _getUserProfile();
+      }
+    });
 
     return Scaffold(
         body: SafeArea(

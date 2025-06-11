@@ -643,4 +643,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get their_following => 'their following';
+
+  @override
+  String get their_fav_tracks => 'their favorite tracks';
 }

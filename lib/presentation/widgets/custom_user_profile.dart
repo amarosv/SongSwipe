@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/export_providers.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/custom_last_swipes_widget%20copy.dart';
@@ -11,24 +13,27 @@ import 'package:songswipe/services/api/internal_api.dart';
 /// Widget que personaliza la vista del perfil de un usuario <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class CustomUserProfile extends StatefulWidget {
+class CustomUserProfile extends ConsumerStatefulWidget {
   /// UID del usuario
   final String uidUser;
   const CustomUserProfile({super.key, required this.uidUser});
 
   @override
-  State<CustomUserProfile> createState() => _CustomUserProfileState();
+  ConsumerState<CustomUserProfile> createState() => _CustomUserProfileState();
 }
 
-class _CustomUserProfileState extends State<CustomUserProfile> {
+class _CustomUserProfileState extends ConsumerState<CustomUserProfile> {
   // Obtenemos el usuario actual
   final User user = FirebaseAuth.instance.currentUser!;
 
   // Variable que almacena el uid del usuario actual
   late String uid;
-
+  
   // Variable que almacena la lista con todos los ids de las canciones
   late List<int> _allTracksIds = [];
+
+  // Variable que almacena la lista con todos los ids de las canciones favoritas
+  late List<int> _favTracksIds = [];
 
   // Variable que almacena al userprofile con sus datos
   UserProfile userProfile = UserProfile.empty();
@@ -58,7 +63,8 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
         checkIfIsMyFriend(uid: uid, uidFriend: widget.uidUser),
         checkIfIsFollowed(uid: uid, uidFriend: widget.uidUser),
         getUserSettings(uid: widget.uidUser),
-        getSwipedTracksIds(uid: widget.uidUser)
+        getSwipedTracksIds(uid: widget.uidUser),
+        getLikedTracksIds(uid: widget.uidUser)
       ]);
 
       if (!mounted) return;
@@ -69,6 +75,7 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
         followed = results[2] as bool;
         userSettings = results[3] as UserSettings;
         _allTracksIds = results[4] as List<int>;
+        _favTracksIds = results[5] as List<int>;
         _loadingFriendStatus = false;
       });
 
@@ -129,6 +136,8 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
 
                   followed = numFilasAfectadas > 0;
                 }
+                
+                ref.read(followingChangedProvider.notifier).state++;
 
                 loadData();
               },
@@ -266,6 +275,8 @@ class _CustomUserProfileState extends State<CustomUserProfile> {
                                 text: localization.see_fav_tracks),
                             style: TextStyle(fontSize: 18),
                           ),
+                          function: () => context.push('/fav-tracks?uid=${widget.uidUser}',
+                                extra: _favTracksIds),
                         ),
                       ],
                     )

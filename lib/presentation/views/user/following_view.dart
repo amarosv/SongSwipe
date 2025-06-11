@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/export_providers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/export_apis.dart';
@@ -9,17 +11,17 @@ import 'package:songswipe/services/api/export_apis.dart';
 /// Vista para mostrar a los usuarios que sigue <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class FollowingView extends StatefulWidget {
+class FollowingView extends ConsumerStatefulWidget {
   /// UID del usuario
   final String uid;
 
   const FollowingView({super.key, required this.uid});
 
   @override
-  State<FollowingView> createState() => _FollowingViewState();
+  ConsumerState<FollowingView> createState() => _FollowingViewState();
 }
 
-class _FollowingViewState extends State<FollowingView> {
+class _FollowingViewState extends ConsumerState<FollowingView> {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
@@ -53,6 +55,12 @@ class _FollowingViewState extends State<FollowingView> {
     // Constante que almacena la localización de la app
     final localization = AppLocalizations.of(context)!;
 
+    ref.listen<int>(followingChangedProvider, (prev, next) {
+      if (mounted && prev != next) {
+        _loadData();
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -68,10 +76,11 @@ class _FollowingViewState extends State<FollowingView> {
               child: CircularProgressIndicator(),
             )
           : SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: CustomContainer(
-                child: Column(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: CustomContainer(
+                    child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: _following.asMap().entries.map((entry) {
                     final index = entry.key;
@@ -113,10 +122,9 @@ class _FollowingViewState extends State<FollowingView> {
                       ),
                     );
                   }).toList(),
-                )
+                )),
               ),
             ),
-          ),
     );
   }
 }

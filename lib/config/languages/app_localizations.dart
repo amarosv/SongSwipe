@@ -1347,6 +1347,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'their following'**
   String get their_following;
+
+  /// No description provided for @their_fav_tracks.
+  ///
+  /// In en, this message translates to:
+  /// **'their favorite tracks'**
+  String get their_fav_tracks;
 }
 
 class _AppLocalizationsDelegate

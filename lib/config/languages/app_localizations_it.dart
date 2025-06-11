@@ -648,4 +648,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get their_following => 'il loro seguito';
+
+  @override
+  String get their_fav_tracks => 'i loro canzoni preferiti';
 }
