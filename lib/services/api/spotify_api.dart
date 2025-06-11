@@ -238,7 +238,7 @@ Future<void> createPlaylist(String accessToken,
       },
       body: json.encode({
         'name': 'SongSwipe',
-        'public': false,
+        'public': true,
         'description':
             capitalizeFirstLetter(text: appLocalizations.playlist_description),
       }),

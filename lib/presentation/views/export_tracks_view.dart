@@ -49,7 +49,9 @@ class _ExportTracksViewState extends State<ExportTracksView> {
 
       if (pair == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(capitalizeFirstLetter(text: AppLocalizations.of(context)!.login_abort))),
+          SnackBar(
+              content: Text(capitalizeFirstLetter(
+                  text: AppLocalizations.of(context)!.login_abort))),
         );
         Navigator.pop(context);
         return;
@@ -70,8 +72,10 @@ class _ExportTracksViewState extends State<ExportTracksView> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(capitalizeFirstLetter(
-              text: '${localization.export_to} Spotify'))),
+          title: Text(
+        capitalizeFirstLetter(text: '${localization.export_to} Spotify'),
+        style: TextStyle(fontWeight: FontWeight.bold),
+      )),
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
@@ -83,10 +87,12 @@ class _ExportTracksViewState extends State<ExportTracksView> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Text(
-                        '${_spotifyTrackDataFuture.length} ${localization.of_txt} ${widget.tracks.length} ${localization.tracks_exported}',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                      child: Center(
+                        child: Text(
+                          '${_spotifyTrackDataFuture.length} ${localization.of_txt} ${widget.tracks.length} ${localization.tracks_exported}',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                     if (_cancionesFallidas.isNotEmpty) ...[
@@ -146,128 +152,144 @@ class _ExportTracksViewState extends State<ExportTracksView> {
                         ),
                       ),
                     ],
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        capitalizeFirstLetter(
-                            text: '${localization.tracks_succes_export}:'),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: widget.tracks.length,
-                      itemBuilder: (context, index) {
-                        final track = widget.tracks.elementAt(index);
-                        Map<String, String>? spotifyTrack;
-                        if (index < _spotifyTrackDataFuture.length) {
-                          spotifyTrack = _spotifyTrackDataFuture[index];
-                        }
+                    if (_spotifyTrackDataFuture.isNotEmpty)
+                      Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              capitalizeFirstLetter(
+                                  text:
+                                      '${localization.tracks_succes_export}:'),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: widget.tracks.length,
+                            itemBuilder: (context, index) {
+                              final track = widget.tracks.elementAt(index);
+                              Map<String, String>? spotifyTrack;
+                              if (index < _spotifyTrackDataFuture.length) {
+                                spotifyTrack = _spotifyTrackDataFuture[index];
+                              }
 
-                        return Column(
-                          children: [
-                            Align(
-                                alignment: Alignment.topLeft,
-                                child: Text('Deezer')),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: CustomContainer(
-                                color: Colors.transparent,
-                                borderColor: Colors.black,
-                                child: Row(
-                                  children: [
-                                    Image.network(
-                                      track.album.cover,
-                                      height: 64,
-                                      width: 64,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
+                              return Column(
+                                children: [
+                                  Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text('Deezer')),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: CustomContainer(
+                                      color: Colors.transparent,
+                                      borderColor: Colors.black,
+                                      child: Row(
                                         children: [
-                                          Text(
-                                            track.title,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                          Image.network(
+                                            track.album.cover,
+                                            height: 64,
+                                            width: 64,
+                                            fit: BoxFit.cover,
                                           ),
-                                          Text(
-                                            track.buildArtistsText(),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  track.title,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                Text(
+                                                  track.buildArtistsText(),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(localization.as.toUpperCase()),
-                            const SizedBox(height: 5),
-                            Align(
-                                alignment: Alignment.topLeft,
-                                child: Text('Spotify')),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: CustomContainer(
-                                color: Colors.transparent,
-                                borderColor: Colors.black,
-                                child: Row(
-                                  children: [
-                                    Image.network(
-                                      spotifyTrack != null
-                                          ? (spotifyTrack['image'] ?? '')
-                                          : '',
-                                      height: 64,
-                                      width: 64,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(localization.as.toUpperCase()),
+                                  const SizedBox(height: 5),
+                                  Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text('Spotify')),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: CustomContainer(
+                                      color: Colors.transparent,
+                                      borderColor: Colors.black,
+                                      child: Row(
                                         children: [
-                                          Text(
+                                          Image.network(
                                             spotifyTrack != null
-                                                ? (spotifyTrack['title'] ??
-                                                    'Sin título')
-                                                : 'Sin título',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                                ? (spotifyTrack['image'] ?? '')
+                                                : '',
+                                            height: 64,
+                                            width: 64,
+                                            fit: BoxFit.cover,
                                           ),
-                                          Text(
-                                            spotifyTrack != null
-                                                ? (spotifyTrack['artists'] ??
-                                                    'Sin título')
-                                                : 'Sin título',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  spotifyTrack != null
+                                                      ? (spotifyTrack[
+                                                              'title'] ??
+                                                          'Sin título')
+                                                      : 'Sin título',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                Text(
+                                                  spotifyTrack != null
+                                                      ? (spotifyTrack[
+                                                              'artists'] ??
+                                                          'Sin título')
+                                                      : 'Sin título',
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 20)
-                          ],
-                        );
-                      },
-                    ),
+                                  ),
+                                  const SizedBox(height: 20)
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      )
                   ],
                 ),
               ),
