@@ -37,5 +37,7 @@ export 'user/fav_genres_view.dart';
 export 'user/fav_tracks_view.dart';
 export 'user/followers_view.dart';
 export 'user/following_view.dart';
+export 'user/search_artists_view.dart';
+export 'user/search_genres_view.dart';
 export 'user/stats_view.dart';
 export 'user/user_view.dart';

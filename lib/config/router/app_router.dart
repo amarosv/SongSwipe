@@ -67,9 +67,19 @@ class AppRouter {
         builder: (context, state) => SelectArtistsScreen(),
       ),
       GoRoute(
+        path: '/search-artists',
+        name: SearchArtistsScreen.name,
+        builder: (context, state) => SearchArtistsScreen(),
+      ),
+      GoRoute(
         path: '/select-genres',
         name: SelectGenresScreen.name,
         builder: (context, state) => SelectGenresScreen(),
+      ),
+      GoRoute(
+        path: '/search-genres',
+        name: SearchGenresScreen.name,
+        builder: (context, state) => SearchGenresScreen(),
       ),
       GoRoute(
         path: '/language-settings',

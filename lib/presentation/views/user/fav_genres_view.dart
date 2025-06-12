@@ -1,7 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/providers.dart';
 import 'package:songswipe/helpers/utils.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
@@ -10,14 +13,14 @@ import 'package:songswipe/services/api/export_apis.dart';
 /// Vista para mostrar los artistas favoritos <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class FavGenresView extends StatefulWidget {
+class FavGenresView extends ConsumerStatefulWidget {
   const FavGenresView({super.key});
 
   @override
-  State<FavGenresView> createState() => _FavGenresViewState();
+  ConsumerState<FavGenresView> createState() => _FavGenresViewState();
 }
 
-class _FavGenresViewState extends State<FavGenresView> {
+class _FavGenresViewState extends ConsumerState<FavGenresView> {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
@@ -55,12 +58,17 @@ class _FavGenresViewState extends State<FavGenresView> {
   }
 
   // Función que obtiene los géneros
-  void _fetchGenres() async {
+  void _fetchGenres({bool reset = false}) async {
     if (!_isLoadingMore) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;
 
         setState(() => _isLoadingMore = true);
+
+        if (reset) {
+          _allGenres.clear();
+          _nextUrl = '';
+        }
 
         final data = await getFavoriteGenresByUser(
             uid: _uid, limit: _limit, url: _nextUrl);
@@ -82,6 +90,12 @@ class _FavGenresViewState extends State<FavGenresView> {
   Widget build(BuildContext context) {
     AppLocalizations localization = AppLocalizations.of(context)!;
 
+    ref.listen<int>(genresChangedProvider, (prev, next) {
+      if (mounted && prev != next) {
+        _fetchGenres(reset: true);
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -89,6 +103,15 @@ class _FavGenresViewState extends State<FavGenresView> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: GestureDetector(
+              onTap: () => context.push('/search-genres'),
+              child: Icon(Icons.search),
+            ),
+          )
+        ],
       ),
       body: _allGenres.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -143,7 +166,8 @@ class _FavGenresViewState extends State<FavGenresView> {
                                 }
                                 return confirm;
                               },
-                              onDismissed: (_) {
+                              onDismissed: (_) async {
+                                await deleteGenreFromFavorites(uid: _uid, idGenre: genre.id);
                                 setState(() {
                                   _allGenresIDs.removeWhere((item) => item == genre.id);
                                   _allGenres.removeAt(index);

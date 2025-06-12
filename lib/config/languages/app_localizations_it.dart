@@ -703,4 +703,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get must_have_genres => 'devi avere almeno 3 generi come preferiti';
+
+  @override
+  String get search_artists_title => 'cercare artisti';
+
+  @override
+  String get search_genres_title => 'cercare generi';
+
+  @override
+  String get add => 'aggiungere';
 }

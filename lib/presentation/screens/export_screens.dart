@@ -28,5 +28,7 @@ export 'user/fav_genres_screen.dart';
 export 'user/fav_tracks_screen.dart';
 export 'user/followers_screen.dart';
 export 'user/following_screen.dart';
+export 'user/search_artists_screen.dart';
+export 'user/search_genres_screen.dart';
 export 'user/stats_screen.dart';
 export 'user/user_screen.dart';

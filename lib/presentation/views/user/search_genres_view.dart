@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/providers.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/genre.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
@@ -13,14 +14,14 @@ import 'package:songswipe/services/api/internal_api.dart';
 /// Vista para la pantalla de seleccionar géneros <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class SelectGenresView extends StatefulWidget {
-  const SelectGenresView({super.key});
+class SearchGenresView extends ConsumerStatefulWidget {
+  const SearchGenresView({super.key});
 
   @override
-  State<SelectGenresView> createState() => _SelectGenresViewState();
+  ConsumerState<SearchGenresView> createState() => _SearchGenresViewState();
 }
 
-class _SelectGenresViewState extends State<SelectGenresView> {
+class _SearchGenresViewState extends ConsumerState<SearchGenresView> {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
@@ -32,6 +33,9 @@ class _SelectGenresViewState extends State<SelectGenresView> {
 
   // Lista de géneros
   List<Genre> genresList = [];
+
+  // Lista de géneros que ya están como favoritos
+  List<int> favs = [];
 
   // Lista de géneros filtrados
   List<Genre> filteredGenresList = [];
@@ -56,15 +60,20 @@ class _SelectGenresViewState extends State<SelectGenresView> {
 
   // Función que obtiene los géneros de la api
   void _getGenres() async {
-    List<Genre> genres = await getAllGenres();
+    final results =
+        await Future.wait([getAllGenres(), getFavoriteGenres(uid: _uid)]);
+
+    favs = results[1] as List<int>;
+    genresList = (results[0] as List<Genre>)
+        .where((artist) => !favs.contains(artist.id))
+        .toList();
 
     // Quitamos el género 'todos' cuya ID es el 0
-    genres.removeWhere((g) => g.id == 0);
+    genresList.removeWhere((g) => g.id == 0);
 
-    setState(() {
-      genresList = genres;
-      filteredGenresList = genres;
-    });
+    filteredGenresList = List.from(genresList);
+
+    setState(() {});
   }
 
   // Función que se llama cuando el nombre del género a buscar ha cambiado
@@ -99,6 +108,9 @@ class _SelectGenresViewState extends State<SelectGenresView> {
     } else {
       // Si no está en la lista local, busca en Deezer usando searchgenre
       List<Genre> externalResults = await searchGenre(query);
+      externalResults =
+          externalResults.where((artist) => !favs.contains(artist.id)).toList();
+
       setState(() {
         filteredGenresList = externalResults;
       });
@@ -114,7 +126,10 @@ class _SelectGenresViewState extends State<SelectGenresView> {
       appBar: AppBar(
         forceMaterialTransparency: true,
         centerTitle: true,
-        title: Text(capitalizeFirstLetter(text: localization.select_genres)),
+        title: Text(
+          localization.search_genres_title.toUpperCase(),
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Column(
         children: [
@@ -181,15 +196,15 @@ class _SelectGenresViewState extends State<SelectGenresView> {
               backgroundColor: Theme.of(context).colorScheme.primary,
               onPressed: () async {
                 // Obtenemos el número de géneros guardados
-                int numGenresSaved =
-                    await addGenreToFavorites(uid: _uid, genres: selectedGenresIdsList);
+                int numGenresSaved = await addGenreToFavorites(
+                    uid: _uid, genres: selectedGenresIdsList);
 
                 if (numGenresSaved > 0) {
-                  context.go('/home/4');
+                  ref.read(genresChangedProvider.notifier).state++;
+                  Navigator.pop(context);
                 }
               },
-              text: localization.done.toUpperCase(),
-              disabled: selectedGenresIdsList.length < 3,
+              text: localization.add.toUpperCase(),
             ),
           )
         ],

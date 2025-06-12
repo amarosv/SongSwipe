@@ -1449,6 +1449,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'you must have 3 genres as favorites at least'**
   String get must_have_genres;
+
+  /// No description provided for @search_artists_title.
+  ///
+  /// In en, this message translates to:
+  /// **'search artists'**
+  String get search_artists_title;
+
+  /// No description provided for @search_genres_title.
+  ///
+  /// In en, this message translates to:
+  /// **'search genres'**
+  String get search_genres_title;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'add'**
+  String get add;
 }
 
 class _AppLocalizationsDelegate

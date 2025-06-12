@@ -1,8 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/config/providers/providers.dart';
 import 'package:songswipe/helpers/utils.dart';
 import 'package:songswipe/models/artist.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
@@ -11,14 +13,14 @@ import 'package:songswipe/services/api/export_apis.dart';
 /// Vista para mostrar los artistas favoritos <br>
 /// @author Amaro Suárez <br>
 /// @version 1.0
-class FavArtistsView extends StatefulWidget {
+class FavArtistsView extends ConsumerStatefulWidget {
   const FavArtistsView({super.key});
 
   @override
-  State<FavArtistsView> createState() => _FavArtistsViewState();
+  ConsumerState<FavArtistsView> createState() => _FavArtistsViewState();
 }
 
-class _FavArtistsViewState extends State<FavArtistsView> {
+class _FavArtistsViewState extends ConsumerState<FavArtistsView> {
   // Obtenemos el usuario actual
   final User _user = FirebaseAuth.instance.currentUser!;
 
@@ -56,12 +58,17 @@ class _FavArtistsViewState extends State<FavArtistsView> {
   }
 
   // Función que obtiene los artistas
-  void _fetchArtists() async {
+  void _fetchArtists({bool reset = false}) async {
     if (!_isLoadingMore) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;
 
         setState(() => _isLoadingMore = true);
+
+        if (reset) {
+          _allArtists.clear();
+          _nextUrl = '';
+        }
 
         final data = await getFavoriteArtistsByUser(
             uid: _uid, limit: _limit, url: _nextUrl);
@@ -83,6 +90,12 @@ class _FavArtistsViewState extends State<FavArtistsView> {
   Widget build(BuildContext context) {
     AppLocalizations localization = AppLocalizations.of(context)!;
 
+    ref.listen<int>(artistsChangedProvider, (prev, next) {
+      if (mounted && prev != next) {
+        _fetchArtists(reset: true);
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -90,6 +103,15 @@ class _FavArtistsViewState extends State<FavArtistsView> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: GestureDetector(
+              onTap: () => context.push('/search-artists'),
+              child: Icon(Icons.search),
+            ),
+          )
+        ],
       ),
       body: _allArtists.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -146,7 +168,8 @@ class _FavArtistsViewState extends State<FavArtistsView> {
                                   }
                                   return confirm;
                                 },
-                                onDismissed: (_) {
+                                onDismissed: (_) async {
+                                  await deleteArtistFromFavorites(uid: _uid, idArtist: artist.id);
                                   setState(() {
                                     _allArtistsIDs.removeWhere((item) => item == artist.id);
                                     _allArtists.removeAt(index);

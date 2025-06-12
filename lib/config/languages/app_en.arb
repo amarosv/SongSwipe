@@ -225,5 +225,8 @@
     "my_artists": "my artists",
     "my_genres": "my genres",
     "must_have_artists": "you must have 5 artists as favorites at least",
-    "must_have_genres": "you must have 3 genres as favorites at least"
+    "must_have_genres": "you must have 3 genres as favorites at least",
+    "search_artists_title": "search artists",
+    "search_genres_title": "search genres",
+    "add": "add"
 }

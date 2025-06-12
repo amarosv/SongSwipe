@@ -224,5 +224,8 @@
     "my_artists": "i miei artisti",
     "my_genres": "i miei generi",
     "must_have_artists": "devi avere almeno 5 artisti come preferiti",
-    "must_have_genres": "devi avere almeno 3 generi come preferiti"
+    "must_have_genres": "devi avere almeno 3 generi come preferiti",
+    "search_artists_title": "cercare artisti",
+    "search_genres_title": "cercare generi",
+    "add": "aggiungere"
 }

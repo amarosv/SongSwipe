@@ -1055,6 +1055,29 @@ Future<bool> deleteArtistFromFavorites(
   return deleted;
 }
 
+/// Esta función recibe el UID de un usuario y el ID del género y lo elimina de sus favoritos <br>
+/// @param uid UID del usuario <br>
+/// @param idGenre ID del género a eliminar <br>
+/// @returns Bool que indica si se ha eliminado el género
+Future<bool> deleteGenreFromFavorites(
+    {required String uid, required int idGenre}) async {
+  bool deleted = false;
+
+  Uri url = Uri.parse('$apiUser/$uid/genre/$idGenre');
+
+  // Llamada a la API para eliminar al género
+  final response = await http.delete(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    deleted = jsonDecode(response.body) > 0;
+  }
+
+  return deleted;
+}
+
 /// Esta función envia una petición para renovar el token de Spotify <br>
 /// @returns Nuevo token
 Future<String?> renewToken() async {
