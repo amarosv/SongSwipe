@@ -302,7 +302,7 @@ class _SignUpViewState extends State<SignUpView> {
                               }
                             }
                           } catch (e) {
-                            print('Error ${e.toString()}');
+                            print('Error crear cuenta ${e.toString()}');
                           }
                         } else {
                           setState(() {
