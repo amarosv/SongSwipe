@@ -31,7 +31,7 @@ class _SettingsViewState extends State<SettingsView> {
   Future<void> _getAppVersion() async {
     final info = await PackageInfo.fromPlatform();
     setState(() {
-      _version = '${info.appName} v${info.version}';
+      _version = 'SongSwipe v${info.version}';
     });
   }
 

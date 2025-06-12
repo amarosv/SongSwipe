@@ -23,7 +23,7 @@
 		<key>CFBundleVersion</key>
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>LSRequiresIPhoneOS</key>
-		<true />
+		<true/>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
@@ -42,9 +42,9 @@
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
-		<true />
+		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true />
+		<true/>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Se necesita acceso a la galería para seleccionar una imagen.</string>
 		<key>NSCameraUsageDescription</key>
@@ -75,30 +75,30 @@
 		<key>NSAppTransportSecurity</key>
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>
-			<true />
+			<true/>
 			<key>NSExceptionDomains</key>
 			<dict>
 				<key>googleapis.com</key>
 				<dict>
 					<key>NSIncludesSubdomains</key>
-					<true />
+					<true/>
 					<key>NSExceptionAllowsInsecureHTTPLoads</key>
-					<true />
+					<true/>
 					<key>NSExceptionRequiresForwardSecrecy</key>
-					<false />
+					<false/>
 				</dict>
 				<key>google.com</key>
 				<dict>
 					<key>NSIncludesSubdomains</key>
-					<true />
+					<true/>
 					<key>NSExceptionAllowsInsecureHTTPLoads</key>
-					<true />
+					<true/>
 					<key>NSExceptionRequiresForwardSecrecy</key>
-					<false />
+					<false/>
 				</dict>
 			</dict>
 		</dict>
 		<key>UIStatusBarHidden</key>
-		<false />
+		<false/>
 	</dict>
 </plist>

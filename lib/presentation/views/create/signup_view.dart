@@ -218,36 +218,10 @@ class _SignUpViewState extends State<SignUpView> {
                                       text: localization.error_password_weak),
                                   context);
                             } else if (e.code == 'email-already-in-use') {
-                              final credential = await FirebaseAuth.instance
-                                  .signInWithEmailAndPassword(
-                                      email: emailController.text,
-                                      password: password);
-                              UserApp userApp =
-                                  await getUserByUID(uid: credential.user!.uid);
+                              final methods = await FirebaseAuth.instance
+                                  .fetchSignInMethodsForEmail(emailController.text);
 
-                              // Si el UID está vacío es porque esta eliminada
-                              if (userApp.uid.isEmpty) {
-                                await reactivateAccount(
-                                    uid: credential.user!.uid);
-
-                                toastification.show(
-                                  type: ToastificationType.success,
-                                  context: context,
-                                  style: ToastificationStyle.flatColored,
-                                  title: Text(capitalizeFirstLetter(
-                                      text: localization.attention)),
-                                  description: RichText(
-                                      text: TextSpan(
-                                          text: capitalizeFirstLetter(
-                                              text: localization
-                                                  .reactivated_account),
-                                          style:
-                                              TextStyle(color: Colors.black))),
-                                  autoCloseDuration: const Duration(seconds: 3),
-                                );
-                                context.go('/home/4');
-                              } else {
-                                // Mostramos la notificación
+                              if (methods.contains('google.com')) {
                                 toastification.show(
                                   type: ToastificationType.error,
                                   context: context,
@@ -258,8 +232,71 @@ class _SignUpViewState extends State<SignUpView> {
                                       text: TextSpan(
                                           text: capitalizeFirstLetter(
                                               text: localization.error_account),
-                                          style:
-                                              TextStyle(color: Colors.black))),
+                                          style: TextStyle(color: Colors.black))),
+                                  autoCloseDuration: const Duration(seconds: 3),
+                                );
+                                return;
+                              }
+
+                              try {
+                                final credential = await FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
+                                        email: emailController.text,
+                                        password: password);
+                                UserApp userApp =
+                                    await getUserByUID(uid: credential.user!.uid);
+
+                                // Si el UID está vacío es porque esta eliminada
+                                if (userApp.uid.isEmpty) {
+                                  await reactivateAccount(
+                                      uid: credential.user!.uid);
+
+                                  toastification.show(
+                                    type: ToastificationType.success,
+                                    context: context,
+                                    style: ToastificationStyle.flatColored,
+                                    title: Text(capitalizeFirstLetter(
+                                        text: localization.attention)),
+                                    description: RichText(
+                                        text: TextSpan(
+                                            text: capitalizeFirstLetter(
+                                                text: localization
+                                                    .reactivated_account),
+                                            style:
+                                                TextStyle(color: Colors.black))),
+                                    autoCloseDuration: const Duration(seconds: 3),
+                                  );
+                                  context.go('/home/4');
+                                } else {
+                                  // Mostramos la notificación
+                                  toastification.show(
+                                    type: ToastificationType.error,
+                                    context: context,
+                                    style: ToastificationStyle.flatColored,
+                                    title: Text(capitalizeFirstLetter(
+                                        text: localization.attention)),
+                                    description: RichText(
+                                        text: TextSpan(
+                                            text: capitalizeFirstLetter(
+                                                text: localization.error_account),
+                                            style:
+                                                TextStyle(color: Colors.black))),
+                                    autoCloseDuration: const Duration(seconds: 3),
+                                  );
+                                }
+                              } catch (e) {
+                                // Si falla el inicio de sesión, muestra error genérico
+                                toastification.show(
+                                  type: ToastificationType.error,
+                                  context: context,
+                                  style: ToastificationStyle.flatColored,
+                                  title: Text(capitalizeFirstLetter(
+                                      text: localization.attention)),
+                                  description: RichText(
+                                      text: TextSpan(
+                                          text: capitalizeFirstLetter(
+                                              text: localization.error_account),
+                                          style: TextStyle(color: Colors.black))),
                                   autoCloseDuration: const Duration(seconds: 3),
                                 );
                               }

@@ -78,11 +78,11 @@ flutter_native_splash:
   # - flutter pub get
   # - flutter pub run flutter_native_splash:create
   #  or flutter clean && flutter pub get && flutter pub run flutter_native_splash:create
-  color: '#0a081f'
+  color: '#09081f'
   image: 'assets/images/logos/logo-sin-fondo-2.png'
   android_12:
-    icon_background_color: '#0a081f'
-    color: '#0a081f'
+    icon_background_color: '#09081f'
+    color: '#09081f'
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

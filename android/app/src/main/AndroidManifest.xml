@@ -10,6 +10,11 @@
         android:label="songswipe"
         android:icon="@mipmap/ic_launcher">
         <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name="com.amarosv.songswipe.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
