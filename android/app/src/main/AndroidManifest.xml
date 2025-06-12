@@ -7,7 +7,7 @@
     <!-- android:name="@string/app_name"20 -->
 
     <application
-        android:label="songswipe"
+        android:label="SongSwipe"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="false">
         <activity

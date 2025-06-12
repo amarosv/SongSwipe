@@ -781,10 +781,6 @@ Future<bool> updateSwipe(
     {required String uid, required int idTrack, required int newLike}) async {
   Uri url = Uri.parse('$apiUser/$uid/update_swipe');
 
-  print('UPDATING...');
-  print(idTrack);
-  print(newLike);
-
   // Llamada a la API para guardar los ajustes
   final response = await http.put(
     url,
