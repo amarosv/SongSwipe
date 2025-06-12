@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/screens/export_screens.dart';
+import 'package:songswipe/services/api/export_apis.dart';
 
 /// Clase que almacena las rutas de navegación de la app <br>
 /// @author Amaro Suárez <br>
@@ -12,36 +14,18 @@ class AppRouter {
 
   AppRouter({required this.onChangeLanguage});
 
-  /// Función que comprueba si el usuario esta logeado
-  /// y devuelve la ruta correspondiente
-  /// @returns Ruta inicial de la aplicación
-  String initialLocation() {
-    // Variable que almacena la ruta
-    String location = '/signup';
-
-    // Comprobamos si el usuario esta logeado
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user != null && !user.emailVerified) {
-      location = '/verify-email';
-    } else if (user != null && user.emailVerified) {
-      location = '/select-artists';
-    }
-
-    location = '/home/4';
-
-    if (user == null) {
-      location = '/login';
-    }
-    // location = '/change-theme';
-
-    // Devolvemos la ruta
-    return location;
-  }
+  /// Función que devuelve la ruta inicial de la aplicación
+  String initialLocation() => '/startup';
 
   late final GoRouter router = GoRouter(
     initialLocation: initialLocation(),
     routes: [
+      GoRoute(
+        path: '/startup',
+        name: 'StartupScreen',
+        builder: (context, state) =>
+            StartupScreen(onChangeLanguage: onChangeLanguage),
+      ),
       GoRoute(
         path: '/signup',
         name: SignUpScreen.name,
@@ -250,7 +234,10 @@ class AppRouter {
         builder: (context, state) {
           final idArtist = int.parse(state.uri.queryParameters['id']!);
           final nameArtist = state.uri.queryParameters['name']!;
-          return AlbumsArtistScreen(idArtist: idArtist, nameArtist: nameArtist,);
+          return AlbumsArtistScreen(
+            idArtist: idArtist,
+            nameArtist: nameArtist,
+          );
         },
       ),
       GoRoute(
@@ -264,12 +251,87 @@ class AppRouter {
       GoRoute(
         path: '/home/:page',
         name: HomeScreen.name,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
 
-          return HomeScreen(pageIndex: pageIndex, onChangeLanguage: onChangeLanguage);
+          return NoTransitionPage(
+            child: HomeScreen(
+              pageIndex: pageIndex,
+              onChangeLanguage: onChangeLanguage,
+            ),
+          );
         },
       ),
     ],
   );
+}
+
+class StartupScreen extends StatefulWidget {
+  final Function(String) onChangeLanguage;
+
+  const StartupScreen({super.key, required this.onChangeLanguage});
+
+  @override
+  State<StartupScreen> createState() => _StartupScreenState();
+}
+
+class _StartupScreenState extends State<StartupScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _redirectUser());
+  }
+
+  Future<void> _redirectUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      context.go('/login');
+      return;
+    }
+
+    if (!user.emailVerified) {
+      context.go('/verify-email');
+      return;
+    }
+
+    final userDB = await getUserByUID(uid: user.uid);
+
+    final providers = user.providerData.map((info) => info.providerId).toList();
+
+    if (userDB.username.isEmpty && providers.contains('password')) {
+      context.go('/complete-profile');
+      return;
+    }
+
+    if (userDB.username.isEmpty && providers.contains('google.com')) {
+      context.go('/complete-profile-simple');
+      return;
+    }
+
+    final artists = await getFavoriteArtists(uid: user.uid);
+
+    if (artists.isEmpty) {
+      context.go('/select-artists');
+      return;
+    }
+
+    final genres = await getFavoriteGenres(uid: user.uid);
+
+    if (genres.isEmpty) {
+      context.go('/select-genres');
+      return;
+    }
+
+    context.go('/home/4');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
 }

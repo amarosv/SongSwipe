@@ -84,7 +84,7 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
     // Forzamos minúsculas en tiempo real
     final currentText = _usernameController.text;
-    final lowerText = currentText.toLowerCase();
+    final lowerText = currentText.replaceAll(' ', '_').toLowerCase();
     if (currentText != lowerText) {
       _usernameController.value = _usernameController.value.copyWith(
         text: lowerText,
@@ -179,10 +179,11 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
     if (_usernameController.text.isNotEmpty &&
         _nameController.text.isNotEmpty &&
         _lastNameController.text.isNotEmpty) {
-      setState(() {
-        _activatedButton = true;
-      });
+      _activatedButton = true;
+    } else {
+      _activatedButton = false;
     }
+    setState(() {});
   }
 
   @override
@@ -333,12 +334,19 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
                     if (username.isNotEmpty &&
                         name.isNotEmpty &&
                         lastName.isNotEmpty) {
-                      String? base64Image;
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                      // String? base64Image;
 
-                      // Si hay imagen, la convertimos a base 64
-                      if (_image != null) {
-                        base64Image = await convertFileToBase64(_image!);
-                      }
+                      // // Si hay imagen, la convertimos a base 64
+                      // if (_image != null) {
+                      //   base64Image = await convertFileToBase64(_image!);
+                      // }
 
                       // Registramos al usuario en la base de datos
                       bool registered = await registerUserInDatabase(
@@ -350,9 +358,11 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
 
                       // Si se ha registrado correctamente, vamos a la siguiente pantalla
                       if (registered) {
+                        Navigator.of(context).pop(); // Cierra el dialogo
                         context.go('/select-artists');
                       }
                     } else {
+                      Navigator.of(context).pop(); // Cierra el dialogo
                       // Mostramos la notificación
                       toastification.show(
                         type: ToastificationType.error,

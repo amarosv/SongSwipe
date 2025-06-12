@@ -79,7 +79,7 @@ class _EditProfileViewState extends State<EditProfileView> {
 
     // Forzamos minúsculas en tiempo real
     final currentText = _usernameController.text;
-    final lowerText = currentText.toLowerCase();
+    final lowerText = currentText.replaceAll(' ', '_').toLowerCase();
     if (currentText != lowerText) {
       _usernameController.value = _usernameController.value.copyWith(
         text: lowerText,

@@ -19,6 +19,7 @@ class VerifyEmailView extends StatefulWidget {
 }
 
 class _VerifyEmailViewState extends State<VerifyEmailView> {
+  User user = FirebaseAuth.instance.currentUser!;
   late AppLocalizations localization;
   bool _isButtonDisabled = false;
   int _counter = 60;
@@ -76,7 +77,8 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           title: Text(capitalizeFirstLetter(text: localization.verified)),
           description: RichText(
               text: TextSpan(
-                  text: capitalizeFirstLetter(text: localization.verified_email),
+                  text:
+                      capitalizeFirstLetter(text: localization.verified_email),
                   style: TextStyle(color: Colors.black))),
           autoCloseDuration: const Duration(seconds: 3),
         );
@@ -102,8 +104,6 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   @override
   Widget build(BuildContext context) {
     localization = AppLocalizations.of(context)!;
-
-    User user = FirebaseAuth.instance.currentUser!;
 
     return Scaffold(
       body: SafeArea(

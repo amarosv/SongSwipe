@@ -56,7 +56,7 @@ class _CompleteProfileSimpleViewState extends State<CompleteProfileSimpleView> {
 
     // Forzamos minúsculas en tiempo real
     final currentText = _usernameController.text;
-    final lowerText = currentText.toLowerCase();
+    final lowerText = currentText.replaceAll(' ', '_').toLowerCase();
     if (currentText != lowerText) {
       _usernameController.value = _usernameController.value.copyWith(
         text: lowerText,
@@ -97,10 +97,11 @@ class _CompleteProfileSimpleViewState extends State<CompleteProfileSimpleView> {
   /// y activa el botón para continuar
   void checkIfButtonIsActived() {
     if (_usernameController.text.isNotEmpty) {
-      setState(() {
-        _activatedButton = true;
-      });
+      _activatedButton = true;
+    } else {
+      _activatedButton = false;
     }
+    setState(() {});
   }
 
   @override
@@ -148,14 +149,15 @@ class _CompleteProfileSimpleViewState extends State<CompleteProfileSimpleView> {
             // Texto informativo para el username
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child:
-                  Text(
-                    capitalizeFirstLetter(text: localization.username_info),
-                    style: TextStyle(color: Colors.grey),
-                  ),
+              child: Text(
+                capitalizeFirstLetter(text: localization.username_info),
+                style: TextStyle(color: Colors.grey),
+              ),
             ),
 
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
 
             // Button para continuar
             CustomButton(
@@ -168,6 +170,14 @@ class _CompleteProfileSimpleViewState extends State<CompleteProfileSimpleView> {
 
                         // Primero comprueba que estén los campos rellenos
                         if (username.isNotEmpty) {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+
                           // Registramos al usuario en la base de datos
                           bool registered = await registerUserInDatabase(
                               user: user,

@@ -49,7 +49,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Brightness _previousBrightness = Brightness.dark;
 
   // Variable que almacena el país
-  Locale _locale = WidgetsBinding.instance.platformDispatcher.locale;
+  Locale? _locale;
 
   // Inicializa el router
   AppRouter? _router;
@@ -87,6 +87,9 @@ class _MyAppState extends ConsumerState<MyApp> {
         UserSettings settings = results[0];
 
         languageCode = settings.language;
+        setState(() {
+          
+        });
       } catch (e) {
         print(e);
       }
@@ -101,14 +104,15 @@ class _MyAppState extends ConsumerState<MyApp> {
         locale = WidgetsBinding.instance.platformDispatcher.locale;
 
         languageCode = locale.languageCode;
+        setState(() {
+          
+        });
       }
     }
 
-    // Inicalizamos el locale
-    locale = Locale(languageCode);
-
-    // Cambiamos el locale
-    _locale = locale;
+    if (languageCode.isNotEmpty) {
+      _locale = Locale(languageCode);
+    }
 
     // Cargamos el AppRouter
     _router =
@@ -168,7 +172,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     return MaterialApp.router(
       title: 'SongSwipe',
-      locale: _locale,
+      locale: _locale ?? const Locale('en'),
       debugShowCheckedModeBanner: false,
       theme: appTheme.getTheme(),
       localizationsDelegates: [
