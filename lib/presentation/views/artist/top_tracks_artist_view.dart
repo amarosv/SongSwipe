@@ -12,7 +12,10 @@ class TopTracksArtistView extends StatefulWidget {
   /// Lista de canciones
   final List<Track> tracks;
 
-  const TopTracksArtistView({super.key, required this.tracks});
+  /// Nombre del artista
+  final String artistName;
+
+  const TopTracksArtistView({super.key, required this.tracks, required this.artistName});
 
   @override
   State<TopTracksArtistView> createState() => _TopTracksArtistViewState();
@@ -37,7 +40,7 @@ class _TopTracksArtistViewState extends State<TopTracksArtistView> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                '${localization.by} ${widget.tracks.first.artist.name}',
+                '${localization.by} ${widget.artistName}',
                 style: TextStyle(
                   fontSize: 14
                 ),
@@ -83,7 +86,7 @@ class _TopTracksArtistViewState extends State<TopTracksArtistView> {
         ),
         body: FadeInLeft(
           child: ListView.builder(
-            
+            itemCount: widget.tracks.length,
             itemBuilder: (context, index) {
               Track track = widget.tracks[index];
                 

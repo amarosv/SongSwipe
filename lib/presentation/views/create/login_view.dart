@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -38,6 +40,11 @@ class _LoginViewState extends State<LoginView> {
   late TextEditingController emailController;
   late TextEditingController passwordController;
 
+  // Cooldown para el envío de correo de recuperación
+  bool _isCooldown = false;
+  Timer? _cooldownTimer;
+  int _secondsRemaining = 0;
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +68,7 @@ class _LoginViewState extends State<LoginView> {
     // Destruimos los controllers
     emailController.dispose();
     passwordController.dispose();
+    _cooldownTimer?.cancel();
     super.dispose();
   }
 
@@ -152,13 +160,14 @@ class _LoginViewState extends State<LoginView> {
 
               const SizedBox(height: 10),
 
-              // Texto para recuperar contraseña (ahora InkWell)
+              // Texto para recuperar contraseña
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SizedBox(
                   width: width,
                   child: InkWell(
                     onTap: () async {
+                      if (_isCooldown) return;
                       final email = emailController.text.trim();
 
                       if (email.isEmpty) {
@@ -183,36 +192,65 @@ class _LoginViewState extends State<LoginView> {
                         return;
                       }
 
-                      try {
-                        await FirebaseAuth.instance
-                            .sendPasswordResetEmail(email: email);
-                        toastification.show(
-                          context: context,
-                          style: ToastificationStyle.flatColored,
-                          title: Text(
-                              capitalizeFirstLetter(text: localization.sent)),
-                          description: RichText(
-                              text: TextSpan(
-                                  text: capitalizeFirstLetter(
-                                      text: localization.email_reset_sent),
-                                  style: TextStyle(color: Colors.black))),
-                          autoCloseDuration: const Duration(seconds: 3),
-                        );
-                      } catch (e) {
+                      UserApp userApp = await getUserByEmail(email: email);
+
+                      if (userApp.email.isNotEmpty) {
+                        try {
+                          await FirebaseAuth.instance
+                              .sendPasswordResetEmail(email: email);
+                          toastification.show(
+                            context: context,
+                            style: ToastificationStyle.flatColored,
+                            title: Text(
+                                capitalizeFirstLetter(text: localization.sent)),
+                            description: RichText(
+                                text: TextSpan(
+                                    text: capitalizeFirstLetter(
+                                        text: localization.email_reset_sent),
+                                    style: TextStyle(color: Colors.black))),
+                            autoCloseDuration: const Duration(seconds: 3),
+                          );
+                          setState(() {
+                            _isCooldown = true;
+                            _secondsRemaining = 60;
+                          });
+                          _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                            if (_secondsRemaining == 0) {
+                              timer.cancel();
+                              setState(() {
+                                _isCooldown = false;
+                              });
+                            } else {
+                              setState(() {
+                                _secondsRemaining--;
+                              });
+                            }
+                          });
+                        } catch (e) {
+                          showNotification(
+                            capitalizeFirstLetter(text: localization.attention),
+                            capitalizeFirstLetter(text: localization.error),
+                            context,
+                          );
+                        }
+                      } else {
                         showNotification(
-                          capitalizeFirstLetter(text: localization.attention),
-                          capitalizeFirstLetter(text: localization.error),
-                          context,
-                        );
+                            capitalizeFirstLetter(text: localization.attention),
+                            capitalizeFirstLetter(text: localization.email_not_exist),
+                            context,
+                          );
                       }
                     },
                     child: Text(
-                      capitalizeFirstLetter(text: localization.forgot_password),
+                      _isCooldown
+                          ? '${capitalizeFirstLetter(text: localization.forgot_password)} (${_secondsRemaining}s)'
+                          : capitalizeFirstLetter(text: localization.forgot_password),
                       textAlign: TextAlign.end,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline,
+                        color: _isCooldown ? Colors.grey : Colors.black,
                       ),
                     ),
                   ),
@@ -249,8 +287,25 @@ class _LoginViewState extends State<LoginView> {
 
                           if (!mounted) return;
 
-                          // Vamos al home
-                          context.go('/home/4');
+                          if (credential.user != null) {
+                            UserApp userApp =
+                                await getUserByUID(uid: credential.user!.uid);
+
+                            // Si el uid está vacío es porque está eliminado
+                            if (userApp.uid.isNotEmpty) {
+                              context.go('/home/4');
+                            } else {
+                              showNotification(
+                                  capitalizeFirstLetter(
+                                      text: localization.attention),
+                                  capitalizeFirstLetter(
+                                      text: localization
+                                          .error_account_not_exists),
+                                  context);
+                            }
+                          } else {
+                            throw Error();
+                          }
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'invalid-credential') {
                             print(
@@ -352,7 +407,6 @@ class _LoginViewState extends State<LoginView> {
                           User? user = await signInWithGoogle();
 
                           if (user != null) {
-                            print(user.uid);
                             UserApp userApp = await getUserByUID(uid: user.uid);
 
                             // Si el uid está vacío es porque está eliminado
@@ -363,7 +417,8 @@ class _LoginViewState extends State<LoginView> {
                                   capitalizeFirstLetter(
                                       text: localization.attention),
                                   capitalizeFirstLetter(
-                                      text: localization.error_account_not_exists),
+                                      text: localization
+                                          .error_account_not_exists),
                                   context);
                             }
                           }

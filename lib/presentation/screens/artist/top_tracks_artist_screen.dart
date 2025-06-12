@@ -12,10 +12,13 @@ class TopTracksArtistScreen extends StatelessWidget {
   /// Lista de canciones
   final List<Track> tracks;
 
-  const TopTracksArtistScreen({super.key, required this.tracks});
+  /// Nombre del artista
+  final String artistName;
+
+  const TopTracksArtistScreen({super.key, required this.tracks, required this.artistName});
 
   @override
   Widget build(BuildContext context) {
-    return TopTracksArtistView(tracks: tracks);
+    return TopTracksArtistView(tracks: tracks, artistName: artistName,);
   }
 }

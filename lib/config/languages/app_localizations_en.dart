@@ -707,4 +707,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get add => 'add';
+
+  @override
+  String get email_not_exist => 'no user found for that email';
 }

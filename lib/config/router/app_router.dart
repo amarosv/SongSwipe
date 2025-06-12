@@ -244,8 +244,9 @@ class AppRouter {
         path: '/top-tracks',
         name: TopTracksArtistScreen.name,
         builder: (context, state) {
+          final artistName = state.uri.queryParameters['name']!;
           final tracks = state.extra as List<Track>;
-          return TopTracksArtistScreen(tracks: tracks);
+          return TopTracksArtistScreen(tracks: tracks, artistName: artistName,);
         },
       ),
       GoRoute(

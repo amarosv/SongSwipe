@@ -1397,12 +1397,35 @@ Future<void> reactivateAccount({required String uid}) async {
 /// Esta función recibe el UID de un usuario y acepta todas sus solicitudes de amistad entrantes <br>
 /// @param uid UID del usuario
 Future<void> acceptAllRequests({required String uid}) async {
-  print('entra');
   Uri url = Uri.parse('$apiUser/$uid/accept_all_requests');
 
-  // Llamada a la API para reactivar la cuenta
+  // Llamada a la API para aceptar todas las solicitudes entrantes
   await http.post(url, headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   });
+}
+
+/// Esta función recibe un email y busca al usuario <br>
+/// @param email Email del usuario a buscar <br>
+/// @returns Usuario
+Future<UserApp> getUserByEmail({required String email}) async {
+  // Variable donde se almacenará el resultado
+  UserApp userApp = UserApp.empty();
+
+  // Formamos la url del endpoint
+  Uri url = Uri.parse('$apiUser/email/$email');
+
+  // Llamada a la API para obtener los datos del perfil del usuario
+  final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    userApp = UserApp.fromJson(jsonDecode(response.body));
+  }
+
+  return userApp;
 }

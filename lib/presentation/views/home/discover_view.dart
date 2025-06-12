@@ -447,6 +447,9 @@ class _DiscoverViewState extends State<DiscoverView>
   Widget _content() {
     final localization = AppLocalizations.of(context)!;
 
+    final size = MediaQuery.of(context).size;
+    final height = size.height;
+
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -526,8 +529,8 @@ class _DiscoverViewState extends State<DiscoverView>
                                   // Carta
                                   Expanded(
                                     child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 20, top: 50),
+                                      padding: EdgeInsets.only(
+                                          bottom: 20, top: height * 0.05),
                                       child: CardSwiper(
                                         initialIndex: _currentIndex,
                                         cardsCount: _cards.length,

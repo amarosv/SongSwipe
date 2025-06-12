@@ -1467,6 +1467,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'add'**
   String get add;
+
+  /// No description provided for @email_not_exist.
+  ///
+  /// In en, this message translates to:
+  /// **'no user found for that email'**
+  String get email_not_exist;
 }
 
 class _AppLocalizationsDelegate

@@ -227,5 +227,6 @@
     "must_have_genres": "debes tener al menos 3 géneros como favoritos",
     "search_artists_title": "buscar artistas",
     "search_genres_title": "buscar géneros",
-    "add": "añadir"
+    "add": "añadir",
+    "email_not_exist": "no se encontró ningún usuario con ese email"
 }

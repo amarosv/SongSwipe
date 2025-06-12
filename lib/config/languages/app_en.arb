@@ -228,5 +228,6 @@
     "must_have_genres": "you must have 3 genres as favorites at least",
     "search_artists_title": "search artists",
     "search_genres_title": "search genres",
-    "add": "add"
+    "add": "add",
+    "email_not_exist": "no user found for that email"
 }

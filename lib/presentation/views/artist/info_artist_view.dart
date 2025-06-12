@@ -561,7 +561,7 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
                                   ),
                                 ),
 
-                                // Container con el top 3 canciones
+                                // Container con el top 3 albumes
                                 SizedBox(
                                   width: double.infinity,
                                   child: CustomContainer(
@@ -639,7 +639,7 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
                                           text: localization.see_top_tracks),
                                       style: TextStyle(fontSize: 18),
                                     ),
-                                    function: () => context.push('/top-tracks',
+                                    function: () => context.push('/top-tracks?name=${_artist.name}',
                                         extra: _topTracksDeezer)),
                               ],
                             ),

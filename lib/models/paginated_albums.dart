@@ -27,8 +27,10 @@ class PaginatedAlbum {
 
   /// Método que parsea un JSON en PaginatedAlbum
   factory PaginatedAlbum.fromJson(Map<String, dynamic> json) => PaginatedAlbum(
-        albums: List<Album>.from(json["data"].map((x) => Album.fromJson(x))),
-        total: json["total"],
-        next: json["next"],
+        albums: (json['data'] as List<dynamic>?)
+                ?.map((item) => Album.fromJson(item as Map<String, dynamic>))
+                .toList() ?? [],
+        total: json["total"] ?? 0,
+        next: json["next"] ?? '',
       );
 }

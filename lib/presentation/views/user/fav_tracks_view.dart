@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/helpers/utils.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/export_apis.dart';
@@ -46,9 +47,7 @@ class _FavTracksViewState extends State<FavTracksView> {
 
   void _loadTracksIds() async {
     _idsTracks = await getLikedTracksIds(uid: widget.uid);
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   // Función que obtiene las canciones
@@ -96,83 +95,91 @@ class _FavTracksViewState extends State<FavTracksView> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
-          GestureDetector(
-            onTap: () => context
-                .push('/swipes-library', extra: widget.tracks)
-                .then((result) async {
-              if (result is Future<void>) {
-                print('waiting...');
-                await result;
-              }
+          if (widget.tracks.length > 1)
+            GestureDetector(
+              onTap: () => context
+                  .push('/swipes-library', extra: widget.tracks)
+                  .then((result) async {
+                if (result is Future<void>) {
+                  print('waiting...');
+                  await result;
+                }
 
-              // ref.read(swipeChangedProvider.notifier).state = true;
-            }),
-            child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: AnimatedOpacity(
-                opacity: 1.0,
-                duration: Duration(milliseconds: 300),
-                child: AnimatedContainer(
+                // ref.read(swipeChangedProvider.notifier).state = true;
+              }),
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: AnimatedOpacity(
+                  opacity: 1.0,
                   duration: Duration(milliseconds: 300),
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 200),
-                    transitionBuilder: (child, animation) => ScaleTransition(
-                      scale: animation,
-                      child: child,
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      Icons.swipe
+                    child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 200),
+                      transitionBuilder: (child, animation) => ScaleTransition(
+                        scale: animation,
+                        child: child,
+                      ),
+                      child: Icon(Icons.swipe),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
-      body: FadeInLeft(
-        child: ListView.builder(
-            shrinkWrap: true,
-            // padding: EdgeInsets.zero,
-            // physics: NeverScrollableScrollPhysics(),
-            itemCount:
-                _isLoadingMore ? _allTracks.length + 1 : _allTracks.length,
-            itemBuilder: (context, index) {
-              Widget result;
+      body: _allTracks.isEmpty
+          ? Center(
+              child: Text(
+                capitalizeFirstLetter(text: localization.nothing_to_show),
+                style: TextStyle(fontSize: 18),
+              ),
+            )
+          : FadeInLeft(
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  // padding: EdgeInsets.zero,
+                  // physics: NeverScrollableScrollPhysics(),
+                  itemCount: _isLoadingMore
+                      ? _allTracks.length + 1
+                      : _allTracks.length,
+                  itemBuilder: (context, index) {
+                    Widget result;
 
-              if (index == _allTracks.length) {
-                result = const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                Track track = _allTracks[index];
+                    if (index == _allTracks.length) {
+                      result = const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      Track track = _allTracks[index];
 
-                String artists = track.buildArtistsText();
+                      String artists = track.buildArtistsText();
 
-                if (index == _allTracks.length - 1 && _nextUrl.isNotEmpty) {
-                  _fetchTracks();
-                }
+                      if (index == _allTracks.length - 1 &&
+                          _nextUrl.isNotEmpty) {
+                        _fetchTracks();
+                      }
 
-                result = FadeInLeft(
-                  child: CustomListTracks(
-                    track: track,
-                    artists: artists,
-                    allTracksLength: _allTracks.length,
-                    index: index,
-                    isSelecting: false,
-                    isSelected: false,
-                    onSelect: () {},
-                  ),
-                );
-              }
+                      result = FadeInLeft(
+                        child: CustomListTracks(
+                          track: track,
+                          artists: artists,
+                          allTracksLength: _allTracks.length,
+                          index: index,
+                          isSelecting: false,
+                          isSelected: false,
+                          onSelect: () {},
+                        ),
+                      );
+                    }
 
-              return result;
-            }),
-      ),
+                    return result;
+                  }),
+            ),
     );
   }
 }
