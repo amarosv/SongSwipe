@@ -687,6 +687,66 @@ Future<PaginatedTracks> getLibraryUser(
   return paginatedTracks;
 }
 
+/// Esta función recibe el UID de un usuario y devuelve los artistas que sigue como una lista paginada <br>
+/// @param uid UID del usuario <br>
+/// @param url (opcional) URL a buscar <br>
+/// @returns Lista de artistas paginada
+Future<PaginatedArtists> getFavoriteArtistsByUser(
+    {required String uid,
+    String url = '',
+    int limit = 10}) async {
+  PaginatedArtists paginatedArtists = PaginatedArtists.empty();
+
+  if (url.isEmpty) {
+    url = '$apiUser/$uid/artists';
+  }
+
+  Uri uri = Uri.parse(url);
+
+  // Llamada a la API para obtener los artistas que sigue el usuario
+  final response = await http.get(uri, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    paginatedArtists = PaginatedArtists.fromJson(json.decode(response.body));
+  }
+
+  return paginatedArtists;
+}
+
+/// Esta función recibe el UID de un usuario y devuelve los géneros que sigue como una lista paginada <br>
+/// @param uid UID del usuario <br>
+/// @param url (opcional) URL a buscar <br>
+/// @returns Lista de géneros paginada
+Future<PaginatedGenres> getFavoriteGenresByUser(
+    {required String uid,
+    String url = '',
+    int limit = 10}) async {
+  PaginatedGenres paginatedGenres = PaginatedGenres.empty();
+
+  if (url.isEmpty) {
+    url = '$apiUser/$uid/genres';
+  }
+
+  Uri uri = Uri.parse(url);
+
+  // Llamada a la API para obtener los géneros que sigue el usuario
+  final response = await http.get(uri, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  });
+
+  // Si la respuesta es 200, parseamos el json
+  if (response.statusCode == 200) {
+    paginatedGenres = PaginatedGenres.fromJson(json.decode(response.body));
+  }
+
+  return paginatedGenres;
+}
+
 /// Esta función recibe el UID de un usuario y un ID de canción y devuelve si el usuario la
 /// ha marcado como me gusta <br>
 /// @param uid UID del usuario <br>

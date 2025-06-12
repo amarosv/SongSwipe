@@ -688,4 +688,19 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get reactivated_account => 'account riattivata';
+
+  @override
+  String get nothing_to_show => 'niente da mostrare';
+
+  @override
+  String get my_artists => 'i miei artisti';
+
+  @override
+  String get my_genres => 'i miei generi';
+
+  @override
+  String get must_have_artists => 'devi avere almeno 5 artisti come preferiti';
+
+  @override
+  String get must_have_genres => 'devi avere almeno 3 generi come preferiti';
 }

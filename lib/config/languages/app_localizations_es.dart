@@ -690,4 +690,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get reactivated_account => 'cuenta reactivada';
+
+  @override
+  String get nothing_to_show => 'nada para mostrar';
+
+  @override
+  String get my_artists => 'mis artistas';
+
+  @override
+  String get my_genres => 'mis géneros';
+
+  @override
+  String get must_have_artists =>
+      'debes tener al menos 5 artistas como favoritos';
+
+  @override
+  String get must_have_genres =>
+      'debes tener al menos 3 géneros como favoritos';
 }

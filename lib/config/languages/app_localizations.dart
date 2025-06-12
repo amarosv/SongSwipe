@@ -1419,6 +1419,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'reactivated account'**
   String get reactivated_account;
+
+  /// No description provided for @nothing_to_show.
+  ///
+  /// In en, this message translates to:
+  /// **'nothing to show'**
+  String get nothing_to_show;
+
+  /// No description provided for @my_artists.
+  ///
+  /// In en, this message translates to:
+  /// **'my artists'**
+  String get my_artists;
+
+  /// No description provided for @my_genres.
+  ///
+  /// In en, this message translates to:
+  /// **'my genres'**
+  String get my_genres;
+
+  /// No description provided for @must_have_artists.
+  ///
+  /// In en, this message translates to:
+  /// **'you must have 5 artists as favorites at least'**
+  String get must_have_artists;
+
+  /// No description provided for @must_have_genres.
+  ///
+  /// In en, this message translates to:
+  /// **'you must have 3 genres as favorites at least'**
+  String get must_have_genres;
 }
 
 class _AppLocalizationsDelegate

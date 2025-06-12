@@ -220,5 +220,10 @@
     "account_deleted_success": "your account has been successfully deleted",
     "warning": "warning!!!",
     "cancel": "cancel",
-    "reactivated_account": "reactivated account"
+    "reactivated_account": "reactivated account",
+    "nothing_to_show": "nothing to show",
+    "my_artists": "my artists",
+    "my_genres": "my genres",
+    "must_have_artists": "you must have 5 artists as favorites at least",
+    "must_have_genres": "you must have 3 genres as favorites at least"
 }

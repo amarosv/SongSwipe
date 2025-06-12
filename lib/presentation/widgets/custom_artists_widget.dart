@@ -48,18 +48,7 @@ class CustomArtistsWidget extends StatelessWidget {
                       const SizedBox(
                         width: 10,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 2),
-                        ),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(artist.pictureXL),
-                          radius: 24,
-                        ),
-                      ),
+                      CustomRoundedImageWidget(path: artist.pictureXL, height: 48),
                       const SizedBox(width: 20),
                       Expanded(
                         child: Column(

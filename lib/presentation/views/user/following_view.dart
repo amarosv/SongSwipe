@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/config/providers/export_providers.dart';
+import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/export_apis.dart';
@@ -75,56 +76,64 @@ class _FollowingViewState extends ConsumerState<FollowingView> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : SingleChildScrollView(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: CustomContainer(
-                    child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: _following.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final user = entry.value;
-                    return InkWell(
-                      onTap: () => user.uid == _uid
-                          ? context.go('/home/4')
-                          : context.push('/user?uid=${user.uid}'),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            title: Text(user.name),
-                            subtitle: Text(user.lastName),
-                            leading: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  width: 2,
+          : _following.isEmpty
+              ? Center(
+                  child: Text(
+                    capitalizeFirstLetter(text: localization.nothing_to_show),
+                    style: TextStyle(fontSize: 18),
+                  ),
+                )
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
+                    child: CustomContainer(
+                        child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: _following.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final user = entry.value;
+                        return InkWell(
+                          onTap: () => user.uid == _uid
+                              ? context.go('/home/4')
+                              : context.push('/user?uid=${user.uid}'),
+                          child: Column(
+                            children: [
+                              ListTile(
+                                title: Text(user.name),
+                                subtitle: Text(user.lastName),
+                                leading: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: ClipOval(
+                                    child: Image.network(
+                                      user.photoUrl,
+                                      width: 48,
+                                      height: 48,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              child: ClipOval(
-                                child: Image.network(
-                                  user.photoUrl,
-                                  width: 48,
-                                  height: 48,
-                                  fit: BoxFit.cover,
+                              if (index != _following.length - 1)
+                                Divider(
+                                  color: Theme.of(context).dividerColor,
+                                  height: 1,
+                                  thickness: 1,
                                 ),
-                              ),
-                            ),
+                            ],
                           ),
-                          if (index != _following.length - 1)
-                            Divider(
-                              color: Theme.of(context).dividerColor,
-                              height: 1,
-                              thickness: 1,
-                            ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                )),
-              ),
-            ),
+                        );
+                      }).toList(),
+                    )),
+                  ),
+                ),
     );
   }
 }

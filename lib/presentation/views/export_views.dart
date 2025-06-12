@@ -32,6 +32,8 @@ export 'swipes_view.dart';
 export 'track/info_track_view.dart';
 export 'track/lyrics_view.dart';
 export 'user/edit_profile_view.dart';
+export 'user/fav_artists_view.dart';
+export 'user/fav_genres_view.dart';
 export 'user/fav_tracks_view.dart';
 export 'user/followers_view.dart';
 export 'user/following_view.dart';

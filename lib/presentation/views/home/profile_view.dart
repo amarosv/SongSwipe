@@ -125,27 +125,12 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
     }
   }
 
-  // Función que obtiene todos los IDs de las canciones
-  void _loadAllTracks() async {
-    _allTracksIds = await getSwipedTracksIds(uid: _uid);
-    setState(() {});
-  }
-
   // Función que obtiene los datos del usuario de la api
   void _getUserProfile() async {
     UserProfile user = await getUserProfile(uid: _uid);
     if (!mounted) return;
     setState(() {
       _userProfile = user;
-    });
-  }
-
-  // Función que obtiene el código del idioma
-  void _getLanguageCode() async {
-    if (!mounted) return;
-    String code = await loadDataString(tag: 'language');
-    setState(() {
-      _languageCode = code;
     });
   }
 
@@ -325,6 +310,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                   capitalizeFirstLetter(text: localization.see_fav_artists),
                   style: TextStyle(fontSize: 18),
                 ),
+                function: () => context.push('/fav-artists'),
               ),
 
               const SizedBox(
@@ -337,6 +323,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                   capitalizeFirstLetter(text: localization.see_fav_genres),
                   style: TextStyle(fontSize: 18),
                 ),
+                function: () => context.push('/fav-genres'),
               ),
 
               const SizedBox(

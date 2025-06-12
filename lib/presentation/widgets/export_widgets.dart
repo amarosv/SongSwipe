@@ -16,6 +16,7 @@ export 'custom_navigator_widget.dart';
 export 'custom_privacy_widget.dart';
 export 'custom_public_user.dart';
 export 'custom_request.dart';
+export 'custom_rounded_image_widget.dart';
 export 'custom_row_widget.dart';
 export 'custom_search_widget.dart';
 export 'custom_social_button_widget.dart';

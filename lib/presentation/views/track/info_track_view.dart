@@ -379,21 +379,7 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           // Imagen del artista
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary,
-                                                  width: 2),
-                                            ),
-                                            child: CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  artist.pictureBig),
-                                              radius: 40,
-                                            ),
-                                          ),
+                                          CustomRoundedImageWidget(path: artist.pictureXL, height: 80,),
                                           SizedBox(height: 4),
                                           // Nombre del artista
                                           Text(

@@ -53,6 +53,9 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
   // Variable que almacena los artistas similares
   late List<Artist> _relatedArtists = List.empty();
 
+  // Variable que almacena los ids de los artistas favoritos
+  late List<int> _favoriteArtistsIds = List.empty();
+
   // Variable que almacena si tiene al menos un album
   late bool _hasAlbums = false;
 
@@ -92,7 +95,8 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
         getArtistStats(idArtist: widget.idArtist),
         getRelatedArtists(idArtist: widget.idArtist),
         getTopDeezerTracksByArtist(idArtist: widget.idArtist),
-        hasArtistAnAlbum(idArtist: widget.idArtist)
+        hasArtistAnAlbum(idArtist: widget.idArtist),
+        getFavoriteArtists(uid: _uid)
       ]);
 
       setState(() {
@@ -106,6 +110,7 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
         _relatedArtists = results[6] as List<Artist>;
         _topTracksDeezer = results[7] as List<Track>;
         _hasAlbums = results[8] as bool;
+        _favoriteArtistsIds = results[9] as List<int>;
         _isLoading = false;
       });
     } catch (e) {
@@ -261,7 +266,17 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
                       GestureDetector(
                         onTap: () async {
                           if (_isFavorite) {
-                            _isFavorite = false;
+                            if (_favoriteArtistsIds.length == 5) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(capitalizeFirstLetter(
+                                      text: localization.must_have_artists)),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            } else {
+                              _isFavorite = false;
+                            }
                           } else {
                             _isFavorite = true;
                           }
@@ -638,13 +653,13 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
 
                                 // Ver todos los albums
                                 CustomNavigator(
-                                  title: Text(
-                                    capitalizeFirstLetter(
-                                        text: localization.see_all_albums),
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  function: () => context.push('/albums-artist?id=${widget.idArtist}&name=${_artist.name}')
-                                ),
+                                    title: Text(
+                                      capitalizeFirstLetter(
+                                          text: localization.see_all_albums),
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    function: () => context.push(
+                                        '/albums-artist?id=${widget.idArtist}&name=${_artist.name}')),
                               ],
                             ),
 
@@ -698,22 +713,9 @@ class _InfoArtistViewState extends ConsumerState<InfoArtistView>
                                             child: Column(
                                               children: [
                                                 // Imagen del artista
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .primary,
-                                                        width: 2),
-                                                  ),
-                                                  child: CircleAvatar(
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                            artist.pictureXL),
-                                                    radius: 36,
-                                                  ),
-                                                ),
+                                                CustomRoundedImageWidget(
+                                                    path: artist.pictureXL,
+                                                    height: 64),
 
                                                 const SizedBox(
                                                   height: 5,

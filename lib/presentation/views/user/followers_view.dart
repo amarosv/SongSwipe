@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
+import 'package:songswipe/helpers/utils.dart';
 import 'package:songswipe/models/user_app.dart';
 import 'package:songswipe/presentation/widgets/export_widgets.dart';
 import 'package:songswipe/services/api/internal_api.dart';
@@ -67,7 +68,14 @@ class _FollowersViewState extends State<FollowersView> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : SingleChildScrollView(
+          : _followers.isEmpty
+            ? Center(
+              child: Text(
+                capitalizeFirstLetter(text: localization.nothing_to_show),
+                style: TextStyle(fontSize: 18),
+              ),
+            )
+            : SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: CustomContainer(

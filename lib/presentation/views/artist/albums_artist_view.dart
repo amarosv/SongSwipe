@@ -32,7 +32,7 @@ class _AlbumArtistViewState extends State<AlbumArtistView> {
   // Variable que almacena la lista con todos los albums
   late List<Album> _allAlbums = [];
 
-  // Variable que indica si se están cargando más canciones
+  // Variable que indica si se están cargando más albums
   bool _isLoadingMore = false;
 
   @override

@@ -4,6 +4,8 @@ export 'contributor.dart';
 export 'dominant_colors.dart';
 export 'genre.dart';
 export 'paginated_albums.dart';
+export 'paginated_artists.dart';
+export 'paginated_genres.dart';
 export 'paginated_tracks.dart';
 export 'stats.dart';
 export 'swipe.dart';

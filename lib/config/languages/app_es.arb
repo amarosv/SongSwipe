@@ -219,5 +219,10 @@
     "account_deleted_success": "su cuenta ha sido eliminada exitosamente",
     "warning": "¡¡¡peligro!!!",
     "cancel": "cancelar",
-    "reactivated_account": "cuenta reactivada"
+    "reactivated_account": "cuenta reactivada",
+    "nothing_to_show": "nada para mostrar",
+    "my_artists": "mis artistas",
+    "my_genres": "mis géneros",
+    "must_have_artists": "debes tener al menos 5 artistas como favoritos",
+    "must_have_genres": "debes tener al menos 3 géneros como favoritos"
 }

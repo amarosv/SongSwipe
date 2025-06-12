@@ -109,6 +109,16 @@ class AppRouter {
         builder: (context, state) => EditProfileScreen(),
       ),
       GoRoute(
+        path: '/fav-artists',
+        name: FavArtistsScreen.name,
+        builder: (context, state) => FavArtistsScreen(),
+      ),
+      GoRoute(
+        path: '/fav-genres',
+        name: FavGenresScreen.name,
+        builder: (context, state) => FavGenresScreen(),
+      ),
+      GoRoute(
         path: '/user',
         name: UserScreen.name,
         builder: (context, state) {
