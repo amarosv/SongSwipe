@@ -247,6 +247,8 @@ class _LoginViewState extends State<LoginView> {
                               .signInWithEmailAndPassword(
                                   email: email, password: password);
 
+                          if (!mounted) return;
+
                           // Vamos al home
                           context.go('/home/4');
                         } on FirebaseAuthException catch (e) {
