@@ -99,7 +99,7 @@ class _FavGenresViewState extends ConsumerState<FavGenresView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          localization.my_artists.toUpperCase(),
+          localization.my_genres.toUpperCase(),
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,

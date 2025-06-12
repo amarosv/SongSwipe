@@ -219,7 +219,7 @@ class _DislikedViewState extends ConsumerState<DislikedView>
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
-                                mainAxisExtent: height * 0.36,
+                                childAspectRatio: 2.6 / 4,
                               ),
                               itemCount: _isLoadingMore
                                   ? _allTracks.length + 1

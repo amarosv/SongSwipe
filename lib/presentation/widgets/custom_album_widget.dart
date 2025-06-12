@@ -52,6 +52,8 @@ class _CustomAlbumWidgetState extends State<CustomAlbumWidget> {
   void getGenre() async {
     Genre temp = await getGenreById(genreID: widget.album.genreId);
 
+    if (!mounted) return;
+    
     setState(() {
       genre = temp;
     });

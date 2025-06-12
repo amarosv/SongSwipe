@@ -1,10 +1,10 @@
 import 'dart:ui';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/helpers/export_helpers.dart';
 import 'package:songswipe/models/export_models.dart';
@@ -69,9 +69,6 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
   // Booleano que indica si es auto play el audio
   bool autoAudio = false;
 
-  // Booleano que indica si se está reproduciendo la canción
-  bool _isPlaying = false;
-
   // Duración actual del preview
   Duration _currentPosition = Duration.zero;
 
@@ -88,7 +85,7 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
   void initState() {
     super.initState();
     _uid = _user.uid;
-    
+
     // Hacemos shuffle a las canciones
     widget.tracks.shuffle();
 
@@ -136,7 +133,7 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     );
 
     // Escuchar cambios de posición del reproductor
-    _audioPlayer.onPositionChanged.listen((Duration p) {
+    _audioPlayer.positionStream.listen((Duration p) {
       if (mounted) {
         setState(() {
           _currentPosition = p;
@@ -145,19 +142,17 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     });
 
     // Escuchar cuando el preview termina para reiniciar la barra de progreso y el estado de reproducción
-    _audioPlayer.onPlayerComplete.listen((event) {
-      if (mounted) {
-        setState(() {
-          ReleaseMode releaseMode = _audioPlayer.releaseMode;
-          _currentPosition = Duration.zero;
-
-          if (releaseMode == ReleaseMode.loop) {
-            _audioPlayer.pause();
-            _audioPlayer.resume();
-          } else {
-            _isPlaying = false;
-          }
-        });
+    _audioPlayer.playerStateStream.listen((playerState) {
+      if (playerState.processingState == ProcessingState.completed) {
+        if (mounted) {
+          setState(() {
+            _currentPosition = Duration.zero;
+            if (_audioPlayer.loopMode == LoopMode.one) {
+              _audioPlayer.pause();
+              _audioPlayer.play();
+            }
+          });
+        }
       }
     });
 
@@ -186,7 +181,6 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     });
 
     try {
-      print('Cargando 10 canciones...');
       final maxIterations = (_loadIndex + 10).clamp(0, widget.tracks.length);
       final idsToLoad = widget.tracks.sublist(_loadIndex, maxIterations);
       final tracks = await Future.wait(
@@ -236,6 +230,8 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
   }
 
   Future<void> _playPreview(String url, String imageUrl) async {
+    // Validar url vacía o incorrecta antes de intentar reproducir
+    if (url.isEmpty || !url.startsWith('http')) return;
     if (_currentTrackUrl == url) return;
 
     autoAudio = true;
@@ -243,16 +239,16 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     await _audioPlayer.stop();
 
     if (_userSettings.audioLoop) {
-      _audioPlayer.setReleaseMode(ReleaseMode.loop);
+      await _audioPlayer.setLoopMode(LoopMode.one);
     } else {
-      _audioPlayer.setReleaseMode(ReleaseMode.stop);
+      await _audioPlayer.setLoopMode(LoopMode.off);
     }
 
     _currentTrackUrl = url;
-    await _audioPlayer.play(UrlSource(url));
-    setState(() {
-      _isPlaying = true;
-    });
+    await _audioPlayer.setUrl(url);
+    _audioPlayer.play();
+
+    if (!mounted) return;
     _backgroundImageNotifier.value = imageUrl;
   }
 
@@ -383,6 +379,7 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
     }
   }
 
+  // Función que guarda los swipes
   Future<bool> _finalizeSwipes() async {
     bool changes = false;
     if (swipes.isNotEmpty) {
@@ -431,10 +428,9 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
         state == AppLifecycleState.detached ||
         state == AppLifecycleState.hidden) {
       _audioPlayer.pause();
-
       _finalizeSwipes();
     } else if (state == AppLifecycleState.resumed) {
-      _audioPlayer.resume();
+      _audioPlayer.play();
     }
   }
 
@@ -473,6 +469,9 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
 
   Widget _content() {
     final localization = AppLocalizations.of(context)!;
+
+    final size = MediaQuery.of(context).size;
+    final height = size.height;
 
     // Si no hay cartas, usar un Container simple con fondo del scaffold.
     if (_cards.isEmpty) {
@@ -570,8 +569,8 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
                                   // Carta
                                   Expanded(
                                     child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 20, top: 50),
+                                      padding: EdgeInsets.only(
+                                          bottom: 20, top: height * 0.05),
                                       child: CardSwiper(
                                         initialIndex: _currentIndex,
                                         cardsCount: _cards.length,
@@ -674,7 +673,7 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
                                                 .withValues(alpha: 0.8),
                                             child: IconButton(
                                               icon: Icon(
-                                                _isPlaying
+                                                _audioPlayer.playing
                                                     ? Icons.pause
                                                     : Icons.play_arrow,
                                                 color: Colors.white,
@@ -689,14 +688,11 @@ class _SwipesLibraryViewState extends ConsumerState<SwipesLibraryView>
                                                           .track
                                                           .md5Image);
                                                 } else {
-                                                  if (_isPlaying) {
+                                                  if (_audioPlayer.playing) {
                                                     await _audioPlayer.pause();
                                                   } else {
-                                                    await _audioPlayer.resume();
+                                                    await _audioPlayer.play();
                                                   }
-                                                  setState(() {
-                                                    _isPlaying = !_isPlaying;
-                                                  });
                                                 }
                                               },
                                             ),

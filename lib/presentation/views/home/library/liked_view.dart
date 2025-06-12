@@ -223,7 +223,7 @@ class _LikedViewState extends ConsumerState<LikedView>
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
-                                      mainAxisExtent: height * 0.36),
+                                      childAspectRatio: 2.6 / 4), // o 0.75),
                               itemCount: _isLoadingMore
                                   ? _allTracks.length + 1
                                   : _allTracks.length,

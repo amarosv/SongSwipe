@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
@@ -17,21 +19,19 @@ final redirectUri = 'songswipe://callback';
 /// @param tracks Lista de canciones de Deezer a exportar <br>
 /// @param context BuildContext de la app <br>
 /// @returns Tupla con lista de canciones de Spotify exportadas y lista de canciones fallidas
-Future<(List<Map<String, String>>, List<Track>)?>
-    authenticateAndSearchTracks({
+Future<(List<Map<String, String>>, List<Track>)?> authenticateAndSearchTracks({
   required List<Track> tracks,
   required BuildContext context,
 }) async {
   final appLocalizations = AppLocalizations.of(context)!;
-  final accessToken = await authenticateWithSpotify();
-  
+  final accessToken = await authenticateWithSpotify(context);
   if (accessToken == null) return null;
 
   List<Track> cancionesFallidas = [];
   final ids = <Map<String, String>>[];
   for (final track in tracks) {
-    final data = await searchTrackInSpotify(
-        track.title, track.artist.name, accessToken);
+    final data =
+        await searchTrackInSpotify(track.title, track.artist.name, accessToken);
     if (data != null) {
       ids.add(data);
     } else {
@@ -79,7 +79,7 @@ Future<(List<Map<String, String>>, List<Track>)?>
 
 /// Esta función autentica al usuario con Spotify <br>
 /// @returns Access Token de Spotify
-Future<String?> authenticateWithSpotify() async {
+Future<String?> authenticateWithSpotify(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   final savedRefreshToken = prefs.getString('spotify_refresh_token');
   final clientID = await getSpotifyClientID();
@@ -87,7 +87,6 @@ Future<String?> authenticateWithSpotify() async {
   if (savedRefreshToken != null) {
     final newToken = await renewToken();
     if (newToken != null) return newToken;
-    print('No se pudo renovar el token desde el backend, iniciando sesión manualmente...');
   }
 
   // Si no hay refresh_token o no se pudo renovar, hacer autenticación manual
@@ -108,8 +107,20 @@ Future<String?> authenticateWithSpotify() async {
     result = await FlutterWebAuth2.authenticate(
       url: authUrl.toString(),
       callbackUrlScheme: 'songswipe',
+      options: const FlutterWebAuth2Options(
+          useWebview: false, preferEphemeral: true),
     );
+
+    // Si estamos en Android, relanzar la app para traerla al frente
+    if (Platform.isAndroid) {
+      final intent = AndroidIntent(
+        package: 'com.amarosv.songswipe',
+        componentName: 'com.amarosv.songswipe.MainActivity',
+      );
+      await intent.launch();
+    }
   } on PlatformException catch (e) {
+    print('ERROR: $e');
     if (e.code == 'CANCELED') {
       return null; // usuario canceló login
     }
@@ -118,30 +129,33 @@ Future<String?> authenticateWithSpotify() async {
 
   final code = Uri.parse(result).queryParameters['code'];
 
-  final tokenResponse = await http.post(
-    Uri.parse('https://accounts.spotify.com/api/token'),
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: {
-      'grant_type': 'authorization_code',
-      'code': code!,
-      'redirect_uri': redirectUri,
-      'client_id': clientID,
-      'code_verifier': codeVerifier,
-    },
-  );
+  if (code != null && code.isNotEmpty) {
+    final tokenResponse = await http.post(
+      Uri.parse('https://accounts.spotify.com/api/token'),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: {
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': redirectUri,
+        'client_id': clientID,
+        'code_verifier': codeVerifier,
+      },
+    );
 
-  if (tokenResponse.statusCode == 200) {
-    final jsonResponse = jsonDecode(tokenResponse.body);
-    final accessToken = jsonResponse['access_token'];
-    final refreshToken = jsonResponse['refresh_token'];
+    if (tokenResponse.statusCode == 200) {
+      final jsonResponse = jsonDecode(tokenResponse.body);
+      final accessToken = jsonResponse['access_token'];
+      final refreshToken = jsonResponse['refresh_token'];
 
-    // Guardar refresh token
-    await prefs.setString('spotify_refresh_token', refreshToken);
+      // Guardar refresh token
+      await prefs.setString('spotify_refresh_token', refreshToken);
 
-    return accessToken;
-  } else {
-    throw Exception('Error al obtener el token');
+      return accessToken;
+    } else {
+      throw Exception('Error al obtener el token');
+    }
   }
+  return null;
 }
 
 /// Esta función busca la canción equivalente en Spotify <br>
@@ -191,8 +205,8 @@ Future<Map<String, String>?> searchTrackInSpotify(
 /// @param accessToken Access Token de Spotify <br>
 /// @param trackIds IDs de las canciones de Spotify <br>
 /// @param appLocalizations AppLocalizations
-Future<void> createPlaylist(String accessToken,
-    List<String> trackIds, AppLocalizations appLocalizations) async {
+Future<void> createPlaylist(String accessToken, List<String> trackIds,
+    AppLocalizations appLocalizations) async {
   // Paso 1: Obtener ID del usuario
   final userResponse = await http.get(
     Uri.parse('https://api.spotify.com/v1/me'),
@@ -202,7 +216,8 @@ Future<void> createPlaylist(String accessToken,
   );
 
   if (userResponse.statusCode != 200) {
-    throw Exception('Error al obtener el perfil del usuario');
+    throw Exception(
+        'Error al obtener el perfil del usuario ${userResponse.statusCode}');
   }
 
   final userId = json.decode(userResponse.body)['id'];

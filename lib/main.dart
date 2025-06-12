@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,12 @@ Future<void> main() async {
 
   // Cargamos el .env
   await dotenv.load(fileName: '.env');
+
+  // Evitar que go_router use el deep link como ruta en Android
+  if (Platform.isAndroid && Uri.base.scheme == 'songswipe') {
+    // Redirección de Spotify detectada: no dejar que go_router la procese como ruta
+    debugPrint('Interceptado deep link: ${Uri.base}');
+  }
 
   // Corremos la aplicación
   runApp(const ProviderScope(child: MyApp()));

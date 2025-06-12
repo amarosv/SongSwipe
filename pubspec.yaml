@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  android_intent_plus: ^5.3.0
   animate_do: ^4.2.0
   audioplayers: ^6.4.0
   blurrycontainer: ^2.1.0
@@ -59,6 +60,7 @@ dependencies:
   image_cropper: ^9.0.0
   image_picker: ^1.1.2
   intl: any
+  just_audio: ^0.10.4
   marquee: ^2.3.0
   package_info_plus: ^8.3.0
   shared_preferences: ^2.3.5

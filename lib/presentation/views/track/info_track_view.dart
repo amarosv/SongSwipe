@@ -1,8 +1,8 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:marquee/marquee.dart';
 import 'package:songswipe/config/languages/app_localizations.dart';
 import 'package:songswipe/config/providers/export_providers.dart';
@@ -73,9 +73,6 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
   // Variable que almacena si se ha cambiado el valor de _isFavorite
   bool _hasChange = false;
 
-  // Variable que almacena si se está reproduciendo la canción
-  bool _isPlaying = false;
-
   // Variable que almacena la opacidad del texto del titulo del appbar
   double _textOpacity = 0.0;
 
@@ -83,15 +80,7 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
   void initState() {
     super.initState();
     _uid = _user.uid;
-    _audioPlayer.setReleaseMode(ReleaseMode.stop);
-    // Configura el listener para el estado del reproductor
-    _audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
-      if (state == PlayerState.completed) {
-        setState(() {
-          _isPlaying = false;
-        });
-      }
-    });
+    _audioPlayer.setLoopMode(LoopMode.off);
     _loadData();
     _scrollController.addListener(_updateTextOpacity);
 
@@ -145,14 +134,15 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
 
   // Función que reproduce o pausa la canción
   Future<void> _playPreview() async {
-    if (_isPlaying) {
+    if (_audioPlayer.playing) {
       await _audioPlayer.pause();
     } else {
-      await _audioPlayer.play(UrlSource(_track.preview));
+      await _audioPlayer.setUrl(_track.preview);
+      _audioPlayer.play();
     }
 
     setState(() {
-      _isPlaying = !_isPlaying;
+      
     });
   }
 
@@ -194,9 +184,6 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
         state == AppLifecycleState.detached ||
         state == AppLifecycleState.hidden)) {
       _audioPlayer.stop();
-      setState(() {
-        _isPlaying = false;
-      });
     }
   }
 
@@ -366,9 +353,6 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                                 children: _artists.map((artist) {
                                   return GestureDetector(
                                     onTap: () {
-                                      setState(() {
-                                        _isPlaying = false;
-                                      });
                                       _audioPlayer.pause();
                                       context.push('/artist?id=${artist.id}');
                                     },
@@ -534,9 +518,6 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                           // Container con los datos del album
                           GestureDetector(
                               onTap: () {
-                                setState(() {
-                                  _isPlaying = false;
-                                });
                                 _audioPlayer.pause();
                                 context.push('/album?id=${_album.id}');
                               },
@@ -583,9 +564,6 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                                   children: _relatedTracks.map((track) {
                                     return InkWell(
                                       onTap: () {
-                                        setState(() {
-                                          _isPlaying = false;
-                                        });
                                         _audioPlayer.pause();
                                         context.push('/track?id=${track.id}');
                                       },
@@ -759,7 +737,7 @@ class _InfoTrackViewState extends ConsumerState<InfoTrackView>
                     child: child,
                   ),
                   child: Icon(
-                    _isPlaying ? Icons.pause : Icons.play_arrow,
+                    _audioPlayer.playing ? Icons.pause : Icons.play_arrow,
                     key: ValueKey<bool>(_textOpacity > 0),
                     color: _textOpacity <= 0
                         ? Colors.white

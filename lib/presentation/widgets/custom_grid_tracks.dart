@@ -11,18 +11,25 @@ import 'package:songswipe/presentation/widgets/export_widgets.dart';
 class CustomGridTracks extends StatelessWidget {
   /// Altura
   final double height;
+
   /// Canción a mostrar
   final Track track;
+
   /// Nombre de los artistas
   final String artists;
+
   /// Indice en la lista
   final int index;
+
   /// Variable que indica si se está seleccionando canciones
   final bool isSelecting;
+
   /// Variable que indica si se ha seleccionado
   final bool isSelected;
+
   /// Función que se ejecuta al seleccionar o deseleccionar
   final VoidCallback? onSelect;
+
   /// Función que se ejecuta para refrescar la lista
   final VoidCallback? onRefresh;
 
@@ -60,223 +67,202 @@ class CustomGridTracks extends StatelessWidget {
                 }
               }
             },
-            child: CustomContainer(
-                color: Theme.of(context).colorScheme.primary,
-                child: Column(
-                  children: [
-                    // Portada
-                    SizedBox(
-                      height: height * 0.2,
-                      width: double.infinity,
-                      child: ClipRRect(
-                        borderRadius:
-                            BorderRadiusGeometry.only(
-                                topLeft: Radius.circular(8),
-                                topRight: Radius.circular(8)),
-                        child: Image.network(
-                          track.md5Image,
-                          fit: BoxFit.fill,
+            child: Flexible(
+              child: CustomContainer(
+                  color: Theme.of(context).colorScheme.primary,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Portada
+                      SizedBox(
+                        height: height * 0.2,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: BorderRadiusGeometry.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8)),
+                          child: Image.network(
+                            track.md5Image,
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
-                    ),
-                    
-                    const SizedBox(height: 10),
-                    
-                    // Título
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5),
-                      child: LayoutBuilder(
-                          builder: (context, constraints) {
-                        Widget resultText;
-                    
-                        final text = track.title;
-                        final textPainter = TextPainter(
-                            text: TextSpan(
-                              text: text,
+
+                      const SizedBox(height: 10),
+
+                      // Título
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: LayoutBuilder(builder: (context, constraints) {
+                          Widget resultText;
+
+                          final text = track.title;
+                          final textPainter = TextPainter(
+                              text: TextSpan(
+                                text: text,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                              maxLines: 1,
+                              textDirection: TextDirection.ltr)
+                            ..layout(maxWidth: double.infinity);
+
+                          final textWidth = textPainter.size.width;
+
+                          if (textWidth > constraints.maxWidth) {
+                            resultText = SizedBox(
+                              height: 25,
+                              child: Marquee(
+                                text: text,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.ellipsis),
+                                scrollAxis: Axis.horizontal,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                blankSpace: 20.0,
+                                velocity: 40.0,
+                                pauseAfterRound: Duration(seconds: 4),
+                                startPadding: 0.0,
+                                accelerationDuration: Duration(seconds: 2),
+                                accelerationCurve: Curves.linear,
+                                decelerationDuration:
+                                    Duration(milliseconds: 500),
+                                decelerationCurve: Curves.easeOut,
+                              ),
+                            );
+                          } else {
+                            resultText = SizedBox(
+                              height: 25,
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  text,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                              ),
+                            );
+                          }
+
+                          return resultText;
+                        }),
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // Artistas
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: LayoutBuilder(builder: (context, constraints) {
+                          Widget resultText;
+
+                          final text = artists;
+                          final textPainter = TextPainter(
+                              text: TextSpan(
+                                text: text,
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                              maxLines: 1,
+                              textDirection: TextDirection.ltr)
+                            ..layout(maxWidth: double.infinity);
+
+                          final textWidth = textPainter.size.width;
+
+                          if (textWidth > constraints.maxWidth) {
+                            resultText = SizedBox(
+                              height: 25,
+                              child: Marquee(
+                                text: text,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    overflow: TextOverflow.ellipsis),
+                                scrollAxis: Axis.horizontal,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                blankSpace: 20.0,
+                                velocity: 40.0,
+                                pauseAfterRound: Duration(seconds: 4),
+                                startPadding: 0.0,
+                                accelerationDuration: Duration(seconds: 2),
+                                accelerationCurve: Curves.linear,
+                                decelerationDuration:
+                                    Duration(milliseconds: 500),
+                                decelerationCurve: Curves.easeOut,
+                              ),
+                            );
+                          } else {
+                            resultText = SizedBox(
+                              height: 25,
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  text,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                              ),
+                            );
+                          }
+
+                          return resultText;
+                        }),
+                      ),
+
+                      const SizedBox(
+                        height: 10,
+                      ),
+
+                      // Fecha e icono si es explícita
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Fecha
+                            Text(
+                              formatDate(
+                                  date: track.releaseDate, context: context),
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  overflow:
-                                      TextOverflow.ellipsis),
+                                  fontSize: 12,
+                                  overflow: TextOverflow.ellipsis),
                             ),
-                            maxLines: 1,
-                            textDirection: TextDirection.ltr)
-                          ..layout(maxWidth: double.infinity);
-                    
-                        final textWidth =
-                            textPainter.size.width;
-                    
-                        if (textWidth >
-                            constraints.maxWidth) {
-                          resultText = SizedBox(
-                            height: 25,
-                            child: Marquee(
-                              text: text,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  overflow:
-                                      TextOverflow.ellipsis),
-                              scrollAxis: Axis.horizontal,
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                              blankSpace: 20.0,
-                              velocity: 40.0,
-                              pauseAfterRound:
-                                  Duration(seconds: 4),
-                              startPadding: 0.0,
-                              accelerationDuration:
-                                  Duration(seconds: 2),
-                              accelerationCurve:
-                                  Curves.linear,
-                              decelerationDuration:
-                                  Duration(milliseconds: 500),
-                              decelerationCurve:
-                                  Curves.easeOut,
-                            ),
-                          );
-                        } else {
-                          resultText = Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              text,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  overflow:
-                                      TextOverflow.ellipsis),
-                            ),
-                          );
-                        }
-                    
-                        return resultText;
-                      }),
-                    ),
-                    
-                    const SizedBox(height: 10),
-                    
-                    // Artistas
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5),
-                      child: LayoutBuilder(
-                          builder: (context, constraints) {
-                        Widget resultText;
-                    
-                        final text = artists;
-                        final textPainter = TextPainter(
-                            text: TextSpan(
-                              text: text,
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  overflow:
-                                      TextOverflow.ellipsis),
-                            ),
-                            maxLines: 1,
-                            textDirection: TextDirection.ltr)
-                          ..layout(maxWidth: double.infinity);
-                    
-                        final textWidth =
-                            textPainter.size.width;
-                    
-                        if (textWidth >
-                            constraints.maxWidth) {
-                          resultText = SizedBox(
-                            height: 25,
-                            child: Marquee(
-                              text: text,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  overflow:
-                                      TextOverflow.ellipsis),
-                              scrollAxis: Axis.horizontal,
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                              blankSpace: 20.0,
-                              velocity: 40.0,
-                              pauseAfterRound:
-                                  Duration(seconds: 4),
-                              startPadding: 0.0,
-                              accelerationDuration:
-                                  Duration(seconds: 2),
-                              accelerationCurve:
-                                  Curves.linear,
-                              decelerationDuration:
-                                  Duration(milliseconds: 500),
-                              decelerationCurve:
-                                  Curves.easeOut,
-                            ),
-                          );
-                        } else {
-                          resultText = Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              text,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  overflow:
-                                      TextOverflow.ellipsis),
-                            ),
-                          );
-                        }
-                    
-                        return resultText;
-                      }),
-                    ),
-                    
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    
-                    // Fecha e icono si es explícita
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5),
-                      child: Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Fecha
-                          Text(
-                            formatDate(
-                                date: track.releaseDate,
-                                context: context),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                overflow:
-                                    TextOverflow.ellipsis),
-                          ),
-                    
-                          // Icono
-                          if (track.explicitLyrics ||
-                              track.explicitContentCover ==
-                                  1 ||
-                              track.explicitContentLyrics ==
-                                  1)
+
+                            // Icono
+                            // Truquito para que tengan la misma altura
                             Icon(
                               Icons.explicit,
-                              color: Colors.white,
+                              color: track.explicitLyrics ||
+                                      track.explicitContentCover == 1 ||
+                                      track.explicitContentLyrics == 1
+                                  ? Colors.white
+                                  : Colors.transparent,
                             )
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    
-                    const SizedBox(
-                      height: 5,
-                    )
-                  ],
-                )),
+
+                      const SizedBox(
+                        height: 5,
+                      )
+                    ],
+                  )),
+            ),
           ),
         ),
         if (isSelecting)
